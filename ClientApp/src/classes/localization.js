@@ -1,6 +1,6 @@
 ﻿import LocalizedStrings from 'react-localization';
 
-let strings = new LocalizedStrings({
+export const Strings = new LocalizedStrings({
     en: {
         howtoplay: "How To Play",
         join: "Join",
@@ -12,6 +12,4 @@ let strings = new LocalizedStrings({
         create: "Crio"
     }
 });
-
-export const strings;
 
