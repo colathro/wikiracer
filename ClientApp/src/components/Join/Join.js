@@ -24,6 +24,12 @@ export class Join extends Component {
         };
 
         this.setEmojiAvatar = this.setEmojiAvatar.bind(this);
+        this.handleChange = this.handleChange.bind(this)
+    }
+
+    handleChange(event) {
+        this.props.hub.invoke("SendMessage", event.target.value);
+        this.setState({ user: event.target.value })
     }
 
     setEmojiAvatar(name) {
@@ -34,6 +40,9 @@ export class Join extends Component {
         return (
             <div className='container'>
                 <h1>Join</h1>
+                <div className='width-300' style={{ 'display': 'inline-block' }}>
+                    <Input type='text' onChange={this.handleChange}></Input>
+                </div>
                 <Link to='/'>Back</Link>
                 <br />
                 <Container style={{ 'overflow': 'scroll', 'height': '500px'}}>

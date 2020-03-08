@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
+using wiki_racer.Database;
 using wiki_racer.Hubs;
 
 namespace wiki_racer
@@ -20,6 +24,16 @@ namespace wiki_racer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<GameContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("GameContext")));
+
+            services.AddLogging(builder =>
+            {
+                builder.AddApplicationInsights("7872c707-389e-4b0b-be3e-3de1cbad3fcc");
+                builder.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Information);
+                builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Error);
+            });
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -44,7 +58,9 @@ namespace wiki_racer
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
+
             app.UseSpaStaticFiles();
 
             app.UseRouting();
