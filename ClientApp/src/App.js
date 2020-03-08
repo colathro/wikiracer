@@ -9,21 +9,38 @@ import { Game } from './classes/gamestate.js';
 import { Strings } from './classes/localization.js';
 import './custom.css'
 
+const signalR = require("@aspnet/signalr");
+
 export default class App extends Component {
     constructor(props) {
         super(props);
 
-        this.Game = Game;
-        this.Strings = Strings;
+        this.state = {
+            hub : null,
+            strings : Strings,
+            game : Game
+        };
+    }
+
+    componentDidMount = () => {
+        let hubConn = new signalR.HubConnectionBuilder()
+            .withUrl("/gamehub")
+            .build();
+
+        hubConn.on("ReceiveMessage", function (message) { console.log(message); });
+
+        hubConn.start();
+
+        this.setState({ hub : hubConn });
     }
 
   render () {
     return (
       <Layout>
-            <Route exact path='/' render={(props) => <Home {...props} lang={this.Strings}/>} />
-            <Route exact path='/howto' render={(props) => <HowTo {...props} lang={this.Strings}/>} />
-            <Route exact path='/join' render={(props) => <Join {...props} lang={this.Strings}/>} />
-            <Route exact path='/lobby' render={(props) => <Lobby {...props} lang={this.Strings}/>} />
+            <Route exact path='/' render={(props) => <Home {...props} lang={this.state.strings} game={this.state.game} hub={this.state.hub} />} />
+            <Route exact path='/howto' render={(props) => <HowTo {...props} lang={this.state.strings} game={this.state.game} hub={this.state.hub} />} />
+            <Route exact path='/join' render={(props) => <Join {...props} lang={this.state.strings} game={this.state.game} hub={this.state.hub} />} />
+            <Route exact path='/lobby' render={(props) => <Lobby {...props} lang={this.state.strings} game={this.state.game} hub={this.state.hub} />} />
       </Layout>
     );
   }

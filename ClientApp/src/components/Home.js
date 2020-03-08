@@ -7,7 +7,6 @@ export class Home extends Component {
 
     constructor(props) {
         super(props);
-        this.props = props;
 
         this.state = {
             lobby: '',
@@ -37,12 +36,12 @@ export class Home extends Component {
     }
 
     handleChange(event) {
+        this.props.hub.invoke("SendMessage", event.target.value);
         this.setState({lobby: event.target.value})
     }
 
     updateLang() {
         this.setState({
-            lobby: this.state.lobby,
             lang: this.state.lang
         });
     }
