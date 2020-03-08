@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { Button, Input, Row, Col } from 'reactstrap';
+import { Languages } from './Languages';
 
 export class Home extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = { lobby: '' };
         this.props = props;
 
-        this.props.lang.setLanguage('pt');
+        this.state = {
+            lobby: '',
+            lang: this.props.lang
+        };
 
         this.handleChange = this.handleChange.bind(this)
         this.createGame = this.createGame.bind(this);
         this.joinGame = this.joinGame.bind(this);
         this.howTo = this.howTo.bind(this);
+        this.updateLang = this.updateLang.bind(this);
     }
 
     createGame(e) {
@@ -37,10 +40,22 @@ export class Home extends Component {
         this.setState({lobby: event.target.value})
     }
 
+    updateLang() {
+        this.setState({
+            lobby: this.state.lobby,
+            lang: this.state.lang
+        });
+    }
+
 
     render() {
         return (
             <div>
+                <Row>
+                    <Col className='text-center'>
+                        <Languages lang={this.state.lang} callBack={this.updateLang} />
+                    </Col>
+                </Row>
                 <Row>
                     <Col className='text-center mt-4 mb-4'>
                         <img src='/content/wikilogo.png' style={{ 'width': '276px', 'height': '256px' }}></img>
@@ -55,7 +70,7 @@ export class Home extends Component {
                 <Row className='mt-3'>
                     <Col className='text-center'>
                         <Button className='width-300' color='primary' size='lg' onClick={this.howTo}>
-                            {this.props.lang.howtoplay}
+                            {this.state.lang.howtoplay}
                         </Button>
                     </Col>
                 </Row>
@@ -71,7 +86,7 @@ export class Home extends Component {
                 <Row className='mt-3'>
                     <Col className='text-center'>
                         <Button className='width-300' color='success' size='lg' onClick={this.joinGame}>
-                            {this.props.lang.join}
+                            {this.state.lang.join}
                         </Button>
                     </Col>
                 </Row>
@@ -79,7 +94,7 @@ export class Home extends Component {
                 <Row className='mt-3'>
                     <Col className='text-center'>
                         <Button className='width-300' color='primary' size='lg' onClick={this.createGame}>
-                            {this.props.lang.create}
+                            {this.state.lang.create}
                         </Button>
                     </Col>
                 </Row>

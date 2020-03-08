@@ -1,6 +1,5 @@
 ﻿class GameState {
     constructor() {
-        this.lang = 'en';
     }
 }
 
