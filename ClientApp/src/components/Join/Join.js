@@ -24,11 +24,11 @@ export class Join extends Component {
         };
 
         this.setEmojiAvatar = this.setEmojiAvatar.bind(this);
-        this.handleChange = this.handleChange.bind(this)
+        this.handleChange = this.handleChange.bind(this);
+        this.joinGame = this.joinGame.bind(this);
     }
 
     handleChange(event) {
-        this.props.hub.invoke("SendMessage", event.target.value);
         this.setState({ user: event.target.value })
     }
 
@@ -36,16 +36,22 @@ export class Join extends Component {
         this.setState({emoji: name});
     }
 
+    joinGame() {
+        this.props.hub.invoke("SetUsernameAndAvatar", this.state.user, this.state.emoji, this.props.game.lobby).then(() => {
+            this.props.history.push('/lobby');
+        });
+    }
+
     render() {
         return (
-            <div className='container'>
+            <div className='container text-center'>
                 <h1>Join</h1>
                 <div className='width-300' style={{ 'display': 'inline-block' }}>
                     <Input type='text' onChange={this.handleChange}></Input>
                 </div>
                 <Link to='/'>Back</Link>
                 <br />
-                <Container style={{ 'overflow': 'scroll', 'height': '500px'}}>
+                <Container style={{ 'overflow': 'scroll', 'height': '450px'}}>
                     <Row>
                         {emojis.map(function (name, index) {
                             var className = unselected();
@@ -63,7 +69,9 @@ export class Join extends Component {
                         }, this)}
                     </Row>
                 </Container>
-                <Link to='/lobby'>Continue</Link>
+                <Button className='width-300 mt-3' color='primary' size='lg' onClick={this.joinGame}>
+                    {this.props.lang.continue}
+                </Button>
             </div>
         );
     }

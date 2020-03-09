@@ -22,12 +22,18 @@ export class Home extends Component {
 
     createGame(e) {
         console.log('Attempting to create game.');
-        this.props.history.push('/join');
+        this.props.hub.invoke("CreateLobby", this.state.lobby).then(() => {
+            this.props.game.lobby = this.state.lobby;
+            this.props.history.push('/join');
+        });
     }
 
     joinGame(e) {
         console.log('Attempting to join game.');
-        this.props.history.push('/join');
+        this.props.hub.invoke("JoinLobby", this.state.lobby).then(() => {
+            this.props.game.lobby = this.state.lobby;
+            this.props.history.push('/join');
+        });
     }
 
     howTo() {
@@ -36,7 +42,6 @@ export class Home extends Component {
     }
 
     handleChange(event) {
-        this.props.hub.invoke("SendMessage", event.target.value);
         this.setState({lobby: event.target.value})
     }
 

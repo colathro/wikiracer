@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router';
+import { Route, Redirect } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { HowTo } from './components/HowTo/HowTo';
@@ -34,9 +34,12 @@ export default class App extends Component {
         this.setState({ hub : hubConn });
     }
 
-  render () {
+    render() {
+        if (this.state.hub === null) {
+            return (<Redirect to='/'></Redirect>);
+        }
     return (
-      <Layout>
+        <Layout>
             <Route exact path='/' render={(props) => <Home {...props} lang={this.state.strings} game={this.state.game} hub={this.state.hub} />} />
             <Route exact path='/howto' render={(props) => <HowTo {...props} lang={this.state.strings} game={this.state.game} hub={this.state.hub} />} />
             <Route exact path='/join' render={(props) => <Join {...props} lang={this.state.strings} game={this.state.game} hub={this.state.hub} />} />

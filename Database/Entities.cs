@@ -7,7 +7,9 @@ namespace wiki_racer.Database
     public class User
     {
         [Key]
+        public string ConnectionId { get; set; }
         public string UserName { get; set; }
+        public string Avatar { get; set; }
     }
 
     public class Lobby

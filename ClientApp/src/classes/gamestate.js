@@ -1,5 +1,6 @@
 ﻿class GameState {
     constructor() {
+        this.lobby = '';
     }
 }
 
