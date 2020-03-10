@@ -27,7 +27,7 @@ export default class App extends Component {
             .withUrl("/gamehub")
             .build();
 
-        hubConn.on("ReceiveMessage", function (message) { console.log(message); });
+        this.state.game.registerEventHandlers(hubConn, this.setState.bind(this));
 
         hubConn.start();
 
