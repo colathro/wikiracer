@@ -6,7 +6,7 @@
     registerEventHandlers(hub, setstate) {
         console.log("registering gamestate");
         hub.on("GameState", function (message) { this.gameState(setstate, message) }.bind(this));
-        console.log("registered gamestate);
+        console.log("registered gamestate");
     }
 
     gameState(setstate, message) {
