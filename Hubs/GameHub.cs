@@ -23,15 +23,19 @@ namespace wiki_racer.Hubs
 
         public override Task OnConnectedAsync()
         {
+            this.Logger.LogInformation($"{Context.ConnectionId} Connected.");
             var user = new User { ConnectionId = Context.ConnectionId };
             this.Database.Add(user);
             this.Database.SaveChanges();
+
+            this.Logger.LogInformation($"{Context.ConnectionId} added to database.");
 
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception e)
         {
+            this.Logger.LogInformation($"{Context.ConnectionId} Disconnected.");
             var user = this.Database.Users.Where(u => u.ConnectionId == Context.ConnectionId);
 
             foreach (var id in user)
@@ -41,11 +45,14 @@ namespace wiki_racer.Hubs
 
             this.Database.SaveChanges();
 
+            this.Logger.LogInformation($"{Context.ConnectionId} removed from database.");
+
             return base.OnDisconnectedAsync(e);
         }
 
         public Task CreateLobby(string lobbyName)
         {
+            this.Logger.LogInformation($"{Context.ConnectionId} Creating Lobby.");
             lobbyName = lobbyName.ToLowerInvariant();
             if (this.Database.LobbyExists(lobbyName))
             {
@@ -61,11 +68,14 @@ namespace wiki_racer.Hubs
             this.Database.Add(lobby);
             this.Database.SaveChanges();
 
+            this.Logger.LogInformation($"{Context.ConnectionId} finished creating lobby.");
+
             return Groups.AddToGroupAsync(Context.ConnectionId, lobbyName);
         }
 
         public Task JoinLobby(string lobby)
         {
+            this.Logger.LogInformation($"{Context.ConnectionId} Joining lobby.");
             lobby = lobby.ToLowerInvariant();
 
             if (!this.Database.LobbyExists(lobby))
@@ -78,6 +88,7 @@ namespace wiki_racer.Hubs
             lobbyObject.Users.Add(this.Database.GetUser(Context.ConnectionId));
 
             this.Database.SaveChanges();
+            this.Logger.LogInformation($"{Context.ConnectionId} joined lobby.");
 
             return Groups.AddToGroupAsync(Context.ConnectionId, lobby);
         }
@@ -89,6 +100,7 @@ namespace wiki_racer.Hubs
 
         public async void SetUsernameAndAvatar(string username, string avatar, string lobby)
         {
+            this.Logger.LogInformation($"{Context.ConnectionId} setting username.");
             var user = this.Database.GetUser(Context.ConnectionId);
 
             user.Avatar = avatar;
@@ -96,7 +108,11 @@ namespace wiki_racer.Hubs
 
             this.Database.SaveChanges();
 
+            this.Logger.LogInformation($"{Context.ConnectionId} saved username.");
+
             await Clients.Group(lobby).SendAsync("GameState", JsonSerializer.Serialize(this.Database.GetGameState(lobby)));
+            this.Logger.LogInformation($"{Context.ConnectionId} sent gamestate to all {lobby}.");
+
 
             return;
         }
