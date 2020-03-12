@@ -100,6 +100,7 @@ namespace wiki_racer.Hubs
 
         public async void SetUsernameAndAvatar(string username, string avatar, string lobby)
         {
+            lobby = lobby.ToLowerInvariant();
             this.Logger.LogInformation($"{Context.ConnectionId} setting username.");
             var user = this.Database.GetUser(Context.ConnectionId);
 
