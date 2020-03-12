@@ -1,5 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, Input, Row, Col, Container } from 'reactstrap';
+import { LobbyModals } from './Modals/LobbyModals.js'
+
 
 export class Lobby extends Component {
 
@@ -7,16 +9,17 @@ export class Lobby extends Component {
         super(props);
     }
 
-  render () {
-    return (
-        <Container>
-            <Row style={{ 'height': '10vh', 'background-color' : 'blue' }}>
-            </Row>
-            <Row style={{ 'height': '80vh', 'background-color': 'red'}}>
-            </Row>
-            <Row style={{ 'height': '10vh', 'background-color': 'yellow' }}>
-            </Row>
-        </Container>
-    );
-  }
+    render() {
+        return (
+            <Container>
+                <Row style={{ 'height': '10vh', 'background-color': 'blue' }}>
+                    <LobbyModals />
+                </Row>
+                <Row style={{ 'height': '80vh', 'background-color': 'red' }}>
+                </Row>
+                <Row style={{ 'height': '10vh', 'background-color': 'yellow' }}>
+                </Row>
+            </Container>
+        );
+    }
 }
