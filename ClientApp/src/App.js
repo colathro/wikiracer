@@ -9,7 +9,7 @@ import { Game } from './classes/gamestate.js';
 import { Strings } from './classes/localization.js';
 import './custom.css'
 
-const signalR = require("@aspnet/signalr");
+const signalR = require("@microsoft/signalr");
 
 export default class App extends Component {
     constructor(props) {
