@@ -8,8 +8,7 @@
     }
 
     gameState(setstate, message) {
-        this.lobby += 'test';
-        setstate({ game: this });
+        setstate({ game: JSON.parse(message) });
         console.log(message);
     }
 }

@@ -13,7 +13,7 @@ export class Lobby extends Component {
         return (
             <Container>
                 <Row style={{ 'height': '10vh', 'background-color': 'blue' }}>
-                    <LobbyModals />
+                    <LobbyModals game={this.props.game} lang={this.props.lang} hub={this.props.hub}/>
                 </Row>
                 <Row style={{ 'height': '80vh', 'background-color': 'red' }}>
                 </Row>
