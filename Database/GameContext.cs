@@ -44,6 +44,10 @@ namespace wiki_racer.Database
 
         public GameState GetGameState(string lobby)
         {
+            if (string.IsNullOrWhiteSpace(lobby))
+            {
+                return new GameState();
+            }
             var lobbyObject = this.Lobbies.Where(l => l.LobbyName == lobby).Include(l => l.Users).First();
 
             var output = new GameState { Lobby = lobbyObject };

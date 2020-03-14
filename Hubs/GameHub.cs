@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using wiki_racer.Database;
+using wiki_racer.WikipediaExtensions;
 
 namespace wiki_racer.Hubs
 {
@@ -36,21 +37,26 @@ namespace wiki_racer.Hubs
         public override Task OnDisconnectedAsync(Exception e)
         {
             this.Logger.LogInformation($"{Context.ConnectionId} Disconnected.");
-            var user = this.Database.Users.Where(u => u.ConnectionId == Context.ConnectionId);
 
-            foreach (var id in user)
-            {
-                this.Database.Remove(id);
-            }
-
+            var user = this.Database.Users.Where(u => u.ConnectionId == Context.ConnectionId).First();
+            this.Database.Remove(user);
             this.Database.SaveChanges();
 
             this.Logger.LogInformation($"{Context.ConnectionId} removed from database.");
+            try
+            {
+                Clients.Group(user.Lobby).SendAsync("GameState", JsonSerializer.Serialize(this.Database.GetGameState(user.Lobby)));
+                this.Logger.LogInformation($"{Context.ConnectionId} sent gamestate to all {user.Lobby}.");
+            }
+            catch
+            {
+                this.Logger.LogError($"Unable to send gamestate on disconnect. Likely lobby does not exist.");
+            }
 
             return base.OnDisconnectedAsync(e);
         }
 
-        public Task CreateLobby(string lobbyName)
+        public Task CreateLobby(string lobbyName, string lang)
         {
             this.Logger.LogInformation($"{Context.ConnectionId} Creating Lobby.");
             lobbyName = lobbyName.ToLowerInvariant();
@@ -73,7 +79,7 @@ namespace wiki_racer.Hubs
             return Groups.AddToGroupAsync(Context.ConnectionId, lobbyName);
         }
 
-        public Task JoinLobby(string lobby)
+        public Task JoinLobby(string lobby, string lang)
         {
             this.Logger.LogInformation($"{Context.ConnectionId} Joining lobby.");
             lobby = lobby.ToLowerInvariant();
@@ -85,7 +91,11 @@ namespace wiki_racer.Hubs
 
             var lobbyObject = this.Database.GetLobby(lobby);
 
-            lobbyObject.Users.Add(this.Database.GetUser(Context.ConnectionId));
+            var user = this.Database.GetUser(Context.ConnectionId);
+
+            user.Lobby = lobby;
+
+            lobbyObject.Users.Add(user);
 
             this.Database.SaveChanges();
             this.Logger.LogInformation($"{Context.ConnectionId} joined lobby.");
@@ -108,7 +118,6 @@ namespace wiki_racer.Hubs
             user.UserName = username;
 
             this.Database.SaveChanges();
-
             this.Logger.LogInformation($"{Context.ConnectionId} saved username.");
 
             await Clients.Group(lobby).SendAsync("GameState", JsonSerializer.Serialize(this.Database.GetGameState(lobby)));
@@ -116,6 +125,67 @@ namespace wiki_racer.Hubs
 
 
             return;
+        }
+
+        public async Task<Dictionary<string, bool>> SetStartAndFinish(string lobby, string start, string finish)
+        {
+            lobby = lobby.ToLowerInvariant();
+            var output = new Dictionary<string, bool>();
+            output.Add("start", false);
+            output.Add("finish", false);
+
+            var lobbyObject = this.Database.GetLobby(lobby);
+
+            if (!string.IsNullOrWhiteSpace(start))
+            {
+                try
+                {
+                    WikiCore.GetWikiPage(start, lobbyObject.Language, Database, Logger);
+                    output["start"] = true;
+                    lobbyObject.StartArticle = start;
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e, $"Unable to set article: {start} language:{lobbyObject.Language}");
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(finish))
+            {
+                try
+                {
+                    WikiCore.GetWikiPage(finish, lobbyObject.Language, Database, Logger);
+                    output["finish"] = true;
+                    lobbyObject.FinishArticle = finish;
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e, $"Unable to set article: {finish} language:{lobbyObject.Language}");
+                }
+            }
+
+            Database.SaveChanges();
+
+            await Clients.Group(lobby).SendAsync("GameState", JsonSerializer.Serialize(this.Database.GetGameState(lobby)));
+            this.Logger.LogInformation($"{Context.ConnectionId} sent gamestate to all {lobby}.");
+
+            return output;
+        }
+
+        public async void RandomizeStartAndFinish(string lobby)
+        {
+            lobby = lobby.ToLowerInvariant();
+
+            var lobbyObject = this.Database.GetLobby(lobby);
+
+            lobbyObject.StartArticle = "Avocado";
+            lobbyObject.FinishArticle = "Tree";
+
+            Database.SaveChanges();
+
+
+            await Clients.Group(lobby).SendAsync("GameState", JsonSerializer.Serialize(this.Database.GetGameState(lobby)));
+            this.Logger.LogInformation($"{Context.ConnectionId} sent gamestate to all {lobby}.");
         }
 
         public async Task SendMessage(string message)
