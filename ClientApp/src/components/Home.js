@@ -22,7 +22,7 @@ export class Home extends Component {
 
     createGame(e) {
         console.log('Attempting to create game.');
-        this.props.hub.invoke("CreateLobby", this.state.lobby).then(() => {
+        this.props.hub.invoke("CreateLobby", this.state.lobby, this.state.lang.getLanguage()).then(() => {
             this.props.game.lobby = this.state.lobby;
             this.props.history.push('/join');
         });
@@ -30,7 +30,7 @@ export class Home extends Component {
 
     joinGame(e) {
         console.log('Attempting to join game.');
-        this.props.hub.invoke("JoinLobby", this.state.lobby).then(() => {
+        this.props.hub.invoke("JoinLobby", this.state.lobby, this.state.lang.getLanguage()).then(() => {
             this.props.game.lobby = this.state.lobby;
             this.props.history.push('/join');
         });

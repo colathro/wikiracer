@@ -39,6 +39,7 @@ namespace wiki_racer.Hubs
             this.Logger.LogInformation($"{Context.ConnectionId} Disconnected.");
 
             var user = this.Database.Users.Where(u => u.ConnectionId == Context.ConnectionId).First();
+            var lobby = this.Database.GetLobby(user.Lobby);
             this.Database.Remove(user);
             this.Database.SaveChanges();
 
@@ -53,6 +54,13 @@ namespace wiki_racer.Hubs
                 this.Logger.LogError($"Unable to send gamestate on disconnect. Likely lobby does not exist.");
             }
 
+            if (!lobby.Users.Any())
+            {
+                this.Database.Remove(lobby);
+            }
+
+            this.Database.SaveChanges();
+
             return base.OnDisconnectedAsync(e);
         }
 
@@ -65,7 +73,10 @@ namespace wiki_racer.Hubs
                 throw new Exception();
             }
 
-            var lobby = new Lobby { LobbyName = lobbyName };
+            var lobby = new Lobby {
+                LobbyName = lobbyName,
+                Language = lang
+            };
 
             var currentUser = this.Database.GetUser(Context.ConnectionId);
 
@@ -84,7 +95,7 @@ namespace wiki_racer.Hubs
             this.Logger.LogInformation($"{Context.ConnectionId} Joining lobby.");
             lobby = lobby.ToLowerInvariant();
 
-            if (!this.Database.LobbyExists(lobby))
+            if (!this.Database.LobbyExists(lobby, lang))
             {
                 throw new Exception();
             }
@@ -116,6 +127,7 @@ namespace wiki_racer.Hubs
 
             user.Avatar = avatar;
             user.UserName = username;
+            user.Lobby = lobby;
 
             this.Database.SaveChanges();
             this.Logger.LogInformation($"{Context.ConnectionId} saved username.");
@@ -127,7 +139,7 @@ namespace wiki_racer.Hubs
             return;
         }
 
-        public async Task<Dictionary<string, bool>> SetStartAndFinish(string lobby, string start, string finish)
+        public async void SetStartAndFinish(string lobby, string start, string finish)
         {
             lobby = lobby.ToLowerInvariant();
             var output = new Dictionary<string, bool>();
@@ -168,8 +180,6 @@ namespace wiki_racer.Hubs
 
             await Clients.Group(lobby).SendAsync("GameState", JsonSerializer.Serialize(this.Database.GetGameState(lobby)));
             this.Logger.LogInformation($"{Context.ConnectionId} sent gamestate to all {lobby}.");
-
-            return output;
         }
 
         public async void RandomizeStartAndFinish(string lobby)
