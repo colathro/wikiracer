@@ -17,6 +17,8 @@ namespace wiki_racer.WikipediaExtensions
 
         public static string GetWikiPage(string id, string lang, GameContext db, ILogger logger)
         {
+            id = id.ToLowerInvariant();
+
             return TryGetWikiPageFromCache(id, lang, db, logger);
         }
 

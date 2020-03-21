@@ -39,7 +39,7 @@ export class MenuModal extends Component {
 
   render () {
     return (
-        <Modal isOpen={this.props.isOpen} toggle={this.props.toggle}>
+        <Modal centered isOpen={this.props.isOpen} toggle={this.props.toggle}>
             <ModalHeader toggle={this.props.toggle}>Lobby Settings</ModalHeader>
             <ModalBody>
                 <span>Start: </span><Input type='text' onChange={this.handleChangeStart}></Input>

@@ -12,12 +12,14 @@ export class Lobby extends Component {
     render() {
         return (
             <Container>
-                <Row style={{ 'height': '10vh', 'backgroundColor': 'blue' }}>
-                    <LobbyModals game={this.props.game} lang={this.props.lang} hub={this.props.hub}/>
+                <Row style={{ 'height': '90vh', 'backgroundColor': 'red' }}>
                 </Row>
-                <Row style={{ 'height': '80vh', 'backgroundColor': 'red' }}>
-                </Row>
-                <Row style={{ 'height': '10vh', 'backgroundColor': 'yellow' }}>
+                <Row className='align-items-center' style={{ 'height': '10vh', 'backgroundColor': 'yellow' }}>
+                    <Col>
+                    </Col>
+                    <Col>
+                        <LobbyModals game={this.props.game} lang={this.props.lang} hub={this.props.hub} />
+                    </Col>
                 </Row>
             </Container>
         );

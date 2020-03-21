@@ -30,7 +30,7 @@ export class LobbyModals extends Component {
             <div>
                 <MenuModal isOpen={this.state.menuModalIsOpen} toggle={this.toggleMenuModal} game={this.props.game} hub={this.props.hub}/>
                 <PlayerListModal isOpen={this.state.playerListModalIsOpen} toggle={this.togglePlayerListModal} game={this.props.game}/>
-                <Button onClick={this.toggleMenuModal}>Host Menu</Button>
+                <Button onClick={this.toggleMenuModal}>Menu</Button>
                 <Button onClick={this.togglePlayerListModal}>Players</Button>
             </div>
         );

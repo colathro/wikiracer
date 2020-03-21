@@ -24,10 +24,10 @@ export class PlayerListModal extends Component {
                     );
         });
     return (
-        <Modal isOpen={this.props.isOpen} toggle={this.props.toggle}>
+        <Modal centered isOpen={this.props.isOpen} toggle={this.props.toggle}>
             <ModalHeader toggle={this.props.toggle}>Player List</ModalHeader>
             <ModalBody>
-                <div>
+                <div style={{'overflow-y': 'scroll', 'maxHeight': '30vh'}}>
                     <ListGroup>
                         {users}
                     </ListGroup>
