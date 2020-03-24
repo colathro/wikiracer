@@ -30,7 +30,7 @@ namespace wiki_racer.WikipediaExtensions
 
             if (article.Any()) 
             {
-                if (article.First().TimeStamp > (DateTime.UtcNow + TimeSpan.FromDays(30))) // cache expires in 30 days
+                if (article.First().TimeStamp < (DateTime.UtcNow + TimeSpan.FromDays(30))) // cache expires in 30 days
                 {
                     output = article.First().PageContent;
                 }
@@ -134,7 +134,10 @@ namespace wiki_racer.WikipediaExtensions
             try
             {
                 var editNodes = doc.SelectNodes("//span[@class='mw-editsection']");
-                foreach (var sup in editNodes) { toRemove.Add(sup); }
+                if (editNodes != null)
+                {
+                    foreach (var sup in editNodes) { toRemove.Add(sup); }
+                }
             }
             catch
             {

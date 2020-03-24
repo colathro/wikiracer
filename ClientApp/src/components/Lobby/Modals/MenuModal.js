@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, Input, Row, Col, Container, Modal, ModalHeader, ModalBody, ModalFooter  } from 'reactstrap';
+import { Button, Input, Row, Col, Container, Modal, ModalHeader, ModalBody, ModalFooter, InputGroup, InputGroupText, InputGroupAddon } from 'reactstrap';
 
 export class MenuModal extends Component {
 
@@ -42,8 +42,19 @@ export class MenuModal extends Component {
         <Modal centered isOpen={this.props.isOpen} toggle={this.props.toggle}>
             <ModalHeader toggle={this.props.toggle}>Lobby Settings</ModalHeader>
             <ModalBody>
-                <span>Start: </span><Input type='text' onChange={this.handleChangeStart}></Input>
-                <span>Finish: </span><Input type='text' onChange={this.handleChangeFinish}></Input>
+                <InputGroup>
+                    <InputGroupAddon addonType="prepend">
+                        <InputGroupText>Start</InputGroupText>
+                    </InputGroupAddon>
+                    <Input type='text' onChange={this.handleChangeStart} defaultValue={this.props.game.Lobby.StartArticle}></Input>
+                </InputGroup>
+                <br/>
+                <InputGroup>
+                    <InputGroupAddon addonType="prepend">
+                        <InputGroupText>Finish</InputGroupText>
+                    </InputGroupAddon>
+                    <Input type='text' onChange={this.handleChangeFinish} defaultValue={this.props.game.Lobby.FinishArticle}></Input>
+                </InputGroup>
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" onClick={this.setStartFinish}>Submit Settings</Button>{' '}

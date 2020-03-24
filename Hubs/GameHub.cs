@@ -39,27 +39,36 @@ namespace wiki_racer.Hubs
             this.Logger.LogInformation($"{Context.ConnectionId} Disconnected.");
 
             var user = this.Database.Users.Where(u => u.ConnectionId == Context.ConnectionId).First();
+
+            if (user != null)
+            {
+                this.Database.Remove(user);
+                this.Database.SaveChanges();
+            }
+
             var lobby = this.Database.GetLobby(user.Lobby);
-            this.Database.Remove(user);
-            this.Database.SaveChanges();
 
-            this.Logger.LogInformation($"{Context.ConnectionId} removed from database.");
-            try
+            if (lobby != null)
             {
-                Clients.Group(user.Lobby).SendAsync("GameState", JsonSerializer.Serialize(this.Database.GetGameState(user.Lobby)));
-                this.Logger.LogInformation($"{Context.ConnectionId} sent gamestate to all {user.Lobby}.");
-            }
-            catch
-            {
-                this.Logger.LogError($"Unable to send gamestate on disconnect. Likely lobby does not exist.");
-            }
+                this.Logger.LogInformation($"{Context.ConnectionId} removed from database.");
 
-            if (!lobby.Users.Any())
-            {
-                this.Database.Remove(lobby);
-            }
+                try
+                {
+                    Clients.Group(user.Lobby).SendAsync("GameState", JsonSerializer.Serialize(this.Database.GetGameState(user.Lobby)));
+                    this.Logger.LogInformation($"{Context.ConnectionId} sent gamestate to all {user.Lobby}.");
+                }
+                catch
+                {
+                    this.Logger.LogError($"Unable to send gamestate on disconnect. Likely lobby does not exist.");
+                }
 
-            this.Database.SaveChanges();
+                if (!lobby.Users.Any())
+                {
+                    this.Database.Remove(lobby);
+                }
+
+                this.Database.SaveChanges();
+            }
 
             return base.OnDisconnectedAsync(e);
         }

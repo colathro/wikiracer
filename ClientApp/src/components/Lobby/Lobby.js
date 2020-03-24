@@ -16,6 +16,9 @@ export class Lobby extends Component {
                 </Row>
                 <Row className='align-items-center' style={{ 'height': '10vh', 'backgroundColor': 'yellow' }}>
                     <Col>
+                        Start: {this.props.game.Lobby.StartArticle}
+                        <br/>
+                        Finish: {this.props.game.Lobby.FinishArticle}
                     </Col>
                     <Col>
                         <LobbyModals game={this.props.game} lang={this.props.lang} hub={this.props.hub} />

@@ -30,11 +30,19 @@ namespace wiki_racer.Database
             return this.Users.Where(u => u.ConnectionId == connectionId).First();
         }
 
-        public Lobby GetLobby(string lobby)
+        public Lobby? GetLobby(string lobby)
         {
-            return this.Lobbies.Where(l => l.LobbyName == lobby)
-                .Include(l => l.Users)
-                .First();
+            var lobbyReturn = this.Lobbies.Where(l => l.LobbyName == lobby)
+                .Include(l => l.Users);
+
+            if (lobbyReturn.Any())
+            {
+                return lobbyReturn.First();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public bool LobbyExists(string lobby)
