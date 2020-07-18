@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using wiki_racer.Database;
@@ -25,7 +26,7 @@ namespace wiki_racer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<GameContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("GameContext")));
+                options.UseSqlServer(Configuration["Database:ConnectionString"]));
 
             services.AddLogging(builder =>
             {

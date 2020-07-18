@@ -4,7 +4,7 @@ a {
 }
 
 code {
-  color: #E01A76;
+  color: #e01a76;
 }
 
 .btn-primary {
@@ -13,10 +13,6 @@ code {
   border-color: #1861ac;
 }
 
-.width-300{
-    width: 300px;
-}
-
-.twemoji {
-    width:30px;
+.width-300 {
+  width: 300px;
 }

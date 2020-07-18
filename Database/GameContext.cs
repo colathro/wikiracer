@@ -50,11 +50,6 @@ namespace wiki_racer.Database
             return this.Lobbies.Where(l => l.LobbyName == lobby).Any();
         }
 
-        public bool LobbyExists(string lobby, string lang)
-        {
-            return this.Lobbies.Where(l => l.LobbyName == lobby && l.Language == lang).Any();
-        }
-
         public GameState GetGameState(string lobby)
         {
             if (string.IsNullOrWhiteSpace(lobby))

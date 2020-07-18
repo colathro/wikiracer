@@ -73,7 +73,7 @@ namespace wiki_racer.Hubs
             return base.OnDisconnectedAsync(e);
         }
 
-        public Task CreateLobby(string lobbyName, string lang)
+        public Task CreateLobby(string lobbyName)
         {
             this.Logger.LogInformation($"{Context.ConnectionId} Creating Lobby.");
             lobbyName = lobbyName.ToLowerInvariant();
@@ -82,9 +82,9 @@ namespace wiki_racer.Hubs
                 throw new Exception();
             }
 
-            var lobby = new Lobby {
-                LobbyName = lobbyName,
-                Language = lang
+            var lobby = new Lobby
+            {
+                LobbyName = lobbyName
             };
 
             var currentUser = this.Database.GetUser(Context.ConnectionId);
@@ -99,12 +99,12 @@ namespace wiki_racer.Hubs
             return Groups.AddToGroupAsync(Context.ConnectionId, lobbyName);
         }
 
-        public Task JoinLobby(string lobby, string lang)
+        public Task JoinLobby(string lobby)
         {
             this.Logger.LogInformation($"{Context.ConnectionId} Joining lobby.");
             lobby = lobby.ToLowerInvariant();
 
-            if (!this.Database.LobbyExists(lobby, lang))
+            if (!this.Database.LobbyExists(lobby))
             {
                 throw new Exception();
             }
