@@ -38,6 +38,7 @@ export class Join extends Component {
         this.props.game.lobby
       )
       .then(() => {
+        this.props.game.me = this.state.user;
         this.props.history.push("/lobby");
       });
   }
@@ -54,7 +55,7 @@ export class Join extends Component {
           <Row>
             {emojis.map(function (name, index) {
               return (
-                <Col className="mt-2" xs="2" key={name + index}>
+                <Col className="mt-3" xs="3" key={name + index}>
                   <div
                     className={
                       this.state.emoji === name

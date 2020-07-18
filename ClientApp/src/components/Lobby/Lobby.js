@@ -1,30 +1,32 @@
-﻿import React, { Component } from 'react';
-import { Button, Input, Row, Col, Container } from 'reactstrap';
-import { LobbyModals } from './Modals/LobbyModals.js'
+﻿import React, { Component } from "react";
+import { WikiPage } from "./WikiPage";
+import { LobbyModals } from "./Modals/LobbyModals.js";
 
+import "./Lobby.scss";
 
 export class Lobby extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <Container>
-                <Row style={{ 'height': '90vh', 'backgroundColor': 'red' }}>
-                </Row>
-                <Row className='align-items-center' style={{ 'height': '10vh', 'backgroundColor': 'yellow' }}>
-                    <Col>
-                        Start: {this.props.game.Lobby.StartArticle}
-                        <br/>
-                        Finish: {this.props.game.Lobby.FinishArticle}
-                    </Col>
-                    <Col>
-                        <LobbyModals game={this.props.game} lang={this.props.lang} hub={this.props.hub} />
-                    </Col>
-                </Row>
-            </Container>
-        );
-    }
+  render() {
+    return (
+      <div id="lobby">
+        <div className="wiki-container">
+          <WikiPage game={this.props.game} hub={this.props.hub}></WikiPage>
+        </div>
+        <div className="menu-container">
+          <div className="startfinish">
+            <div>Start: {this.props.game.Lobby.StartArticle}</div>
+            <div>Finish: {this.props.game.Lobby.FinishArticle}</div>
+          </div>
+          <div className="menuplayers">
+            <div>
+              <LobbyModals game={this.props.game} hub={this.props.hub} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }

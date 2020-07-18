@@ -5,7 +5,6 @@ import { Home } from "./components/Home";
 import { Join } from "./components/Join/Join";
 import { Lobby } from "./components/Lobby/Lobby";
 import { Game } from "./classes/gamestate.js";
-import { Strings } from "./classes/localization.js";
 import "./custom.css";
 
 const signalR = require("@microsoft/signalr");
@@ -16,8 +15,8 @@ export default class App extends Component {
 
     this.state = {
       hub: null,
-      strings: Strings,
       game: Game,
+      page: "",
     };
   }
 

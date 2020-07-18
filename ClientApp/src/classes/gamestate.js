@@ -1,18 +1,39 @@
 ﻿class GameState {
-    constructor() {
-        this.lobby = '';
-    }
+  constructor() {
+    this.Lobby = null;
+    this.Page = null;
+  }
 
-    registerEventHandlers(hub, setstate) {
-        console.log("registering gamestate");
-        hub.on("GameState", function (message) { this.gameState(setstate, message) }.bind(this));
-        console.log("registered gamestate");
-    }
+  registerEventHandlers(hub, setstate) {
+    console.log("registering gamestate");
+    hub.on(
+      "GameState",
+      function (message) {
+        this.gameState(setstate, message);
+      }.bind(this)
+    );
 
-    gameState(setstate, message) {
-        setstate({ game: JSON.parse(message) });
-        console.log(message);
-    }
+    hub.on(
+      "WikiReceive",
+      function (message) {
+        this.wikiReceive(setstate, message);
+      }.bind(this)
+    );
+
+    console.log("registered gamestate");
+  }
+
+  gameState(setstate, message) {
+    this.Lobby = JSON.parse(message).Lobby;
+    setstate({ game: this });
+    console.log(message);
+  }
+
+  wikiReceive(setstate, message) {
+    this.Page = message;
+    setstate({ game: this });
+    console.log("got wiki page");
+  }
 }
 
 export const Game = new GameState();

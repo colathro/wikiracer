@@ -15,20 +15,20 @@ namespace wiki_racer.WikipediaExtensions
     public class WikiCore
     {
 
-        public static string GetWikiPage(string id, string lang, GameContext db, ILogger logger)
+        public static string GetWikiPage(string id, GameContext db, ILogger logger)
         {
             id = id.ToLowerInvariant();
 
-            return TryGetWikiPageFromCache(id, lang, db, logger);
+            return TryGetWikiPageFromCache(id, db, logger);
         }
 
-        private static string TryGetWikiPageFromCache(string id, string lang, GameContext db, ILogger logger)
+        private static string TryGetWikiPageFromCache(string id, GameContext db, ILogger logger)
         {
-            var article = db.WikiPageCache.Where(w => w.ArticleId == id && w.Language == lang);
+            var article = db.WikiPageCache.Where(w => w.ArticleId == id);
 
             string output;
 
-            if (article.Any()) 
+            if (article.Any())
             {
                 if (article.First().TimeStamp < (DateTime.UtcNow + TimeSpan.FromDays(30))) // cache expires in 30 days
                 {
@@ -36,17 +36,16 @@ namespace wiki_racer.WikipediaExtensions
                 }
                 else
                 {
-                    output = GetWikiPageFromWikipedia(id, lang, db, logger); // update cache
+                    output = GetWikiPageFromWikipedia(id, db, logger); // update cache
                     article.First().PageContent = output;
                 }
             }
             else
             {
-                output = GetWikiPageFromWikipedia(id, lang, db, logger);
+                output = GetWikiPageFromWikipedia(id, db, logger);
                 db.WikiPageCache.Add(new WikiPageCache
                 {
                     ArticleId = id,
-                    Language = lang,
                     PageContent = output,
                     TimeStamp = DateTime.UtcNow
                 });
@@ -57,11 +56,11 @@ namespace wiki_racer.WikipediaExtensions
             return output;
         }
 
-        private static string GetWikiPageFromWikipedia(string id, string lang, GameContext db, ILogger logger)
+        private static string GetWikiPageFromWikipedia(string id, GameContext db, ILogger logger)
         {
             string data = "";
 
-            string urlAddress = $"https://{lang}.wikipedia.org/wiki/{id}";
+            string urlAddress = $"https://en.wikipedia.org/wiki/{id}";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();

@@ -1,0 +1,26 @@
+#lobby {
+  margin-left: 12px;
+  margin-right: 12px;
+
+  .wiki-container {
+    height: 90vh;
+    overflow-y: scroll;
+  }
+
+  .menu-container {
+    display: flex;
+    flex-wrap: nowrap;
+    position: fixed;
+    bottom: 0px;
+    margin-bottom: 12px;
+  }
+
+  .startfinish {
+    display: inline-block;
+    min-width: 40vw;
+  }
+
+  .menuplayers {
+    display: inline-block;
+  }
+}
