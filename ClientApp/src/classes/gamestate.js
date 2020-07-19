@@ -2,6 +2,7 @@
   constructor() {
     this.Lobby = null;
     this.Page = null;
+    this.Hub = null;
   }
 
   registerEventHandlers(hub, setstate) {
@@ -33,6 +34,10 @@
     this.Page = message;
     setstate({ game: this });
     console.log("got wiki page");
+  }
+
+  wikiGet(page) {
+    this.Hub.invoke("WikiGet", page);
   }
 }
 

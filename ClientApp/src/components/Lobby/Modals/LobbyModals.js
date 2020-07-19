@@ -39,7 +39,7 @@ export class LobbyModals extends Component {
           toggle={this.togglePlayerListModal}
           game={this.props.game}
         />
-        {this.props.game.Lobby.Host === this.props.hub.connectionId ? (
+        {this.props.game.Lobby?.Host === this.props.game.me ? (
           <Button
             color="success"
             className="lobbybutton"

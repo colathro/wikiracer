@@ -7,6 +7,8 @@ import LazyLoad from "react-lazyload";
 
 import "./Join.scss";
 
+const URL = window.location.hostname;
+
 export class Join extends Component {
   constructor(props) {
     super(props);
@@ -30,13 +32,15 @@ export class Join extends Component {
   }
 
   joinGame() {
-    this.props.hub
-      .invoke(
-        "SetUsernameAndAvatar",
-        this.state.user,
-        this.state.emoji,
-        this.props.game.lobby
-      )
+    fetch(
+      `api/game/setname?username=${this.state.user}&avatar=${this.state.emoji}&lobby=${this.props.game.lobby}&connectionId=${this.props.hub.connectionId}`,
+      { method: "POST" }
+    )
+      .then((r) => {
+        if (r.status != 200) {
+          throw new Error("Request to Join Failed.");
+        }
+      })
       .then(() => {
         this.props.game.me = this.state.user;
         this.props.history.push("/lobby");

@@ -29,7 +29,9 @@ export default class App extends Component {
 
     hubConn.start();
 
-    this.setState({ hub: hubConn });
+    this.state.game.Hub = hubConn;
+
+    this.setState({ hub: hubConn, game: this.state.game });
   };
 
   render() {

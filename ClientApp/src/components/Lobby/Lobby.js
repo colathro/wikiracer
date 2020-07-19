@@ -17,8 +17,8 @@ export class Lobby extends Component {
         </div>
         <div className="menu-container">
           <div className="startfinish">
-            <div>Start: {this.props.game.Lobby.StartArticle}</div>
-            <div>Finish: {this.props.game.Lobby.FinishArticle}</div>
+            <div>Start: {this.props.game.Lobby?.StartArticle}</div>
+            <div>Finish: {this.props.game.Lobby?.FinishArticle}</div>
           </div>
           <div className="menuplayers">
             <div>

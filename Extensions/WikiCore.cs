@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using wiki_racer.Database;
 
-namespace wiki_racer.WikipediaExtensions
+namespace wiki_racer.Extensions
 {
     public class WikiCore
     {
@@ -63,6 +63,7 @@ namespace wiki_racer.WikipediaExtensions
             string urlAddress = $"https://en.wikipedia.org/wiki/{id}";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+            logger.LogInformation($"Cache refresh on {urlAddress}");
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
             if (response.StatusCode == HttpStatusCode.OK)
@@ -100,8 +101,8 @@ namespace wiki_racer.WikipediaExtensions
                 string hrefValue = link.GetAttributeValue("href", string.Empty);
                 if (hrefValue.StartsWith("/wiki/"))
                 {
-                    link.Attributes.Append("onClick");
-                    link.SetAttributeValue("onClick", $"traverse_page('{hrefValue.Substring(1)}')");
+                    link.Attributes.Append("resolve");
+                    link.SetAttributeValue("resolve", $"{hrefValue.Substring(6)}");
                     link.Attributes.Append("role");
                     link.SetAttributeValue("role", $"button");
                     link.Attributes.Remove("href");
@@ -110,7 +111,7 @@ namespace wiki_racer.WikipediaExtensions
                 {
                     link.Attributes.Remove("href");
                     link.RemoveClass();
-                    link.AddClass("notlink");
+                    link.Name = "span";
                 }
             }
 

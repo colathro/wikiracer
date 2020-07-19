@@ -25,6 +25,14 @@ export class MenuModal extends Component {
     this.setRandomStartFinish = this.setRandomStartFinish.bind(this);
   }
 
+  componentDidMount() {
+    this.props.hub
+      .invoke("GetGameState", this.props.game.Lobby.LobbyName)
+      .then(() => {
+        console.log("working");
+      });
+  }
+
   setStartFinish() {
     this.props.hub
       .invoke(
@@ -66,7 +74,7 @@ export class MenuModal extends Component {
             <Input
               type="text"
               onChange={this.handleChangeStart}
-              defaultValue={this.props.game.Lobby.StartArticle}
+              defaultValue={this.props.game.Lobby?.StartArticle}
             ></Input>
           </InputGroup>
           <br />
@@ -77,7 +85,7 @@ export class MenuModal extends Component {
             <Input
               type="text"
               onChange={this.handleChangeFinish}
-              defaultValue={this.props.game.Lobby.FinishArticle}
+              defaultValue={this.props.game.Lobby?.FinishArticle}
             ></Input>
           </InputGroup>
         </ModalBody>

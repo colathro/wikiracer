@@ -35,6 +35,8 @@ namespace wiki_racer
                 builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Error);
             });
 
+            services.AddControllers();
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -62,14 +64,17 @@ namespace wiki_racer
 
             app.UseStaticFiles();
 
-            app.UseSpaStaticFiles();
-
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<GameHub>("/gamehub");
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
             });
+
+            app.UseSpaStaticFiles();
 
             app.UseSpa(spa =>
             {
