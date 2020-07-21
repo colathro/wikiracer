@@ -139,8 +139,9 @@ namespace wiki_racer.Hubs
             lobby = lobby.ToLowerInvariant();
 
             var lobbyObject = this.Database.GetLobby(lobby);
+            var userObject = this.Database.GetUser(this.Context.ConnectionId);
 
-            if (this.Context.ConnectionId != lobbyObject.Host)
+            if (userObject.UserName != lobbyObject.Host)
             {
                 throw new Exception("You are not the lobby host!");
             }

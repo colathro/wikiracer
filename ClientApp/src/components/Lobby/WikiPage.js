@@ -9,7 +9,7 @@ const URL = window.location.hostname;
 export class WikiPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { currentPage: "", navigating: true };
+    this.state = { currentPage: "", navigating: true, game: this.props.game };
   }
 
   componentDidUpdate() {
@@ -43,13 +43,22 @@ export class WikiPage extends Component {
 
   setNavigatingAndCallPage(page) {
     fetch(
-      URL +
-        `/api/wikipage?page=${page}&lobby=${this.props.game.Lobby.LobbyName}&connectionId=${this.props.hub.connectionId}`
-    );
+      `/api/wikipage?page=${page}&lobby=${this.props.game.Lobby.LobbyName}&connectionId=${this.props.hub.connectionId}`
+    )
+      .then(async (e) => {
+        if (e.status != 200) {
+          this.setState({ navigating: false });
+          return this.state.game.Page;
+        }
+        var body = await e.text();
+        return body;
+      })
+      .then((e) => {
+        this.state.game.Page = e;
+        this.setState({ game: this.state.game });
+      });
     this.setState({ navigating: true });
   }
-
-  setpage(pageData) {}
 
   render() {
     return (

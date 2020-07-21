@@ -27,7 +27,7 @@ namespace MyWebAPI.Controllers
         {
             try
             {
-                if (this.ValidateUser(lobby, connectionId))
+                if (this.ValidateUserAndWinningPage(page, lobby, connectionId))
                 {
                     var response = WikiCore.GetWikiPage(page, Database, Logger);
                     return Ok(response);
@@ -44,9 +44,10 @@ namespace MyWebAPI.Controllers
             }
         }
 
-        private bool ValidateUser(string lobby, string connectionId)
+        private bool ValidateUserAndWinningPage(string page, string lobby, string connectionId)
         {
             var lobbyObject = this.Database.GetLobby(lobby);
+            var userObject = this.Database.GetUser(connectionId);
 
             if (lobbyObject == null)
             {
@@ -59,6 +60,21 @@ namespace MyWebAPI.Controllers
                 this.Logger.LogError($"ConnectionId: {connectionId} not in {lobby}");
                 return false;
             }
+
+            if (lobbyObject.FinishArticle.ToLower() == page.ToLower() & lobbyObject.Winner == null)
+            {
+                lobbyObject.Winner = userObject.UserName;
+                lobbyObject.GameRunning = false;
+
+                foreach (var user in lobbyObject.Users)
+                {
+                    user.Clicks = 0;
+                }
+            }
+
+            userObject.Clicks += 1;
+
+            this.Database.SaveChanges();
 
             return true;
         }
