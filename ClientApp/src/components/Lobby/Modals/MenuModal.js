@@ -23,6 +23,7 @@ export class MenuModal extends Component {
     this.handleChangeFinish = this.handleChangeFinish.bind(this);
     this.setStartFinish = this.setStartFinish.bind(this);
     this.setRandomStartFinish = this.setRandomStartFinish.bind(this);
+    this.startGame = this.startGame.bind(this);
   }
 
   componentDidMount() {}

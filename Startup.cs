@@ -26,11 +26,11 @@ namespace wiki_racer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<GameContext>(options =>
-                options.UseSqlServer(Configuration["Database:ConnectionString"]));
+                options.UseSqlServer(Configuration["AZURE_SQL_CONNECTION_STRING"]));
 
             services.AddLogging(builder =>
             {
-                builder.AddApplicationInsights("7872c707-389e-4b0b-be3e-3de1cbad3fcc");
+                builder.AddApplicationInsights("ef115d88-f06d-47a7-83ff-b78fe01bca63");
                 builder.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Information);
                 builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Error);
             });
