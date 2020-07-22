@@ -25,13 +25,7 @@ export class MenuModal extends Component {
     this.setRandomStartFinish = this.setRandomStartFinish.bind(this);
   }
 
-  componentDidMount() {
-    this.props.hub
-      .invoke("GetGameState", this.props.game.Lobby.LobbyName)
-      .then(() => {
-        console.log("working");
-      });
-  }
+  componentDidMount() {}
 
   setStartFinish() {
     this.props.hub
@@ -42,7 +36,9 @@ export class MenuModal extends Component {
         this.state.finish
       )
       .then(() => {
-        console.log("working");
+        console.log(
+          `Set Start: ${this.state.start} and Finish: ${this.state.finish}`
+        );
       });
   }
 
@@ -50,7 +46,15 @@ export class MenuModal extends Component {
     this.props.hub
       .invoke("RandomizeStartAndFinish", this.props.game.Lobby.LobbyName)
       .then(() => {
-        console.log("working");
+        console.log("Randomized Start and Finish.");
+      });
+  }
+
+  startGame() {
+    this.props.hub
+      .invoke("StartGame", this.props.game.Lobby.LobbyName)
+      .then(() => {
+        console.log("Starting Game.");
       });
   }
 

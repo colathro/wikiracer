@@ -2,6 +2,7 @@
 import { Button } from "reactstrap";
 import { MenuModal } from "./MenuModal.js";
 import { PlayerListModal } from "./PlayerListModal.js";
+import { WinnerModal } from "./WinnerModal";
 
 import "./LobbyModals.scss";
 
@@ -11,10 +12,30 @@ export class LobbyModals extends Component {
     this.state = {
       menuModalIsOpen: false,
       playerListModalIsOpen: false,
+      winnerModalIsOpen: false,
+      finishedGames: [],
     };
 
     this.toggleMenuModal = this.toggleMenuModal.bind(this);
     this.togglePlayerListModal = this.togglePlayerListModal.bind(this);
+    this.toggleWinnerModal = this.toggleWinnerModal.bind(this);
+  }
+
+  componentDidUpdate() {
+    if (
+      this.props.game.Lobby.Winner != null &&
+      !this.state.finishedGames.includes(this.props.game.Lobby.Game)
+    ) {
+      this.state.finishedGames.push(this.props.game.Lobby.Game);
+      this.setState({
+        finishedGames: this.state.finishedGames,
+        winnerModalIsOpen: true,
+      });
+    }
+  }
+
+  toggleWinnerModal() {
+    this.setState({ winnerModalIsOpen: !this.state.winnerModalIsOpen });
   }
 
   toggleMenuModal() {
@@ -37,6 +58,11 @@ export class LobbyModals extends Component {
         <PlayerListModal
           isOpen={this.state.playerListModalIsOpen}
           toggle={this.togglePlayerListModal}
+          game={this.props.game}
+        />
+        <WinnerModal
+          isOpen={this.state.winnerModalIsOpen}
+          toggle={this.toggleWinnerModal}
           game={this.props.game}
         />
         {this.props.game.Lobby?.Host === this.props.game.me ? (

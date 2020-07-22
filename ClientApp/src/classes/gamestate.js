@@ -3,6 +3,7 @@
     this.Lobby = null;
     this.Page = null;
     this.Hub = null;
+    this.PollingGameState = false;
   }
 
   registerEventHandlers(hub, setstate) {
@@ -28,6 +29,13 @@
     this.Lobby = JSON.parse(message).Lobby;
     setstate({ game: this });
     console.log(message);
+
+    if (!this.PollingGameState) {
+      this.PollingGameState = true;
+      setInterval(() => {
+        this.getGameState();
+      }, 1000);
+    }
   }
 
   wikiReceive(setstate, message) {
@@ -38,6 +46,10 @@
 
   wikiGet(page) {
     this.Hub.invoke("WikiGet", page);
+  }
+
+  getGameState() {
+    this.Hub.invoke("GetGameState", this.Lobby.LobbyName);
   }
 }
 

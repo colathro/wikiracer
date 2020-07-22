@@ -19,7 +19,7 @@ namespace wiki_racer.Database
         [Key]
         public string LobbyName { get; set; }
         public List<User> Users { get; set; }
-        public string Language { get; set; }
+        public string Game { get; set; }
         public string Host { get; set; }
         public string StartArticle { get; set; }
         public string FinishArticle { get; set; }

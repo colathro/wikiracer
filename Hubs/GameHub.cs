@@ -157,7 +157,7 @@ namespace wiki_racer.Hubs
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, $"Unable to set article: {start} language:{lobbyObject.Language}");
+                    Logger.LogError(e, $"Unable to set article: {start}");
                 }
             }
 
@@ -170,12 +170,11 @@ namespace wiki_racer.Hubs
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, $"Unable to set article: {finish} language:{lobbyObject.Language}");
+                    Logger.LogError(e, $"Unable to set article: {finish}");
                 }
             }
 
             Database.SaveChanges();
-
 
             await Clients.Group(lobby).SendAsync("WikiReceive", startPage);
 
