@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.ApplicationInsights.AspNetCore;
 using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
@@ -28,11 +29,13 @@ namespace wiki_racer
             services.AddDbContext<GameContext>(options =>
                 options.UseSqlServer(Configuration["AZURE_SQL_CONNECTION_STRING"]));
 
+            services.AddApplicationInsightsTelemetry();
+
             services.AddLogging(builder =>
             {
                 builder.AddApplicationInsights("ef115d88-f06d-47a7-83ff-b78fe01bca63");
-                builder.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Information);
-                builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Error);
+                builder.AddFilter<Microsoft.Extensions.Logging.ApplicationInsights.ApplicationInsightsLoggerProvider>
+                                 ("", LogLevel.Information);
             });
 
             services.AddControllers();
