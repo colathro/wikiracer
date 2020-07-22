@@ -18,7 +18,7 @@ jobs:
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.0.103'
+        dotnet-version: '3.1.102'
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
@@ -27,9 +27,9 @@ jobs:
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
     - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v1
       with:
         app-name: 'wikiracer'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_6d785a54c31f4084b0a4a907bb272194 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_f24435ce006d401ca7510ecb8c5b0c29 }}
         package: ${{env.DOTNET_ROOT}}/myapp 
