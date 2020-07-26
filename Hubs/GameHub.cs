@@ -182,20 +182,21 @@ namespace wiki_racer.Hubs
             this.Logger.LogInformation($"{Context.ConnectionId} sent gamestate to all {lobby}.");
         }
 
-        public async Task RandomizeStartAndFinish(string lobby)
+        public async Task StartGame(string lobby)
         {
             lobby = lobby.ToLowerInvariant();
 
             var lobbyObject = this.Database.GetLobby(lobby);
+            var userObject = this.Database.GetUser(this.Context.ConnectionId);
 
-            lobbyObject.StartArticle = "Avocado";
-            lobbyObject.FinishArticle = "Tree";
+            if (userObject.UserName != lobbyObject.Host)
+            {
+                throw new Exception("You are not the lobby host!");
+            }
 
-            Database.SaveChanges();
-
+            lobbyObject.GameRunning = true;
 
             await Clients.Group(lobby).SendAsync("GameState", JsonSerializer.Serialize(this.Database.GetGameState(lobby)));
-            this.Logger.LogInformation($"{Context.ConnectionId} sent gamestate to all {lobby}.");
         }
 
         public Task GetGameState(string lobby)

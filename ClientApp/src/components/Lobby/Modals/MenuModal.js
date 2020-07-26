@@ -97,9 +97,6 @@ export class MenuModal extends Component {
         <ModalFooter>
           <Button color="primary" onClick={this.setStartFinish}>
             Submit Settings
-          </Button>{" "}
-          <Button color="secondary" onClick={this.setRandomStartFinish}>
-            Random Settings
           </Button>
           <Button color="secondary" onClick={this.startGame}>
             Start Game
