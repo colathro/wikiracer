@@ -1,0 +1,7 @@
+{
+  "generator-azuresfcsharp": {
+    "projName": "Wikiracer",
+    "frameworkType": "Reliable Stateless Service",
+    "author": "Fivestack LLC"
+  }
+}

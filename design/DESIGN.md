@@ -18,6 +18,10 @@
 
 - stats and ranks
 
+## second class features:
+
+- after scale-in or connection loss new socket session needs to seemlessly pickup lobby and page
+
 ## problem areas:
 
 - underlines and dashes correctly formatted to search db
