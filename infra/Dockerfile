@@ -4,6 +4,6 @@ WORKDIR app/
 
 COPY --chown=myuser:myuser out/ .
 
-EXPOSE 80
+EXPOSE 80 443
 
 ENTRYPOINT dotnet Web.dll
