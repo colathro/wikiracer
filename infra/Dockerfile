@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/service-fabric/onebox:u18
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
-RUN apt-get update
-RUN apt-get install -y apt-transport-https
-RUN apt-get install -y aspnetcore-runtime-5.0
+WORKDIR app/
 
-EXPOSE 19080 19000 80 443
-WORKDIR /home/ClusterDeployer
-CMD ["./ClusterDeployer.sh"]
+COPY --chown=myuser:myuser out/ .
+
+EXPOSE 80
+
+ENTRYPOINT dotnet Web.dll

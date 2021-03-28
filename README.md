@@ -2,8 +2,8 @@
 
 ## prereqs testing sf:
 
-- you need sfctl for running the build scripts in sfapp. [SF CLI](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cli)
 - you need docker: https://dotnet.microsoft.com/download/dotnet/5.0
+- docker run -itd -p 80:80 --name test web:latest
 
 ## prereqs for local dev:
 
