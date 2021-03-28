@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wikiracer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wikiracer
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: wikiracer
+    spec:
+      containers:
+        - name: wikiracer
+          image: wikiracer.azurecr.io/wikiracer/main:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 250m
+            limits:
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wikiracer
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+  selector:
+    app: wikiracer
