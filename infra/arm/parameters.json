@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceName": {
+            "value": "wikiracer-k8s"
+        },
+        "location": {
+            "value": "westus2"
+        },
+        "dnsPrefix": {
+            "value": "wikiracer-k8s-dns"
+        },
+        "kubernetesVersion": {
+            "value": "1.18.14"
+        },
+        "networkPlugin": {
+            "value": "azure"
+        },
+        "enableRBAC": {
+            "value": true
+        },
+        "enablePrivateCluster": {
+            "value": false
+        },
+        "enableHttpApplicationRouting": {
+            "value": false
+        },
+        "enableAzurePolicy": {
+            "value": false
+        },
+        "vmssNodePool": {
+            "value": true
+        },
+        "vnetSubnetID": {
+            "value": "/subscriptions/3e3c4ff4-99c9-4a97-b41d-1582666acc56/resourceGroups/wikiracer/providers/Microsoft.Network/virtualNetworks/wikiracer-vnet/subnets/default"
+        },
+        "serviceCidr": {
+            "value": "10.0.0.0/16"
+        },
+        "dnsServiceIP": {
+            "value": "10.0.0.10"
+        },
+        "dockerBridgeCidr": {
+            "value": "172.17.0.1/16"
+        },
+        "acrName": {
+            "value": "wikiracer"
+        },
+        "acrResourceGroup": {
+            "value": "wikiracer"
+        }
+    }
+}

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: wikiracer
 spec:
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: wikiracer
@@ -19,33 +19,27 @@ spec:
     spec:
       containers:
         - name: wikiracer
-          image: wikiracer.azurecr.io/wikiracer/main:latest
+          image: web
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
           resources:
             requests:
               cpu: 250m
-              memory: 100M
+              memory: 300M
             limits:
               cpu: 250m
-              memory: 100M
-      imagePullSecrets:
-        - name: regcred
-      nodeSelector:
-        kubernetes.io/role: agent
-        beta.kubernetes.io/os: linux
-        type: virtual-kubelet
-      tolerations:
-        - key: virtual-kubelet.io/provider
-          operator: Exists
+              memory: 300M
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: wikiracer
+  name: wikiracer-lb
 spec:
   type: LoadBalancer
   ports:
     - port: 80
   selector:
     app: wikiracer
+---
+
