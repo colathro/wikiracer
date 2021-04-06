@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: wikiracer
 spec:
-  replicas: 10
+  replicas: 1
   selector:
     matchLabels:
       app: wikiracer
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: wikiracer
-          image: web
+          image: wikiracer.azurecr.io/wikiracer:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

@@ -91,7 +91,7 @@
         "description": "Specify the name of the Azure Container Registry."
       }
     },
-    "acrResourceGroup": {
+    "resourceGroup": {
       "type": "string",
       "metadata": {
         "description": "The name of the resource group the container registry is associated with."
@@ -131,7 +131,7 @@
   },
   "resources": [
     {
-      "apiVersion": "2020-09-01",
+      "apiVersion": "2021-02-01",
       "dependsOn": ["Microsoft.Network/virtualNetworks/wikiracer-vnet"],
       "type": "Microsoft.ContainerService/managedClusters",
       "location": "[parameters('location')]",
@@ -152,7 +152,8 @@
             "mode": "System",
             "maxPods": 110,
             "availabilityZones": [],
-            "vnetSubnetID": "[parameters('vnetSubnetID')]"
+            "vnetSubnetID": "[parameters('vnetSubnetID')]",
+            "nodeResourceGroup": "wikiracer"
           }
         ],
         "networkProfile": {
@@ -183,7 +184,7 @@
       "name": "ConnectAKStoACR-7977feff-20b3-4b18-8970-1eb131523044",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
-      "resourceGroup": "[parameters('acrResourceGroup')]",
+      "resourceGroup": "wikiracer",
       "dependsOn": [
         "[concat('Microsoft.ContainerService/managedClusters/', parameters('resourceName'))]",
         "[concat('Microsoft.Resources/deployments/', 'AcrDeployment-7977feff-20b3-4b18-8970-1eb131523045')]"
@@ -202,7 +203,7 @@
                 "principalId": "[reference(parameters('resourceName'), '2020-09-01').identityProfile.kubeletidentity.objectId]",
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-                "scope": "[resourceId(parameters('acrResourceGroup'),'Microsoft.ContainerRegistry/registries/', parameters('acrName'))]"
+                "scope": "[resourceId(parameters('resourceGroup'),'Microsoft.ContainerRegistry/registries/', parameters('acrName'))]"
               }
             }
           ]
