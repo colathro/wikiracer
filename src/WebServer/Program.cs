@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Web
+namespace WebServer
 {
     public class Program
     {
@@ -20,7 +20,7 @@ namespace Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://*:80;https://*:443;");
+                    webBuilder.UseUrls("http://*:80;http://*:443;");
                     webBuilder.UseStartup<Startup>();
                 });
     }

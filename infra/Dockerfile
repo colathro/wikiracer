@@ -6,4 +6,4 @@ COPY --chown=myuser:myuser out/ .
 
 EXPOSE 80 443
 
-ENTRYPOINT dotnet Web.dll
+ENTRYPOINT dotnet WebServer/WebServer.dll
