@@ -21,5 +21,3 @@ test container image
 docker login wikiracer.azurecr.io
 
 find credentials on acr resource in wikiracer resourcegroup
-
-docker
