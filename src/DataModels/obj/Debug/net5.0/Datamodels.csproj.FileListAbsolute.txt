@@ -1,0 +1,14 @@
+/Users/colton/wikiracer/src/DataModels/bin/Debug/net5.0/Datamodels.deps.json
+/Users/colton/wikiracer/src/DataModels/bin/Debug/net5.0/Datamodels.dll
+/Users/colton/wikiracer/src/DataModels/bin/Debug/net5.0/ref/Datamodels.dll
+/Users/colton/wikiracer/src/DataModels/bin/Debug/net5.0/Datamodels.pdb
+/Users/colton/wikiracer/src/DataModels/obj/Debug/net5.0/Datamodels.csprojAssemblyReference.cache
+/Users/colton/wikiracer/src/DataModels/obj/Debug/net5.0/Datamodels.GeneratedMSBuildEditorConfig.editorconfig
+/Users/colton/wikiracer/src/DataModels/obj/Debug/net5.0/Datamodels.AssemblyInfoInputs.cache
+/Users/colton/wikiracer/src/DataModels/obj/Debug/net5.0/Datamodels.AssemblyInfo.cs
+/Users/colton/wikiracer/src/DataModels/obj/Debug/net5.0/Datamodels.csproj.CoreCompileInputs.cache
+/Users/colton/wikiracer/src/DataModels/obj/Debug/net5.0/Datamodels.dll
+/Users/colton/wikiracer/src/DataModels/obj/Debug/net5.0/ref/Datamodels.dll
+/Users/colton/wikiracer/src/DataModels/obj/Debug/net5.0/Datamodels.pdb
+/Users/colton/wikiracer/src/DataModels/bin/Debug/net5.0/Microsoft.Azure.Cosmos.ServiceInterop.dll
+/Users/colton/wikiracer/src/DataModels/bin/Debug/net5.0/Cosmos.CRTCompat.dll

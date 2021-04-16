@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
-namespace WebServer
+namespace WebServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

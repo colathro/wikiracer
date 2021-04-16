@@ -1,26 +1,27 @@
-import React from "react";
-import logo from "./logo.svg";
+import React, { useState, useEffect } from "react";
+import { observer } from "mobx-react-lite";
+import LobbyManager from "./state/Lobby";
 import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <TestComponent></TestComponent>
     </div>
   );
 }
+
+const TestComponent = observer(() => {
+  return (
+    <div>
+      <button onClick={LobbyManager.send}>Send Message</button>
+      <div>
+        {LobbyManager.messages.map((val, ind) => {
+          return <div key={ind}>{val}</div>;
+        })}
+      </div>
+    </div>
+  );
+});
 
 export default App;
