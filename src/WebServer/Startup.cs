@@ -31,7 +31,7 @@ namespace WebServer
                 services.AddApplicationInsightsTelemetry();
             }
 
-            services.AddSingleton<ICosmosService>(initializeGamesService().GetAwaiter().GetResult());
+            services.AddSingleton<GameService>(initializeGamesService());
 
             services.AddSignalR();
 
@@ -74,18 +74,11 @@ namespace WebServer
             });
         }
 
-        private static async Task<CosmosService> initializeGamesService()
+        private GameService initializeGamesService()
         {
-            string databaseName = "wikiracer";
-            string containerName = "games";
             string account = "https://wikiracer.documents.azure.com:443/";
-            string key = "";
-            Microsoft.Azure.Cosmos.CosmosClient client = new Microsoft.Azure.Cosmos.CosmosClient(account, key);
-            CosmosService cosmosDbService = new CosmosService(client, databaseName, containerName);
-            Microsoft.Azure.Cosmos.DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
-            await database.Database.CreateContainerIfNotExistsAsync(containerName, "/Key");
-
-            return cosmosDbService;
+            string key = this.Configuration["COSMOS_KEY"];
+            return new GameService(account, key);
         }
     }
 }

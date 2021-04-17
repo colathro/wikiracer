@@ -6,6 +6,7 @@ namespace DataModels.CosmosModels
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
+
         public string Key { get; set; }
     }
 }
