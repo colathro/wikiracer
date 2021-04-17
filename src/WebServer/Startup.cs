@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using DataModels.Services;
 using WebServer.Hubs;
+using WebServer.BackgroundServices;
 
 namespace WebServer
 {
@@ -35,6 +36,8 @@ namespace WebServer
 
             services.AddSignalR();
 
+            services.AddHostedService<GameSynchronizer>();
+
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "WebClient/build";
@@ -60,7 +63,7 @@ namespace WebServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<TestHub>("/testhub");
+                endpoints.MapHub<GameHub>("/gamehub");
             });
 
             app.UseSpa(spa =>

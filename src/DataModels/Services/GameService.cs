@@ -12,6 +12,13 @@ namespace DataModels.Services
     {
         public GameService(string _account, string _accessKey) : base(_account, _accessKey, "wikiracer", "games") { }
 
+        public async Task<IList<Game>> GetActiveGames()
+        {
+            var query = "SELECT * FROM c";
+            var games = await this.GetItemsAsync(query);
+            return games.ToList();
+        }
+
         public async Task AddItemAsync(Game game)
         {
             await this.container.CreateItemAsync(game, new PartitionKey(game.Key));

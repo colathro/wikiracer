@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import * as signalR from "@microsoft/signalr";
 
 const hubConnection = new signalR.HubConnectionBuilder()
-  .withUrl("/testhub")
+  .withUrl("/gamehub")
   .build();
 
 hubConnection.start();
@@ -10,6 +10,10 @@ hubConnection.start();
 hubConnection.on("ReceiveMessage", (message) => {
   console.log("got message");
   LobbyManager.recieve(message);
+});
+
+hubConnection.on("GameState", (message) => {
+  LobbyManager.gameState(message);
 });
 
 class Lobby {
@@ -26,6 +30,10 @@ class Lobby {
 
   recieve(message: string) {
     this.messages = [...this.messages, message];
+  }
+
+  gameState(game: string) {
+    console.log(game);
   }
 }
 
