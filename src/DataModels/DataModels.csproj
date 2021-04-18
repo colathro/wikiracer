@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.17.1" />
+    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.1.0" />
   </ItemGroup>
 
 </Project>

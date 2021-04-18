@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using DataModels.Services;
+using DataModels.StorageModels;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace WebServer.Controllers
@@ -8,19 +11,33 @@ namespace WebServer.Controllers
     [Route("api/[controller]")]
     public class SampleController : ControllerBase
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
+        private readonly ArticleService articleService;
 
-        public SampleController(ILogger<SampleController> logger)
+        public SampleController(ArticleService _articleService, ILogger<SampleController> _logger)
         {
-            _logger = logger;
+            this.logger = _logger;
+            this.articleService = _articleService;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get([FromQuery] int num)
+        public async Task<ActionResult<string>> Get([FromQuery] int num)
         {
-            _logger.LogWarning("An example of a Warning trace.");
-            _logger.LogError("An example of an Error level message.");
-            return new string[] { "value1", "value2", $"{num}" };
+            var article = new Article
+            {
+                Title = "Anarchism"
+            };
+            await this.articleService.AddArticleAsync(article);
+            return "Success";
+        }
+
+        [HttpGet("add")]
+        public async Task<ActionResult<string>> Add()
+        {
+            var id = "e3df9c39-2c30-47e2-a5e3-10490424d2cf";
+            var key = "Anarchism";
+            await this.articleService.DeleteArticleAsync(key, id);
+            return "Success";
         }
     }
 }

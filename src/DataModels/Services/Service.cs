@@ -8,7 +8,7 @@ using Microsoft.Azure.Cosmos.Fluent;
 namespace DataModels.Services
 {
 
-    public class Service : IService
+    public class Service
     {
         protected string account;
         protected string accessKey;
@@ -28,6 +28,13 @@ namespace DataModels.Services
             this.containerName = _containerName;
             this.client = new CosmosClient(_account, _accessKey);
             this.container = this.client.GetContainer(this.databaseName, this.containerName);
+            this.Setup().GetAwaiter().GetResult();
+        }
+
+        public async Task Setup()
+        {
+            var db = await this.client.CreateDatabaseIfNotExistsAsync(this.databaseName);
+            await db.Database.CreateContainerIfNotExistsAsync(this.containerName, "/Key");
         }
     }
 }
