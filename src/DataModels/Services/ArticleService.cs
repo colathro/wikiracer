@@ -35,7 +35,7 @@ namespace DataModels.Services
             {
                 Link = cloudBlockBlob.Uri.ToString(),
                 Key = article.Title,
-                Id = Guid.NewGuid().ToString()
+                Id = article.Title
             };
             await this.container.CreateItemAsync(newArticlePointer, new PartitionKey(newArticlePointer.Key));
         }
@@ -55,10 +55,10 @@ namespace DataModels.Services
             }
         }
 
-        public async Task DeleteArticleAsync(string key, string id)
+        public async Task DeleteArticleAsync(string key)
         {
             await DeleteArticle(key);
-            await this.container.DeleteItemAsync<ArticlePointer>(id, new PartitionKey(key));
+            await this.container.DeleteItemAsync<ArticlePointer>(key, new PartitionKey(key));
         }
 
         private async Task DeleteArticle(string key)

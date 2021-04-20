@@ -21,23 +21,28 @@ namespace WebServer.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<string>> Get([FromQuery] int num)
+        public async Task<ActionResult> Get()
+        {
+            var articles = await this.articleService.GetItemsAsync("SELECT * FROM c");
+            return Ok(articles);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Create([FromQuery] string title)
         {
             var article = new Article
             {
-                Title = "Anarchism"
+                Title = title
             };
             await this.articleService.AddArticleAsync(article);
-            return "Success";
+            return Ok(article);
         }
 
-        [HttpGet("add")]
-        public async Task<ActionResult<string>> Add()
+        [HttpDelete]
+        public async Task<ActionResult> Delete([FromQuery] string title)
         {
-            var id = "e3df9c39-2c30-47e2-a5e3-10490424d2cf";
-            var key = "Anarchism";
-            await this.articleService.DeleteArticleAsync(key, id);
-            return "Success";
+            await this.articleService.DeleteArticleAsync(title);
+            return Ok();
         }
     }
 }
