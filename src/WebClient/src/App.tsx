@@ -16,13 +16,20 @@ const TestComponent = observer(() => {
   const [title, setTitle] = useState("");
 
   useEffect(() => {
+    if (document.location.toString().includes("login")) {
+      LobbyManager.signin();
+    }
     fetch("/api/sample")
       .then((response) => response.json())
       .then((data) => setArticles(data));
   }, []);
 
   const refresh = () => {
-    fetch("/api/sample")
+    fetch("/api/sample", {
+      headers: {
+        Authorization: "Bearer " + LobbyManager.user.id_token,
+      },
+    })
       .then((response) => response.json())
       .then((data) => setArticles(data));
   };
@@ -50,6 +57,10 @@ const TestComponent = observer(() => {
         {LobbyManager.messages.map((val, ind) => {
           return <div key={ind}>{val}</div>;
         })}
+      </div>
+      <div>
+        <button onClick={LobbyManager.login}>Login</button>
+        <button onClick={LobbyManager.logout}>Logout</button>
       </div>
       <div>
         <button onClick={add}>Add Article</button>

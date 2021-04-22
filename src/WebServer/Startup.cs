@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Threading.Tasks;
-using Microsoft.Azure.Cosmos;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using DataModels.Services;
 using WebServer.Hubs;
 using WebServer.BackgroundServices;
@@ -35,6 +34,13 @@ namespace WebServer
             services.AddSingleton<GameService>(initializeGameService());
             services.AddSingleton<ArticleService>(initializeArticleService());
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Audience = "fprj9ag7iy0cq29pbkaarxw26qe2i0";
+                    options.Authority = "https://id.twitch.tv/oauth2";
+                });
+
             services.AddSignalR();
 
             services.AddHostedService<GameSynchronizer>();
@@ -58,8 +64,10 @@ namespace WebServer
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

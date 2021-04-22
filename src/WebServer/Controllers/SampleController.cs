@@ -3,11 +3,12 @@ using Microsoft.Extensions.Logging;
 using DataModels.Services;
 using DataModels.StorageModels;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebServer.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class SampleController : ControllerBase
     {
