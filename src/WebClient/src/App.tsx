@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import LobbyManager from "./state/Lobby";
+import AuthState from "./state/AuthState";
+import GameState from "./state/GameState";
 import "./App.css";
 
 function App() {
@@ -17,7 +18,7 @@ const TestComponent = observer(() => {
 
   useEffect(() => {
     if (document.location.toString().includes("login")) {
-      LobbyManager.signin();
+      AuthState.signin();
     }
     fetch("/api/sample")
       .then((response) => response.json())
@@ -27,7 +28,7 @@ const TestComponent = observer(() => {
   const refresh = () => {
     fetch("/api/sample", {
       headers: {
-        Authorization: "Bearer " + LobbyManager.user.id_token,
+        Authorization: "Bearer " + AuthState.user.id_token,
       },
     })
       .then((response) => response.json())
@@ -52,15 +53,15 @@ const TestComponent = observer(() => {
 
   return (
     <div>
-      <button onClick={LobbyManager.send}>Send Message</button>
+      <button onClick={GameState.send}>Send Message</button>
       <div>
-        {LobbyManager.messages.map((val, ind) => {
+        {GameState.messages.map((val, ind) => {
           return <div key={ind}>{val}</div>;
         })}
       </div>
       <div>
-        <button onClick={LobbyManager.login}>Login</button>
-        <button onClick={LobbyManager.logout}>Logout</button>
+        <button onClick={AuthState.login}>Login</button>
+        <button onClick={AuthState.logout}>Logout</button>
       </div>
       <div>
         <button onClick={add}>Add Article</button>
