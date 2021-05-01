@@ -5,7 +5,18 @@ const hubConnection = new signalR.HubConnectionBuilder()
   .withUrl("/gamehub")
   .build();
 
-hubConnection.start();
+async function start() {
+  try {
+    await hubConnection.start();
+  } catch (err) {
+    console.log(err);
+    setTimeout(start, 5000);
+  }
+}
+
+hubConnection.onclose(start);
+
+start();
 
 hubConnection.on("ReceiveMessage", (message) => {
   console.log("got message");

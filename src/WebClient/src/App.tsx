@@ -16,15 +16,6 @@ const TestComponent = observer(() => {
   const [articles, setArticles] = useState<any[]>([]);
   const [title, setTitle] = useState("");
 
-  useEffect(() => {
-    if (document.location.toString().includes("login")) {
-      AuthState.signin();
-    }
-    fetch("/api/sample")
-      .then((response) => response.json())
-      .then((data) => setArticles(data));
-  }, []);
-
   const refresh = () => {
     fetch("/api/sample", {
       headers: {
@@ -36,20 +27,35 @@ const TestComponent = observer(() => {
   };
 
   const add = () => {
-    fetch(`/api/sample?title=${title}`, { method: "POST" }).then((response) =>
-      response.json()
-    );
+    fetch(`/api/sample?title=${title}`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + AuthState.user.id_token,
+      },
+    }).then((response) => response.json());
   };
 
   const del = (name: string) => {
     fetch(`/api/sample?title=${name}`, {
       method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + AuthState.user.id_token,
+      },
     }).then((response) => response.json());
   };
 
   const change = (ev: any) => {
     setTitle(ev.target.value);
   };
+
+  useEffect(() => {
+    if (document.location.toString().includes("login")) {
+      AuthState.signin();
+    }
+    if (AuthState.user) {
+      refresh();
+    }
+  }, []);
 
   return (
     <div>
@@ -59,9 +65,22 @@ const TestComponent = observer(() => {
           return <div key={ind}>{val}</div>;
         })}
       </div>
+      <h1>{AuthState.user?.profile?.preferred_username}</h1>
       <div>
-        <button onClick={AuthState.login}>Login</button>
-        <button onClick={AuthState.logout}>Logout</button>
+        <button
+          onClick={() => {
+            AuthState.login();
+          }}
+        >
+          Login
+        </button>
+        <button
+          onClick={() => {
+            AuthState.logout();
+          }}
+        >
+          Logout
+        </button>
       </div>
       <div>
         <button onClick={add}>Add Article</button>

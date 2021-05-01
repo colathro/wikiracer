@@ -8,9 +8,13 @@ f5 Web in src
 
 run ./build.sh to publish the app to the out directory here.
 
+## step 1.5:
+
+set the environment variable
+
 ## step 2:
 
-run docker build . -t wikiracer.azurecr.io/wikiracer:latest
+docker build --build-arg COSMOS_KEY=$COSMOS_KEY --build-arg STORAGE_KEY=$STORAGE_KEY -t wikiracer.azurecr.io/wikiracer:latest .
 
 ## step 2.5:
 

@@ -1,5 +1,11 @@
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
+ARG COSMOS_KEY
+ARG STORAGE_KEY
+
+ENV COSMOS_KEY ${COSMOS_KEY}
+ENV STORAGE_KEY ${STORAGE_KEY}
+
 WORKDIR app/
 
 COPY --chown=myuser:myuser out/ .

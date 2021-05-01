@@ -17,9 +17,9 @@ namespace WebServer.Hubs
 
         public async Task SendMessage(string message)
         {
-            var x = new Game { Id = Guid.NewGuid().ToString(), Key = "test" };
+            // var x = new Game { Id = Guid.NewGuid().ToString(), Key = "test" };
 
-            await this.gameService.AddItemAsync(x);
+            // await this.gameService.AddItemAsync(x);
 
             // Call the broadcastMessage method to update clients.
             await Clients.All.SendAsync("ReceiveMessage", message);

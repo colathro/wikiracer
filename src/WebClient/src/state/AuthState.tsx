@@ -4,10 +4,10 @@ import { UserManager, User } from "oidc-client";
 var config = {
   authority: " https://id.twitch.tv/oauth2/",
   client_id: "fprj9ag7iy0cq29pbkaarxw26qe2i0",
-  redirect_uri: "http://localhost/login",
+  redirect_uri: document.location.origin + "/login",
   response_type: "token id_token",
   scope: "openid",
-  post_logout_redirect_uri: "http://localhost",
+  post_logout_redirect_uri: document.location.origin,
 };
 
 const mgr = new UserManager(config);
@@ -16,12 +16,11 @@ class Auth {
   user: any;
 
   constructor() {
-    mgr.getUser().then((user) => {
-      if (!user) {
-        mgr.signinSilent();
+    mgr.getUser().then((curUser) => {
+      if (!curUser) {
       } else {
-        this.user = user;
-        console.log(user);
+        this.user = curUser;
+        console.log(this.user);
       }
     });
     makeAutoObservable(this);
@@ -38,6 +37,7 @@ class Auth {
   }
 
   logout() {
+    this.user = null;
     mgr.signoutRedirect();
   }
 }
