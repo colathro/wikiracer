@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,7 @@ namespace WebServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddResponseCompression();
 
             if (!this.Environment.IsDevelopment())
             {
@@ -64,6 +66,7 @@ namespace WebServer
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            app.UseResponseCompression();
             app.UseRouting();
 
             app.UseAuthentication();
