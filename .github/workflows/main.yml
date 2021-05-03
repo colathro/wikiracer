@@ -35,8 +35,14 @@ jobs:
           registry: wikiracer.azurecr.io
           username: wikiracer
           password: ${{ secrets.ACR_KEY }}
+          
+      - name: Restore app
+        run: dotnet restore ${{ github.workspace }}/src/WebServer/WebServer.csproj -s https://api.nuget.org/v3/index.json
       
-      - name: Publish the package to Azure Artifacts
+      - name: Build app
+        run: dotnet build ${{ github.workspace }}/src/WebServer/WebServer.csproj -v normal
+      
+      - name: Publish app
         run: dotnet publish ${{ github.workspace }}/src/WebServer/WebServer.csproj -o ${{ github.workspace }}/infra/out/WebServer
       
       - name: Build and push Docker images
