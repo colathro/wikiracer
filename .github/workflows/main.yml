@@ -43,6 +43,8 @@ jobs:
         run: dotnet build ${{ github.workspace }}/src/WebServer/WebServer.csproj -v normal
       
       - name: Publish app
+        env:
+          CI: false
         run: dotnet publish ${{ github.workspace }}/src/WebServer/WebServer.csproj -o ${{ github.workspace }}/infra/out/WebServer
       
       - name: Build and push Docker images
