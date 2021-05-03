@@ -50,7 +50,7 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v2.4.0
         with:
-          file: ${{ github.workspace }}/infra/Dockerfile
+          context: ${{ github.workspace }}/infra/
           build-args: |
             COSMOS_KEY=${{secrets.COSMOS_KEY}}
             STORAGE_KEY=${{secrets.STORAGE_KEY}}
