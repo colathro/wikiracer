@@ -5,5 +5,7 @@ namespace DataModels.StorageModels
     public class Paragraph
     {
         public List<Span> Spans { get; set; }
+
+        public int Level { get; set; }
     }
 }

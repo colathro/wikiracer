@@ -1,7 +1,7 @@
-using MwParserFromScratch;
 using System;
 using MwParserFromScratch.Nodes;
 using DataModels.StorageModels;
+using DataModels.StorageModels.Enums;
 using System.Collections.Generic;
 
 namespace DataLoader
@@ -11,6 +11,7 @@ namespace DataLoader
         public static Article ConvertWikitextToArticle(Wikitext wikiText, string title)
         {
             var article = new Article();
+            article.Paragraphs = new List<DataModels.StorageModels.Paragraph>();
             AddParagraphs(wikiText, article);
 
             return article;
@@ -18,24 +19,123 @@ namespace DataLoader
 
         private static void AddParagraphs(Wikitext wikiText, Article article)
         {
-            var lines = wikiText.EnumDescendants();
+            var lines = wikiText.EnumChildren();
 
             foreach (var line in lines)
             {
+                var flag = new FormatFlag();
                 var paragraph = new DataModels.StorageModels.Paragraph();
                 paragraph.Spans = new List<Span>();
 
-                foreach (var inline in line.EnumDescendants())
+                switch (line)
                 {
-                    var span = new Span();
-                    var type = inline.GetType();
-                    if (type == typeof(PlainText))
+                    case Heading heading:
+                        paragraph.Level = heading.Level;
+                        break;
+                    default:
+                        break;
+                }
+
+                foreach (var inline in line.EnumChildren())
+                {
+                    switch (inline)
                     {
-                        PlainText plainText = (PlainText)inline;
-                        Console.WriteLine(plainText.Content);
+                        case PlainText pt:
+                            ProcessPlainText(pt, paragraph.Spans, flag);
+                            break;
+                        case WikiLink wl:
+                            ProcessWikiLink(wl, paragraph.Spans, flag);
+                            break;
+                        case FormatSwitch fm:
+                            if (fm.SwitchBold)
+                            {
+                                if (flag.Style == SpanStyle.Bold)
+                                {
+                                    flag.SetNone();
+                                }
+                                else
+                                {
+                                    flag.SetBold();
+                                }
+                            }
+                            else if (fm.SwitchItalics)
+                            {
+                                if (flag.Style == SpanStyle.Italic)
+                                {
+                                    flag.SetNone();
+                                }
+                                else
+                                {
+                                    flag.SetItalic();
+                                }
+                            }
+                            else
+                            {
+                                flag.SetNone();
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
+
+                article.Paragraphs.Add(paragraph);
             }
+        }
+
+        private static void ProcessPlainText(PlainText node, List<Span> spans, FormatFlag flag)
+        {
+            var span = new Span();
+            span.Text = node.Content;
+            span.Style = flag.Style;
+            span.Type = SpanType.Text;
+            spans.Add(span);
+        }
+
+        private static void ProcessWikiLink(WikiLink node, List<Span> spans, FormatFlag flag)
+        {
+            var span = new Span();
+            var ptTarget = (PlainText)node.Target.Inlines.FirstNode;
+            var ptText = (PlainText)node.Text?.Inlines.FirstNode;
+            if (ptText == null)
+            {
+                span.Text = ptTarget.Content;
+            }
+            else
+            {
+                span.Text = ptText.Content;
+            }
+
+            span.Link = ptTarget.Content;
+            span.Style = flag.Style;
+            span.Type = SpanType.Link;
+
+            spans.Add(span);
+        }
+    }
+
+    public class FormatFlag
+    {
+        public SpanStyle Style { get; set; }
+
+        public void SetNone()
+        {
+            this.Style = SpanStyle.None;
+        }
+
+        public void SetItalic()
+        {
+            this.Style = SpanStyle.Italic;
+        }
+
+        public void SetBold()
+        {
+            this.Style = SpanStyle.Bold;
+        }
+
+        public void SetUnderline()
+        {
+            this.Style = SpanStyle.Underline;
         }
     }
 }
