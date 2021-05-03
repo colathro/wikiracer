@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { UserManager, User } from "oidc-client";
+import { UserManager } from "oidc-client";
 
 var config = {
   authority: " https://id.twitch.tv/oauth2/",
