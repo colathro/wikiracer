@@ -11,6 +11,7 @@ namespace DataLoader
         public static Article ConvertWikitextToArticle(Wikitext wikiText, string title)
         {
             var article = new Article();
+            article.Title = title;
             article.Paragraphs = new List<DataModels.StorageModels.Paragraph>();
             AddParagraphs(wikiText, article);
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using MwParserFromScratch;
-using MwParserFromScratch.Nodes;
-using Newtonsoft.Json;
+using DataModels.Services;
 
 namespace DataLoader
 {
@@ -384,8 +383,17 @@ Academic [[John Molyneux (academic)|John Molyneux]] writes in his book ''Anarchi
 [[Category:Socialism]]
 ";
             var ast = parser.Parse(text);
-            Converter.ConvertWikitextToArticle(ast, "Anarchism");
-            Console.WriteLine(ast.ToPlainText());
+            var article = Converter.ConvertWikitextToArticle(ast, "Anarchism");
+            var articleService = initializeArticleService();
+            articleService.AddArticleAsync(article).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        public static ArticleService initializeArticleService()
+        {
+            string account = "https://wikiracer.documents.azure.com:443/";
+            string key = Environment.GetEnvironmentVariable("COSMOS_KEY");
+            string connectionString = Environment.GetEnvironmentVariable("STORAGE_KEY");
+            return new ArticleService(account, key, connectionString);
         }
     }
 }
