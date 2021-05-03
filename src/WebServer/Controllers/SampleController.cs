@@ -31,12 +31,12 @@ namespace WebServer.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromQuery] string title)
         {
-            var article = new Article
-            {
-                Title = title
-            };
-            await this.articleService.AddArticleAsync(article);
-            return Ok(article);
+            // var article = new Article
+            // {
+            //     Title = title
+            // };
+            // await this.articleService.AddArticleAsync(article);
+            return Ok();
         }
 
         [HttpDelete]

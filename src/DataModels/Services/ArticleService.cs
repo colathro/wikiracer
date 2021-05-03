@@ -81,7 +81,7 @@ namespace DataModels.Services
 
         }
 
-        public async Task<IEnumerable<ArticlePointer>> GetItemsAsync(string queryString)
+        public async Task<IEnumerable<Article>> GetItemsAsync(string queryString)
         {
             var query = this.container.GetItemQueryIterator<ArticlePointer>(new QueryDefinition(queryString));
             List<ArticlePointer> results = new List<ArticlePointer>();
@@ -92,7 +92,17 @@ namespace DataModels.Services
                 results.AddRange(response.ToList());
             }
 
-            return results;
+            List<Article> articles = new List<Article>();
+
+            foreach (ArticlePointer ptr in results)
+            {
+                CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(ptr.Key);
+                string content = await cloudBlockBlob.DownloadTextAsync();
+                var article = JsonConvert.DeserializeObject<Article>(content);
+                articles.Add(article);
+            }
+
+            return articles;
         }
 
         public async Task UpdateItemAsync(ArticlePointer articlePointer)

@@ -93,10 +93,10 @@ const TestComponent = observer(() => {
         {articles.map((val, ind) => {
           return (
             <div key={ind}>
-              {val.key}
+              {val.title}
               <button
                 onClick={() => {
-                  del(val.key);
+                  del(val.title);
                 }}
               >
                 Delete
