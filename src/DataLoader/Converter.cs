@@ -86,10 +86,13 @@ namespace DataLoader
         private static void ProcessPlainText(PlainText node, List<Span> spans, FormatFlag flag)
         {
             var span = new Span();
-            span.Text = node.Content;
             span.Style = flag.Style;
             span.Type = SpanType.Text;
-            spans.Add(span);
+            if (IsValidText(node.Content))
+            {
+                span.Text = CleanText(node.Content);
+                spans.Add(span);
+            }
         }
 
         private static void ProcessWikiLink(WikiLink node, List<Span> spans, FormatFlag flag)
@@ -111,6 +114,28 @@ namespace DataLoader
             span.Type = SpanType.Link;
 
             spans.Add(span);
+        }
+
+        private static bool IsValidText(string text)
+        {
+            if (text == "\r\n")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private static string CleanText(string text)
+        {
+            string output;
+
+            output = text.Replace("\r", "");
+            output = output.Replace("\n", "");
+
+            return output;
         }
     }
 
