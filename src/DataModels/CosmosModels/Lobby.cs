@@ -1,6 +1,6 @@
 namespace DataModels.CosmosModels
 {
-    public class Game : Record
+    public class Lobby : Record
     {
 
     }

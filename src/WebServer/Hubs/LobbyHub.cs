@@ -6,13 +6,13 @@ using System;
 
 namespace WebServer.Hubs
 {
-    public class GameHub : Hub
+    public class LobbyHub : Hub
     {
-        private readonly GameService gameService;
+        private readonly LobbyService lobbyService;
 
-        public GameHub(GameService _gameService)
+        public LobbyHub(LobbyService _lobbyService)
         {
-            this.gameService = _gameService;
+            this.lobbyService = _lobbyService;
         }
 
         public async Task SendMessage(string message)
@@ -22,7 +22,7 @@ namespace WebServer.Hubs
             // await this.gameService.AddItemAsync(x);
 
             // Call the broadcastMessage method to update clients.
-            await Clients.All.SendAsync("ReceiveMessage", message);
+            await Clients.All.SendAsync("Hello", message);
         }
     }
 }

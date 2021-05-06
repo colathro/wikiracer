@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
 using DataModels.Services;
 using WebServer.Hubs;
 using WebServer.BackgroundServices;
@@ -33,19 +34,21 @@ namespace WebServer
                 services.AddApplicationInsightsTelemetry();
             }
 
-            services.AddSingleton<GameService>(initializeGameService());
+            services.AddSingleton<UserService>(initializeUserService());
+            services.AddSingleton<LobbyService>(initializeLobbyService());
             services.AddSingleton<ArticleService>(initializeArticleService());
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
+                    options.TokenValidationParameters.ValidateLifetime = false;
                     options.Audience = "fprj9ag7iy0cq29pbkaarxw26qe2i0";
                     options.Authority = "https://id.twitch.tv/oauth2";
                 });
 
             services.AddSignalR();
 
-            services.AddHostedService<GameSynchronizer>();
+            services.AddHostedService<LobbySynchronizer>();
 
             services.AddSpaStaticFiles(configuration =>
             {
@@ -69,13 +72,14 @@ namespace WebServer
             app.UseResponseCompression();
             app.UseRouting();
 
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<GameHub>("/gamehub");
+                endpoints.MapHub<LobbyHub>("/lobbyhub");
             });
 
             app.UseSpa(spa =>
@@ -89,11 +93,18 @@ namespace WebServer
             });
         }
 
-        private GameService initializeGameService()
+        private LobbyService initializeLobbyService()
         {
             string account = "https://wikiracer.documents.azure.com:443/";
             string key = this.Configuration["COSMOS_KEY"];
-            return new GameService(account, key);
+            return new LobbyService(account, key);
+        }
+
+        private UserService initializeUserService()
+        {
+            string account = "https://wikiracer.documents.azure.com:443/";
+            string key = this.Configuration["COSMOS_KEY"];
+            return new UserService(account, key);
         }
 
         private ArticleService initializeArticleService()

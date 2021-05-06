@@ -7,15 +7,15 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace WebServer.BackgroundServices
 {
-    public class GameSynchronizer : BackgroundService
+    public class LobbySynchronizer : BackgroundService
     {
-        private readonly GameService gameService;
-        private readonly IHubContext<GameHub> gameHub;
+        private readonly LobbyService lobbyService;
+        private readonly IHubContext<LobbyHub> lobbyHub;
 
-        public GameSynchronizer(GameService _gameService, IHubContext<GameHub> _gameHub)
+        public LobbySynchronizer(LobbyService _lobbyService, IHubContext<LobbyHub> _lobbyHub)
         {
-            this.gameHub = _gameHub;
-            this.gameService = _gameService;
+            this.lobbyHub = _lobbyHub;
+            this.lobbyService = _lobbyService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -24,10 +24,10 @@ namespace WebServer.BackgroundServices
             {
                 try
                 {
-                    var games = await this.gameService.GetActiveGames();
-                    foreach (var game in games)
+                    var lobbys = await this.lobbyService.GetActiveLobbies();
+                    foreach (var lobby in lobbys)
                     {
-                        await this.gameHub.Clients.All.SendAsync("GameState", game);
+                        await this.lobbyHub.Clients.All.SendAsync("LobbyState", lobby);
                     }
                 }
                 catch
