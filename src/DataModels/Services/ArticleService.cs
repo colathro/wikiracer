@@ -28,16 +28,30 @@ namespace DataModels.Services
             this.cloudBlobContainer = cloudBlobContainer = cloudBlobClient.GetContainerReference(storageContainerName);
         }
 
-        public async Task AddArticleAsync(Article article)
+        public async Task AddArticleAsync(Article article, bool redirect = false, string redirectTarget = "")
         {
-            var cloudBlockBlob = await this.UploadArticle(article);
-            ArticlePointer newArticlePointer = new ArticlePointer
+            if (redirect)
             {
-                Link = cloudBlockBlob.Uri.ToString(),
-                Key = article.Title,
-                Id = article.Title
-            };
-            await this.container.CreateItemAsync(newArticlePointer, new PartitionKey(newArticlePointer.Key));
+                ArticlePointer newArticlePointer = new ArticlePointer
+                {
+                    Key = article.Title,
+                    Id = article.Title,
+                    Redirect = true,
+                    RedirectTarget = redirectTarget
+                };
+                await this.container.CreateItemAsync(newArticlePointer, new PartitionKey(newArticlePointer.Key));
+            }
+            else
+            {
+                var cloudBlockBlob = await this.UploadArticle(article);
+                ArticlePointer newArticlePointer = new ArticlePointer
+                {
+                    Link = cloudBlockBlob.Uri.ToString(),
+                    Key = article.Title,
+                    Id = article.Title
+                };
+                await this.container.CreateItemAsync(newArticlePointer, new PartitionKey(newArticlePointer.Key));
+            }
         }
 
         private async Task<CloudBlockBlob> UploadArticle(Article article)
@@ -96,10 +110,22 @@ namespace DataModels.Services
 
             foreach (ArticlePointer ptr in results)
             {
-                CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(ptr.Key);
-                string content = await cloudBlockBlob.DownloadTextAsync();
-                var article = JsonConvert.DeserializeObject<Article>(content);
-                articles.Add(article);
+                if (ptr.Redirect)
+                {
+                    var aptr = await this.GetItemAsync(ptr.RedirectTarget);
+
+                    CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(aptr.Key);
+                    string content = await cloudBlockBlob.DownloadTextAsync();
+                    var article = JsonConvert.DeserializeObject<Article>(content);
+                    articles.Add(article);
+                }
+                else
+                {
+                    CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(ptr.Key);
+                    string content = await cloudBlockBlob.DownloadTextAsync();
+                    var article = JsonConvert.DeserializeObject<Article>(content);
+                    articles.Add(article);
+                }
             }
 
             return articles;

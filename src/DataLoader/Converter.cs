@@ -8,10 +8,11 @@ namespace DataLoader
 {
     public static class Converter
     {
-        public static Article ConvertWikitextToArticle(Wikitext wikiText, string title)
+        public static Article ConvertWikitextToArticle(Wikitext wikiText, string title, bool isRedirect = false, string redirectTarget = "")
         {
             var article = new Article();
             article.Title = title;
+
             article.Paragraphs = new List<DataModels.StorageModels.Paragraph>();
             AddParagraphs(wikiText, article);
 
