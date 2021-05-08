@@ -2,11 +2,11 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -22,12 +22,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
+
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v1.7.2
         with:
           # SDK version to use. Examples: 2.2.104, 3.1, 3.1.x
-          dotnet-version: '5.0.x'
+          dotnet-version: "5.0.x"
 
       - name: Docker Login
         uses: docker/login-action@v1.9.0
@@ -35,18 +35,18 @@ jobs:
           registry: wikiracer.azurecr.io
           username: wikiracer
           password: ${{ secrets.ACR_KEY }}
-          
+
       - name: Restore app
         run: dotnet restore ${{ github.workspace }}/src/WebServer/WebServer.csproj -s https://api.nuget.org/v3/index.json
-      
+
       - name: Build app
         run: dotnet build ${{ github.workspace }}/src/WebServer/WebServer.csproj -v normal
-      
+
       - name: Publish app
         env:
           CI: false
         run: dotnet publish ${{ github.workspace }}/src/WebServer/WebServer.csproj -o ${{ github.workspace }}/infra/out/WebServer
-      
+
       - name: Build and push Docker images
         uses: docker/build-push-action@v2.4.0
         with:
@@ -54,7 +54,6 @@ jobs:
           build-args: |
             COSMOS_KEY=${{secrets.COSMOS_KEY}}
             STORAGE_KEY=${{secrets.STORAGE_KEY}}
+            ENCRYPTION_KEY=${{secrets.ENCRYPTION_KEY}}
           tags: wikiracer.azurecr.io/wikiracer:latest
           push: true
-        
-

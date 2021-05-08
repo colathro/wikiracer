@@ -7,43 +7,56 @@ import "./App.css";
 function App() {
   return (
     <div>
-      <TestComponent></TestComponent>
+      <AuthTest></AuthTest>
     </div>
   );
 }
 
-const TestComponent = observer(() => {
-  const refresh = () => {
-    AuthState.getUser();
-  };
-
-  useEffect(() => {
-    if (document.location.toString().includes("login")) {
-      AuthState.signin();
-    }
-    if (AuthState.user) {
-      refresh();
-    }
-  }, []);
-
+const AuthTest = observer(() => {
   return (
     <div>
       <div>
-        <button
-          onClick={() => {
-            AuthState.login();
-          }}
-        >
-          Login
-        </button>
-        <button
-          onClick={() => {
-            AuthState.logout();
-          }}
-        >
-          Logout
-        </button>
+        {AuthState.auth_info === null ? <LoginView /> : <LoggedInView />}
       </div>
+    </div>
+  );
+});
+
+const LoginView = observer(() => {
+  return (
+    <div>
+      <button
+        onClick={() => {
+          AuthState.loginGuest();
+        }}
+      >
+        Sign in as guest
+      </button>
+      <button
+        onClick={() => {
+          AuthState.loginTwitch();
+        }}
+      >
+        Sign in with Twitch
+      </button>
+    </div>
+  );
+});
+
+const LoggedInView = observer(() => {
+  useEffect(() => {
+    AuthState.getUser();
+  }, []);
+  return (
+    <div>
+      <h1>{AuthState.auth_info?.display_name}</h1>
+      <button
+        onClick={() => {
+          AuthState.logout();
+        }}
+      >
+        Logout
+      </button>
     </div>
   );
 });

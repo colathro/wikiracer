@@ -1,4 +1,5 @@
 using DataModels.CosmosModels.Enums;
+using System;
 
 namespace DataModels.CosmosModels
 {
@@ -6,5 +7,6 @@ namespace DataModels.CosmosModels
     {
         public AuthType AuthProvider { get; set; }
         public string DisplayName { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

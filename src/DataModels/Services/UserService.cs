@@ -28,6 +28,16 @@ namespace DataModels.Services
             }
         }
 
+        public async Task CleanGuestUsers()
+        {
+            var query = $"SELECT * FROM c where c.CreatedOn <= '{DateTime.UtcNow.AddDays(-1).ToString("o")}' and c.AuthProvider = {(int)AuthType.Guest}";
+            var usersToClean = await this.GetItemsAsync(query);
+            foreach (var item in usersToClean)
+            {
+                await this.container.DeleteItemAsync<User>(item.Id, new PartitionKey(item.Key));
+            }
+        }
+
         public async Task<IEnumerable<DataModels.CosmosModels.User>> GetItemsAsync(string queryString)
         {
             var query = this.container.GetItemQueryIterator<DataModels.CosmosModels.User>(new QueryDefinition(queryString));
@@ -52,6 +62,10 @@ namespace DataModels.Services
             if (provider == "https://id.twitch.tv/oauth2")
             {
                 return AuthType.Twitch;
+            }
+            else if (provider == "https://wikiracer.com")
+            {
+                return AuthType.Guest;
             }
             else
             {

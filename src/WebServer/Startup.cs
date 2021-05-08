@@ -6,9 +6,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 using DataModels.Services;
 using WebServer.Hubs;
+using System.Text;
 using WebServer.BackgroundServices;
 
 namespace WebServer
@@ -37,18 +40,40 @@ namespace WebServer
             services.AddSingleton<UserService>(initializeUserService());
             services.AddSingleton<LobbyService>(initializeLobbyService());
             services.AddSingleton<ArticleService>(initializeArticleService());
+            services.AddSingleton<IConfiguration>(Configuration);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+            services.AddAuthentication()
+                .AddJwtBearer("Twitch", options =>
                 {
                     options.TokenValidationParameters.ValidateLifetime = false;
                     options.Audience = "fprj9ag7iy0cq29pbkaarxw26qe2i0";
                     options.Authority = "https://id.twitch.tv/oauth2";
+                })
+                .AddJwtBearer("WikiRacer", options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = "https://wikiracer.com",
+                        ValidAudience = "https://wikiracer.com",
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["ENCRYPTION_KEY"]))
+                    };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder("Twitch", "WikiRacer")
+                    .AddAuthenticationSchemes("Twitch", "WikiRacer")
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
 
             services.AddSignalR();
 
             services.AddHostedService<LobbySynchronizer>();
+            services.AddHostedService<CleanupService>();
 
             services.AddSpaStaticFiles(configuration =>
             {
