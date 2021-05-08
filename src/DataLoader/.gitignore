@@ -24,6 +24,8 @@ Bin/
 obj/
 Obj/
 
+wikidumps/**
+
 bin/**
 Bin/**
 obj/**
