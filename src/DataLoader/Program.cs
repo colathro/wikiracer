@@ -53,7 +53,7 @@ namespace DataLoader
                                 CancellationTokenSource source = new CancellationTokenSource();
                                 source.CancelAfter(20000);
                                 CancellationToken token = source.Token;
-                                var ast = textParser.Parse(page.Text);
+                                var ast = textParser.Parse(page.Text, token);
                                 article = Converter.ConvertWikitextToArticle(ast, page.Title.ToLower());
                                 articleService.AddArticleAsync(article, page.IsRedirect, page.Redirect).ConfigureAwait(false).GetAwaiter().GetResult();
                                 continue;

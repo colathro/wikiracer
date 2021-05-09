@@ -72,7 +72,7 @@ namespace WebServer
 
             services.AddSignalR();
 
-            services.AddHostedService<LobbySynchronizer>();
+            //services.AddHostedService<LobbySynchronizer>();
             services.AddHostedService<CleanupService>();
 
             services.AddSpaStaticFiles(configuration =>
