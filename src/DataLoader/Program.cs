@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using MwParserFromScratch;
+using DataModels.StorageModels;
 using DataModels.Services;
 
 namespace DataLoader
@@ -9,12 +10,10 @@ namespace DataLoader
     {
         static void Main(string[] args)
         {
-            //var parser = new WikitextParser();
+            var textParser = new WikitextParser();
 
-            //var ast = parser.Parse(text);
-            //var article = Converter.ConvertWikitextToArticle(ast, "Anarchism");
-            //var articleService = initializeArticleService();
-            //articleService.AddArticleAsync(article).ConfigureAwait(false).GetAwaiter().GetResult();
+
+            var articleService = initializeArticleService();
 
             using (var sr = new StreamReader("/Users/colton/wikiracer/src/DataLoader/wikidumps/enwiki-latest-pages-articles1.xml-p1p41242"))
             {
@@ -22,6 +21,20 @@ namespace DataLoader
                 foreach (var page in parser.ReadPages())
                 {
                     Console.WriteLine(page.Title);
+
+                    Article article;
+
+                    if (page.IsRedirect)
+                    {
+                        article = Converter.ConvertWikitextToArticle(null, page.Title.ToLower(), page.IsRedirect, page.Redirect);
+                    }
+                    else
+                    {
+                        var ast = textParser.Parse(page.Text);
+                        article = Converter.ConvertWikitextToArticle(ast, page.Title.ToLower());
+                    }
+
+                    articleService.AddArticleAsync(article, page.IsRedirect, page.Redirect).ConfigureAwait(false).GetAwaiter().GetResult();
                 }
             }
         }

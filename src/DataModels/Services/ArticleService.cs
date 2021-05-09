@@ -39,7 +39,7 @@ namespace DataModels.Services
                     Redirect = true,
                     RedirectTarget = redirectTarget
                 };
-                await this.container.CreateItemAsync(newArticlePointer, new PartitionKey(newArticlePointer.Key));
+                await this.container.UpsertItemAsync(newArticlePointer, new PartitionKey(newArticlePointer.Key));
             }
             else
             {
@@ -50,7 +50,7 @@ namespace DataModels.Services
                     Key = article.Title,
                     Id = article.Title
                 };
-                await this.container.CreateItemAsync(newArticlePointer, new PartitionKey(newArticlePointer.Key));
+                await this.container.UpsertItemAsync(newArticlePointer, new PartitionKey(newArticlePointer.Key));
             }
         }
 

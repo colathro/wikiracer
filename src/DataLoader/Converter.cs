@@ -13,8 +13,11 @@ namespace DataLoader
             var article = new Article();
             article.Title = title;
 
-            article.Paragraphs = new List<DataModels.StorageModels.Paragraph>();
-            AddParagraphs(wikiText, article);
+            if (!isRedirect)
+            {
+                article.Paragraphs = new List<DataModels.StorageModels.Paragraph>();
+                AddParagraphs(wikiText, article);
+            }
 
             return article;
         }
@@ -100,18 +103,18 @@ namespace DataLoader
         private static void ProcessWikiLink(WikiLink node, List<Span> spans, FormatFlag flag)
         {
             var span = new Span();
-            var ptTarget = (PlainText)node.Target.Inlines.FirstNode;
-            var ptText = (PlainText)node.Text?.Inlines.FirstNode;
+            var ptTarget = node.Target.ToPlainText();
+            var ptText = node.Text?.ToPlainText();
             if (ptText == null)
             {
-                span.Text = ptTarget.Content;
+                span.Text = ptTarget;
             }
             else
             {
-                span.Text = ptText.Content;
+                span.Text = ptText;
             }
 
-            span.Link = ptTarget.Content;
+            span.Link = ptTarget;
             span.Style = flag.Style;
             span.Type = SpanType.Link;
 
