@@ -21,7 +21,7 @@ namespace DataLoader
                 using (StreamWriter w = File.AppendText("log.txt"))
                 {
                     int count = 0;
-                    int startFrom = 1573700;
+                    int startFrom = 1646600;
                     var parser = Parser.Create(sr.BaseStream);
 
                     foreach (var page in parser.ReadPages())
@@ -57,7 +57,7 @@ namespace DataLoader
                                 articleService.AddArticleAsync(article, page.IsRedirect, page.Redirect).ConfigureAwait(false).GetAwaiter().GetResult();
                                 continue;
                             }
-                            catch (OperationCanceledException ex)
+                            catch (Exception ex)
                             {
                                 Log(page.Title, w);
                             }
