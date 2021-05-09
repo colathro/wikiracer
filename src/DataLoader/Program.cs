@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.IO;
 using MwParserFromScratch;
 using DataModels.StorageModels;
@@ -15,26 +16,48 @@ namespace DataLoader
 
             var articleService = initializeArticleService();
 
-            using (var sr = new StreamReader("/Users/colton/wikiracer/src/DataLoader/wikidumps/enwiki-latest-pages-articles1.xml-p1p41242"))
+            using (var sr = new StreamReader("D:\\enwiki-latest-pages-articles.xml"))
             {
-                var parser = Parser.Create(sr.BaseStream);
-                foreach (var page in parser.ReadPages())
+
+                using (StreamWriter w = File.AppendText("log.txt"))
                 {
-                    Console.WriteLine(page.Title);
+                    int count = 0;
+                    var parser = Parser.Create(sr.BaseStream);
 
-                    Article article;
-
-                    if (page.IsRedirect)
+                    foreach (var page in parser.ReadPages())
                     {
-                        article = Converter.ConvertWikitextToArticle(null, page.Title.ToLower(), page.IsRedirect, page.Redirect);
-                    }
-                    else
-                    {
-                        var ast = textParser.Parse(page.Text);
-                        article = Converter.ConvertWikitextToArticle(ast, page.Title.ToLower());
-                    }
+                        count++;
+                        if (count % 100 == 0)
+                        {
+                            Console.WriteLine(count);
+                        }
 
-                    articleService.AddArticleAsync(article, page.IsRedirect, page.Redirect).ConfigureAwait(false).GetAwaiter().GetResult();
+                        Article article;
+
+                        if (page.IsRedirect)
+                        {
+                            article = Converter.ConvertWikitextToArticle(null, page.Title.ToLower(), page.IsRedirect, page.Redirect);
+                            articleService.AddArticleAsync(article, page.IsRedirect, page.Redirect).ConfigureAwait(false).GetAwaiter().GetResult();
+                            continue;
+                        }
+                        else
+                        {
+                            try
+                            {
+                                CancellationTokenSource source = new CancellationTokenSource();
+                                source.CancelAfter(20000);
+                                CancellationToken token = source.Token;
+                                var ast = textParser.Parse(page.Text);
+                                article = Converter.ConvertWikitextToArticle(ast, page.Title.ToLower());
+                                articleService.AddArticleAsync(article, page.IsRedirect, page.Redirect).ConfigureAwait(false).GetAwaiter().GetResult();
+                                continue;
+                            }
+                            catch (OperationCanceledException ex)
+                            {
+                                Log(page.Title, w);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -45,6 +68,11 @@ namespace DataLoader
             string key = Environment.GetEnvironmentVariable("COSMOS_KEY");
             string connectionString = Environment.GetEnvironmentVariable("STORAGE_KEY");
             return new ArticleService(account, key, connectionString);
+        }
+
+        public static void Log(string logMessage, TextWriter w)
+        {
+            w.WriteLine(logMessage);
         }
     }
 }
