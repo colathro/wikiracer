@@ -13,7 +13,6 @@ namespace DataLoader
         {
             var textParser = new WikitextParser();
 
-
             var articleService = initializeArticleService();
 
             using (var sr = new StreamReader("D:\\enwiki-latest-pages-articles.xml"))
@@ -22,7 +21,7 @@ namespace DataLoader
                 using (StreamWriter w = File.AppendText("log.txt"))
                 {
                     int count = 0;
-                    int startFrom = 58700;
+                    int startFrom = 1570000;
                     var parser = Parser.Create(sr.BaseStream);
 
                     foreach (var page in parser.ReadPages())

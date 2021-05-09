@@ -6,7 +6,7 @@ using DataModels.StorageModels;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
 using System.IO;
-using System;
+using System.Text;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
 
@@ -58,12 +58,23 @@ namespace DataModels.Services
         {
             using (var memoryStream = new MemoryStream())
             {
+                string cleanTitle = Encoding.ASCII.GetString(
+                    Encoding.Convert(
+                        Encoding.UTF8,
+                        Encoding.GetEncoding(
+                            Encoding.ASCII.EncodingName,
+                            new EncoderReplacementFallback(string.Empty),
+                            new DecoderExceptionFallback()
+                            ),
+                    Encoding.UTF8.GetBytes(article.Title)
+                    )
+                );
                 var serializedJson = JsonConvert.SerializeObject(article);
                 StreamWriter writer = new StreamWriter(memoryStream);
                 writer.Write(serializedJson);
                 writer.Flush();
                 memoryStream.Position = 0;
-                CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(article.Title);
+                CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(cleanTitle);
                 await cloudBlockBlob.UploadFromStreamAsync(memoryStream);
                 return cloudBlockBlob;
             }
