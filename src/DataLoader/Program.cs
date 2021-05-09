@@ -22,6 +22,7 @@ namespace DataLoader
                 using (StreamWriter w = File.AppendText("log.txt"))
                 {
                     int count = 0;
+                    int startFrom = 58700;
                     var parser = Parser.Create(sr.BaseStream);
 
                     foreach (var page in parser.ReadPages())
@@ -30,6 +31,11 @@ namespace DataLoader
                         if (count % 100 == 0)
                         {
                             Console.WriteLine(count);
+                        }
+
+                        if (count < startFrom)
+                        {
+                            continue;
                         }
 
                         Article article;
