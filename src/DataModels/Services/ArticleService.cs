@@ -6,6 +6,7 @@ using DataModels.StorageModels;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
 using System.IO;
+using System;
 using System.Text;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
@@ -69,6 +70,12 @@ namespace DataModels.Services
                     Encoding.UTF8.GetBytes(article.Title)
                     )
                 );
+
+                if (cleanTitle == "")
+                {
+                    cleanTitle = Guid.NewGuid().ToString();
+                }
+
                 var serializedJson = JsonConvert.SerializeObject(article);
                 StreamWriter writer = new StreamWriter(memoryStream);
                 writer.Write(serializedJson);
