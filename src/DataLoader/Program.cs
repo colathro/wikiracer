@@ -21,7 +21,7 @@ namespace DataLoader
                 using (StreamWriter w = File.AppendText("log.txt"))
                 {
                     int count = 0;
-                    int startFrom = 1570000;
+                    int startFrom = 1573700;
                     var parser = Parser.Create(sr.BaseStream);
 
                     foreach (var page in parser.ReadPages())
