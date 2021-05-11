@@ -44,9 +44,16 @@ const LoginView = observer(() => {
 });
 
 const LoggedInView = observer(() => {
+  const [article, setArticle] = useState("europe");
+  const [articleData, setArticleData] = useState<any>(undefined);
+
   useEffect(() => {
     AuthState.getUser();
+    AuthState.getArticle(article, setArticleData);
   }, []);
+
+  console.log(articleData);
+
   return (
     <div>
       <h1>{AuthState.auth_info?.display_name}</h1>
@@ -57,6 +64,46 @@ const LoggedInView = observer(() => {
       >
         Logout
       </button>
+      <div>
+        <button
+          onClick={() => {
+            AuthState.getArticle(article, setArticleData);
+          }}
+        >
+          Load Article
+        </button>
+        {articleData != undefined ? (
+          <div>
+            <h1>{articleData!.title}</h1>
+            {articleData!.paragraphs.map((paragraph: any, ind: any) => (
+              <p key={ind}>
+                {paragraph.spans.map((span: any, sind: any) => {
+                  if (span.link != null) {
+                    return (
+                      <a
+                        style={{
+                          cursor: "pointer",
+                          color: "blue",
+                          textDecoration: "underline",
+                        }}
+                        key={sind}
+                        onClick={() => {
+                          AuthState.getArticle(span.link, setArticleData);
+                        }}
+                      >
+                        {span.text}
+                      </a>
+                    );
+                  }
+                  return <span key={sind}>{span.text}</span>;
+                })}
+              </p>
+            ))}
+          </div>
+        ) : (
+          <div>not loaded</div>
+        )}
+      </div>
     </div>
   );
 });

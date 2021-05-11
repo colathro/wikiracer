@@ -110,7 +110,43 @@ namespace DataModels.Services
             {
                 return null;
             }
+        }
 
+        public async Task<Article> GetArticleAsync(string key)
+        {
+            ItemResponse<ArticlePointer> response = await this.container.ReadItemAsync<ArticlePointer>(key, new PartitionKey(key));
+            var ptr = response.Resource;
+
+            if (ptr.Redirect)
+            {
+                var aptr = await this.GetItemAsync(ptr.RedirectTarget);
+
+                CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(aptr.Key);
+                string content = await cloudBlockBlob.DownloadTextAsync();
+                var article = JsonConvert.DeserializeObject<Article>(content);
+                return article;
+            }
+            else
+            {
+                CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(ptr.Key);
+                string content = await cloudBlockBlob.DownloadTextAsync();
+                var article = JsonConvert.DeserializeObject<Article>(content);
+                return article;
+            }
+        }
+
+        public async Task<IEnumerable<ArticlePointer>> GetPointersAsync(string queryString)
+        {
+            var query = this.container.GetItemQueryIterator<ArticlePointer>(new QueryDefinition(queryString));
+            List<ArticlePointer> results = new List<ArticlePointer>();
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+
+                results.AddRange(response.ToList());
+            }
+
+            return results;
         }
 
         public async Task<IEnumerable<Article>> GetItemsAsync(string queryString)

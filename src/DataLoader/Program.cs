@@ -21,13 +21,13 @@ namespace DataLoader
                 using (StreamWriter w = File.AppendText("log.txt"))
                 {
                     int count = 0;
-                    int startFrom = 1646600;
+                    int startFrom = 1646600000;
                     var parser = Parser.Create(sr.BaseStream);
 
                     foreach (var page in parser.ReadPages())
                     {
                         count++;
-                        if (count % 100 == 0)
+                        if (count % 10000 == 0)
                         {
                             Console.WriteLine(count);
                         }
