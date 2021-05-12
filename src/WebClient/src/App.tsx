@@ -75,30 +75,37 @@ const LoggedInView = observer(() => {
         {articleData != undefined ? (
           <div>
             <h1>{articleData!.title}</h1>
-            {articleData!.paragraphs.map((paragraph: any, ind: any) => (
-              <p key={ind}>
-                {paragraph.spans.map((span: any, sind: any) => {
-                  if (span.link != null) {
-                    return (
-                      <a
-                        style={{
-                          cursor: "pointer",
-                          color: "blue",
-                          textDecoration: "underline",
-                        }}
-                        key={sind}
-                        onClick={() => {
-                          AuthState.getArticle(span.link, setArticleData);
-                        }}
-                      >
-                        {span.text}
-                      </a>
-                    );
-                  }
-                  return <span key={sind}>{span.text}</span>;
-                })}
-              </p>
-            ))}
+            {articleData!.paragraphs.map((paragraph: any, ind: any) => {
+              if (paragraph.level === 0) {
+                return (
+                  <p key={ind}>
+                    {paragraph.spans.map((span: any, sind: any) => {
+                      if (span.link != null) {
+                        return (
+                          <a
+                            style={{
+                              cursor: "pointer",
+                              color: "blue",
+                              textDecoration: "underline",
+                            }}
+                            key={sind}
+                            onClick={() => {
+                              AuthState.getArticle(span.link, setArticleData);
+                            }}
+                          >
+                            {span.text}
+                          </a>
+                        );
+                      }
+                      return <span key={sind}>{span.text}</span>;
+                    })}
+                  </p>
+                );
+              }
+              if (paragraph.level >= 1) {
+                return <h1>{paragraph.spans[0].text}</h1>;
+              }
+            })}
           </div>
         ) : (
           <div>not loaded</div>

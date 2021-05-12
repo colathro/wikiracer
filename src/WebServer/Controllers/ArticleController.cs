@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using DataModels.Services;
 using DataModels.StorageModels;
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
@@ -25,7 +26,9 @@ namespace WebServer.Controllers
         public async Task<IActionResult> Get([FromQuery] string key)
         {
             key = key.ToLower();
-            return Ok(await this.articleService.GetArticleAsync(key));
+            var article = await this.articleService.GetArticleAsync(key);
+            article.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(article.Title);
+            return Ok(article);
         }
     }
 }
