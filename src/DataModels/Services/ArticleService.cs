@@ -22,6 +22,8 @@ namespace DataModels.Services
         protected readonly CloudBlobClient cloudBlobClient;
         protected readonly CloudStorageAccount cloudStorageAccount;
 
+        protected const string baseURL = "https://wikiracer.blob.core.windows.net/articles/";
+
         public ArticleService(string _account, string _accessKey, string _storageConnectionString) : base(_account, _accessKey, "wikiracer", "articles")
         {
             CloudStorageAccount.TryParse(_storageConnectionString, out this.cloudStorageAccount);
@@ -119,12 +121,48 @@ namespace DataModels.Services
 
             if (ptr.Redirect)
             {
-                var aptr = await this.GetItemAsync(ptr.RedirectTarget);
+                try
+                {
+                    string target = baseURL + ptr.Key;
+                    CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(ptr.Key);
+                    string content = await cloudBlockBlob.DownloadTextAsync();
+                    var article = JsonConvert.DeserializeObject<Article>(content);
+                    return article;
+                }
+                catch
+                {
+                    try
+                    {
+                        var aptr = await this.GetItemAsync(ptr.RedirectTarget);
 
-                CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(aptr.Key);
-                string content = await cloudBlockBlob.DownloadTextAsync();
-                var article = JsonConvert.DeserializeObject<Article>(content);
-                return article;
+                        CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(aptr.Key);
+                        string content = await cloudBlockBlob.DownloadTextAsync();
+                        var article = JsonConvert.DeserializeObject<Article>(content);
+                        return article;
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            var aptr = await this.GetItemAsync(ptr.RedirectTarget.ToLower());
+
+                            CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(aptr.Key);
+                            string content = await cloudBlockBlob.DownloadTextAsync();
+                            var article = JsonConvert.DeserializeObject<Article>(content);
+                            return article;
+                        }
+                        catch
+                        {
+                            var aptr = await this.GetItemAsync(ptr.RedirectTarget.ToLower());
+
+                            CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(aptr.Key.ToLower());
+                            string content = await cloudBlockBlob.DownloadTextAsync();
+                            var article = JsonConvert.DeserializeObject<Article>(content);
+                            return article;
+                        }
+                    }
+                }
+
             }
             else
             {

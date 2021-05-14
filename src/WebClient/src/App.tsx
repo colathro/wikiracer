@@ -44,7 +44,7 @@ const LoginView = observer(() => {
 });
 
 const LoggedInView = observer(() => {
-  const [article, setArticle] = useState("a");
+  const [article, setArticle] = useState("Metropole Hotel, London");
   const [articleData, setArticleData] = useState<any>(undefined);
 
   useEffect(() => {
