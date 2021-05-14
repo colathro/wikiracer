@@ -44,7 +44,9 @@ const LoginView = observer(() => {
 });
 
 const LoggedInView = observer(() => {
-  const [article, setArticle] = useState("Metropole Hotel, London");
+  const [article, setArticle] = useState(
+    "President_of_the_Policy_and_Resources_Committee_of_Guernsey"
+  );
   const [articleData, setArticleData] = useState<any>(undefined);
 
   useEffect(() => {

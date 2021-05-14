@@ -116,6 +116,7 @@ namespace DataModels.Services
 
         public async Task<Article> GetArticleAsync(string key)
         {
+            key = key.Replace("_", " ");
             ItemResponse<ArticlePointer> response = await this.container.ReadItemAsync<ArticlePointer>(key, new PartitionKey(key));
             var ptr = response.Resource;
 
