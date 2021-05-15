@@ -70,6 +70,32 @@ class Auth {
       });
   }
 
+  getLobbies(callback: any) {
+    fetch(`/api/lobby/public`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        callback(data);
+      });
+  }
+
+  createLobby(callback: any) {
+    fetch(`/api/lobby/create`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        callback(data);
+      });
+  }
+
   handleCallbackGuest(token_response: any) {
     fetch(`/api/user/me`, {
       method: "GET",

@@ -44,17 +44,12 @@ const LoginView = observer(() => {
 });
 
 const LoggedInView = observer(() => {
-  const [article, setArticle] = useState(
-    "President_of_the_Policy_and_Resources_Committee_of_Guernsey"
-  );
-  const [articleData, setArticleData] = useState<any>(undefined);
+  const [lobbies, setLobbies] = useState<any>(undefined);
 
   useEffect(() => {
     AuthState.getUser();
-    AuthState.getArticle(article, setArticleData);
+    AuthState.getLobbies(setLobbies);
   }, []);
-
-  console.log(articleData);
 
   return (
     <div>
@@ -66,53 +61,15 @@ const LoggedInView = observer(() => {
       >
         Logout
       </button>
-      <div>
-        <button
-          onClick={() => {
-            AuthState.getArticle(article, setArticleData);
-          }}
-        >
-          Load Article
-        </button>
-        {articleData != undefined ? (
-          <div>
-            <h1>{articleData!.title}</h1>
-            {articleData!.paragraphs.map((paragraph: any, ind: any) => {
-              if (paragraph.level === 0) {
-                return (
-                  <p key={ind}>
-                    {paragraph.spans.map((span: any, sind: any) => {
-                      if (span.link != null) {
-                        return (
-                          <a
-                            style={{
-                              cursor: "pointer",
-                              color: "blue",
-                              textDecoration: "underline",
-                            }}
-                            key={sind}
-                            onClick={() => {
-                              AuthState.getArticle(span.link, setArticleData);
-                            }}
-                          >
-                            {span.text}
-                          </a>
-                        );
-                      }
-                      return <span key={sind}>{span.text}</span>;
-                    })}
-                  </p>
-                );
-              }
-              if (paragraph.level >= 1) {
-                return <h1>{paragraph.spans[0].text}</h1>;
-              }
-            })}
-          </div>
-        ) : (
-          <div>not loaded</div>
-        )}
-      </div>
+      <button
+        onClick={() => {
+          AuthState.createLobby((d: any) => {
+            console.log(d);
+          });
+        }}
+      >
+        Create Lobby
+      </button>
     </div>
   );
 });

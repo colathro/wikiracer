@@ -14,10 +14,22 @@ namespace DataModels.Services
 
         public async Task<IList<Lobby>> GetActiveLobbies()
         {
-            var query = "SELECT * FROM c";
+            var query = "SELECT * FROM c where c.IsPublic = true";
             var lobbys = await this.GetItemsAsync(query);
             return lobbys.ToList();
         }
+
+        public async Task<Lobby> GetLobby(string joinKey)
+        {
+            QueryDefinition query = new QueryDefinition(
+                "SELECT * FROM c where c.JoinKey =  @joinKey")
+                .WithParameter("@joinKey", joinKey);
+
+            var lobbys = await this.GetItemsAsync(query);
+
+            return lobbys.FirstOrDefault();
+        }
+
 
         public async Task AddItemAsync(Lobby lobby)
         {
@@ -40,12 +52,25 @@ namespace DataModels.Services
             {
                 return null;
             }
-
         }
 
         public async Task<IEnumerable<Lobby>> GetItemsAsync(string queryString)
         {
             var query = this.container.GetItemQueryIterator<Lobby>(new QueryDefinition(queryString));
+            List<Lobby> results = new List<Lobby>();
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+
+                results.AddRange(response.ToList());
+            }
+
+            return results;
+        }
+
+        public async Task<IEnumerable<Lobby>> GetItemsAsync(QueryDefinition queryDef)
+        {
+            var query = this.container.GetItemQueryIterator<Lobby>(queryDef);
             List<Lobby> results = new List<Lobby>();
             while (query.HasMoreResults)
             {

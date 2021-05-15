@@ -7,6 +7,7 @@ namespace DataModels.CosmosModels
     {
         public AuthType AuthProvider { get; set; }
         public string DisplayName { get; set; }
+        public string Avatar { get; set; }
         public DateTime CreatedOn { get; set; }
     }
 }

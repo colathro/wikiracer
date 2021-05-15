@@ -22,7 +22,7 @@ namespace WebServer.Controllers
         private readonly UserService userService;
         private readonly IConfiguration configuration;
 
-        public UserController(UserService _userService, ILogger<SampleController> _logger, IConfiguration _configuration)
+        public UserController(UserService _userService, ILogger<UserController> _logger, IConfiguration _configuration)
         {
             this.logger = _logger;
             this.userService = _userService;
