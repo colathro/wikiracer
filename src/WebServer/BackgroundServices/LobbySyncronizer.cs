@@ -24,10 +24,10 @@ namespace WebServer.BackgroundServices
             {
                 try
                 {
-                    var lobbys = await this.lobbyService.GetActiveLobbies();
+                    var lobbys = await this.lobbyService.GetAllLobbies();
                     foreach (var lobby in lobbys)
                     {
-                        await this.lobbyHub.Clients.All.SendAsync("LobbyState", lobby);
+                        await this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby);
                     }
                 }
                 catch

@@ -9,6 +9,7 @@ namespace DataModels.CosmosModels
         public string Avatar { get; set; }
         public AuthType AuthProvider { get; set; }
         public string CurrentArticle { get; set; }
-        public string Finished { get; set; }
+        public bool Finished { get; set; }
+        public bool Active { get; set; }
     }
 }

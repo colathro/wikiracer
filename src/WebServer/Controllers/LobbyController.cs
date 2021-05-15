@@ -67,7 +67,10 @@ namespace WebServer.Controllers
                     Id = user.Key,
                     DisplayName = user.DisplayName,
                     Avatar = user.Avatar,
-                    AuthProvider = user.AuthProvider
+                    AuthProvider = user.AuthProvider,
+                    CurrentArticle = "",
+                    Finished = false,
+                    Active = false
                 });
 
                 await this.lobbyService.UpdateItemAsync(lobby);
@@ -88,6 +91,7 @@ namespace WebServer.Controllers
                 Players = players,
                 Id = Guid.NewGuid().ToString(),
                 Key = this.GenerateLobbyJoinKey(),
+                BanList = new List<string>(),
                 IsPublic = false
             };
 
@@ -222,7 +226,7 @@ namespace WebServer.Controllers
             return Ok();
         }
 
-        [HttpGet("owner/setpublic")]
+        [HttpPost("owner/setpublic")]
         public async Task<IActionResult> SetPublic([FromQuery] string lobbyKey, [FromQuery] bool isPublic)
         {
             var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
@@ -263,6 +267,5 @@ namespace WebServer.Controllers
         {
             return this.HttpContext.User.FindFirst("iss").Value;
         }
-
     }
 }

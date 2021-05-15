@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import AuthState from "../state/AuthState";
-import GameState from "../state/LobbyState";
+import LobbyState from "../state/LobbyState";
 
 const Article = observer(() => {
   const [article, setArticle] = useState(
@@ -11,7 +11,7 @@ const Article = observer(() => {
 
   useEffect(() => {
     AuthState.getUser();
-    AuthState.getArticle(article, setArticleData);
+    LobbyState.getArticle(article, setArticleData);
   }, []);
 
   console.log(articleData);
@@ -29,7 +29,7 @@ const Article = observer(() => {
       <div>
         <button
           onClick={() => {
-            AuthState.getArticle(article, setArticleData);
+            LobbyState.getArticle(article, setArticleData);
           }}
         >
           Load Article
@@ -52,7 +52,7 @@ const Article = observer(() => {
                             }}
                             key={sind}
                             onClick={() => {
-                              AuthState.getArticle(span.link, setArticleData);
+                              LobbyState.getArticle(span.link, setArticleData);
                             }}
                           >
                             {span.text}

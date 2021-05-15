@@ -14,8 +14,6 @@ namespace DataModels.CosmosModels
 
         public bool IsPublic { get; set; }
 
-        public string JoinKey { get; set; }
-
         public string StartArticle { get; set; }
 
         public string EndArticle { get; set; }

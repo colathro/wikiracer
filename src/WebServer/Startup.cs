@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using DataModels.Services;
 using WebServer.Hubs;
+using System.Threading.Tasks;
 using System.Text;
 using WebServer.BackgroundServices;
 
@@ -32,7 +33,7 @@ namespace WebServer
             services.AddControllers();
             services.AddResponseCompression();
 
-            services.AddApplicationInsightsTelemetry("3b402ab6-f9a9-4597-bac3-1bf57241ddf5");
+            //services.AddApplicationInsightsTelemetry("3b402ab6-f9a9-4597-bac3-1bf57241ddf5");
 
             services.AddSingleton<UserService>(initializeUserService());
             services.AddSingleton<LobbyService>(initializeLobbyService());
@@ -45,6 +46,24 @@ namespace WebServer
                     options.TokenValidationParameters.ValidateLifetime = false;
                     options.Audience = "fprj9ag7iy0cq29pbkaarxw26qe2i0";
                     options.Authority = "https://id.twitch.tv/oauth2";
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/lobbyhub")))
+                            {
+                                // Read the token out of the query string
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 })
                 .AddJwtBearer("WikiRacer", options =>
                 {
@@ -56,6 +75,23 @@ namespace WebServer
                         ValidIssuer = "https://wikiracer.com",
                         ValidAudience = "https://wikiracer.com",
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["ENCRYPTION_KEY"]))
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/lobbyhub")))
+                            {
+                                // Read the token out of the query string
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
@@ -69,7 +105,7 @@ namespace WebServer
 
             services.AddSignalR();
 
-            //services.AddHostedService<LobbySynchronizer>();
+            services.AddHostedService<LobbySynchronizer>();
             services.AddHostedService<CleanupService>();
 
             services.AddSpaStaticFiles(configuration =>

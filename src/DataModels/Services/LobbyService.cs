@@ -19,10 +19,17 @@ namespace DataModels.Services
             return lobbys.ToList();
         }
 
+        public async Task<IList<Lobby>> GetAllLobbies()
+        {
+            var query = "SELECT * FROM c";
+            var lobbys = await this.GetItemsAsync(query);
+            return lobbys.ToList();
+        }
+
         public async Task<Lobby> GetLobby(string joinKey)
         {
             QueryDefinition query = new QueryDefinition(
-                "SELECT * FROM c where c.JoinKey =  @joinKey")
+                "SELECT * FROM c where c.Key =  @joinKey")
                 .WithParameter("@joinKey", joinKey);
 
             var lobbys = await this.GetItemsAsync(query);
