@@ -41,6 +41,10 @@ const LoginView = observer(() => {
 });
 
 const LoggedInView = observer(() => {
+  useEffect(() => {
+    LobbyState.startHubConnection();
+  }, []);
+
   return (
     <div>
       <div>
@@ -115,13 +119,28 @@ const LobbyView = observer(() => {
       >
         Leave Lobby
       </button>
-      <button
-        onClick={() => {
-          LobbyState.setPublic(() => {});
-        }}
-      >
-        Toggle Public
-      </button>
+      <div>
+        <div>
+          Players:
+          <div>
+            <ul>
+              {LobbyState.lobby?.players.map((player, key) => {
+                return <li key={key}>{player.displayName}</li>;
+              })}
+            </ul>
+          </div>
+        </div>
+        <div>
+          Lobby Visibility: {LobbyState.lobby?.isPublic ? "Public" : "Private"}
+        </div>
+        <button
+          onClick={() => {
+            LobbyState.setPublic(() => {});
+          }}
+        >
+          Toggle Public
+        </button>
+      </div>
     </div>
   );
 });

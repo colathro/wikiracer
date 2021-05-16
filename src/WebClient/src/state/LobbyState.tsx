@@ -18,9 +18,9 @@ async function start() {
   }
 }
 
-hubConnection.onclose(start);
-
-start();
+hubConnection.onclose(() => {
+  start();
+});
 
 hubConnection.on("LobbyState", (message) => {
   LobbyState.lobbyState(message);
@@ -140,6 +140,10 @@ class LobbyManager {
     ).then(() => {
       callback();
     });
+  }
+
+  startHubConnection() {
+    start();
   }
 }
 

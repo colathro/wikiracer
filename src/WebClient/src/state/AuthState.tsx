@@ -2,6 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { UserManager } from "oidc-client";
 import { AuthType } from "../enums/AuthType";
 import { AuthInfo } from "../types/AuthInfo";
+import LobbyState from "./LobbyState";
 
 var config = {
   authority: " https://id.twitch.tv/oauth2/",
@@ -23,11 +24,11 @@ class Auth {
   user: any;
 
   constructor() {
+    makeAutoObservable(this);
     this.auth_info = JSON.parse(localStorage.getItem("auth_info")!) as AuthInfo;
     if (document.location.toString().includes("login")) {
       this.handleCallbackTwitch();
     }
-    makeAutoObservable(this);
   }
 
   loginTwitch() {
@@ -77,6 +78,7 @@ class Auth {
   }
 
   logout() {
+    LobbyState.leaveLobby();
     this.auth_info = undefined;
     this.removeLocalAuthInfo();
     twitchManager.signoutRedirect();
