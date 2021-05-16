@@ -1,30 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import AuthState from "./AuthState";
-import * as signalR from "@microsoft/signalr";
+import ConnectionState from "./ConnectionState";
 import { Lobby } from "../types/Lobby";
-
-const hubConnection = new signalR.HubConnectionBuilder()
-  .withUrl("/lobbyhub", {
-    accessTokenFactory: () => AuthState.auth_info!.access_token,
-  })
-  .build();
-
-async function start() {
-  try {
-    await hubConnection.start();
-  } catch (err) {
-    console.log(err);
-    setTimeout(start, 5000);
-  }
-}
-
-hubConnection.onclose(() => {
-  start();
-});
-
-hubConnection.on("LobbyState", (message) => {
-  LobbyState.lobbyState(message);
-});
 
 class LobbyManager {
   lobby: Lobby | null;
@@ -32,11 +9,6 @@ class LobbyManager {
   constructor() {
     this.lobby = JSON.parse(localStorage.getItem("lobby")!) as Lobby;
     makeAutoObservable(this);
-  }
-
-  send() {
-    console.log("sending message");
-    hubConnection.invoke("SendMessage", "Hello World!");
   }
 
   lobbyState(lobby: Lobby) {
@@ -94,7 +66,6 @@ class LobbyManager {
       .then((response) => response.json())
       .then((data) => {
         this.setLocalLobby(data);
-        this.joinWSGroup();
         callback(data);
       });
   }
@@ -103,7 +74,7 @@ class LobbyManager {
     if (this.lobby === null) {
       return true;
     }
-    hubConnection.invoke("LeaveLobby");
+    ConnectionState.leaveLobby();
     this.removeLocalLobby();
   }
 
@@ -112,10 +83,6 @@ class LobbyManager {
     this.lobby = lobby;
     localStorage.setItem("lobby", JSON.stringify(lobby));
     this.getLocalLobby();
-  }
-
-  joinWSGroup() {
-    hubConnection.invoke("JoinLobby", this.lobby!.key);
   }
 
   removeLocalLobby() {
@@ -140,10 +107,6 @@ class LobbyManager {
     ).then(() => {
       callback();
     });
-  }
-
-  startHubConnection() {
-    start();
   }
 }
 

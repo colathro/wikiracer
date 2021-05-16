@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import AuthState from "./state/AuthState";
-import GameState from "./state/LobbyState";
-import "./App.css";
 import LobbyState from "./state/LobbyState";
+import ConnectionState from "./state/ConnectionState";
+import "./App.css";
 
 function App() {
   return (
@@ -41,10 +41,6 @@ const LoginView = observer(() => {
 });
 
 const LoggedInView = observer(() => {
-  useEffect(() => {
-    LobbyState.startHubConnection();
-  }, []);
-
   return (
     <div>
       <div>
@@ -105,9 +101,17 @@ const LobbyFinderView = observer(() => {
 });
 
 const LobbyView = observer(() => {
+  const [connectionStarted, setConnectionStarted] = useState(false);
+
   useEffect(() => {
-    LobbyState.joinLobby(LobbyState.lobby!.key, () => {});
+    ConnectionState.start(() => {
+      setConnectionStarted(true);
+    });
   }, []);
+
+  if (!connectionStarted) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div>
