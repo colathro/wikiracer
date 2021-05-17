@@ -22,22 +22,24 @@ namespace WebServer.Hubs
         {
             if (Context.Items.TryGetValue("joinKey", out var joinKey))
             {
+                // set player inactive - when they join they technically resume.
+                var lobby = await this.lobbyService.GetLobby((string)joinKey);
+                var player = lobby.Players.FirstOrDefault(lp => lp.Id == this.GetUserKey());
 
+                if (player == default)
+                {
+                    return;
+                }
+                player.Active = false;
+
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, lobby.Key);
+                await this.lobbyService.UpdateItemAsync(lobby);
             }
-        }
-
-        public async Task SendMessage(string message)
-        {
-            // var x = new Game { Id = Guid.NewGuid().ToString(), Key = "test" };
-
-            // await this.gameService.AddItemAsync(x);
-
-            // Call the broadcastMessage method to update clients.
-            await Clients.All.SendAsync("Hello", message);
         }
 
         public async Task JoinLobby(string joinKey)
         {
+            // this prevent users from join without join via rest api first
             var lobby = await this.lobbyService.GetLobby(joinKey);
             var player = lobby.Players.FirstOrDefault(lp => lp.Id == this.GetUserKey());
 
@@ -46,6 +48,7 @@ namespace WebServer.Hubs
                 return;
             }
 
+            // ui should only show active users
             player.Active = true;
             await this.lobbyService.UpdateItemAsync(lobby);
             await Groups.AddToGroupAsync(Context.ConnectionId, joinKey);
@@ -56,6 +59,7 @@ namespace WebServer.Hubs
         {
             if (Context.Items.TryGetValue("joinKey", out var joinKey))
             {
+                // explicitly leaving the lobby removes progress
                 var lobby = await this.lobbyService.GetLobby((string)joinKey);
                 var player = lobby.Players.RemoveAll(lp => lp.Id == this.GetUserKey());
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, lobby.Key);

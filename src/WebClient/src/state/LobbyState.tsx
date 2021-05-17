@@ -12,8 +12,7 @@ class LobbyManager {
   }
 
   lobbyState(lobby: Lobby) {
-    this.lobby = lobby;
-    console.log(lobby);
+    this.setLocalLobby(lobby);
   }
 
   getArticle(key: string, callback: any) {
@@ -82,16 +81,11 @@ class LobbyManager {
     this.removeLocalLobby();
     this.lobby = lobby;
     localStorage.setItem("lobby", JSON.stringify(lobby));
-    this.getLocalLobby();
   }
 
   removeLocalLobby() {
     this.lobby = null;
     localStorage.removeItem("lobby");
-  }
-
-  getLocalLobby() {
-    JSON.parse(localStorage.getItem("lobby")!) as Lobby;
   }
 
   setPublic(callback: any) {
