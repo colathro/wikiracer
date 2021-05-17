@@ -69,6 +69,22 @@ class LobbyManager {
       });
   }
 
+  sendMessage(message: string, callback: any) {
+    fetch(
+      `/api/lobby/player/message?lobbyKey=${this.lobby?.key}&message=${message}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + AuthState.auth_info?.access_token,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        callback(data);
+      });
+  }
+
   leaveLobby() {
     if (this.lobby === null) {
       return true;

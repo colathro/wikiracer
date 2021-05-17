@@ -92,6 +92,7 @@ namespace WebServer.Controllers
                 Id = Guid.NewGuid().ToString(),
                 Key = this.GenerateLobbyJoinKey(),
                 BanList = new List<string>(),
+                Messages = new List<Message>(),
                 IsPublic = false
             };
 
