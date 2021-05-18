@@ -33,4 +33,5 @@ export type User = {
   displayName: string;
   avatar: string;
   createdOn: Date;
+  key: string;
 };

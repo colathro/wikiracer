@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import LobbyState from "../state/LobbyState";
 import ConnectionState from "../state/ConnectionState";
 import Chat from "../components/chat/Chat";
+import Players from "../components/players/Players";
 
 const LobbyView = observer(() => {
   const [connectionStarted, setConnectionStarted] = useState(false);
@@ -28,16 +29,7 @@ const LobbyView = observer(() => {
         Leave Lobby
       </button>
       <div>
-        <div>
-          Players:
-          <div>
-            <ul>
-              {LobbyState.lobby?.players.map((player, key) => {
-                return <li key={key}>{player.displayName}</li>;
-              })}
-            </ul>
-          </div>
-        </div>
+        <Players />
         <Chat />
         <div>
           Lobby Visibility: {LobbyState.lobby?.isPublic ? "Public" : "Private"}

@@ -2,6 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { UserManager } from "oidc-client";
 import { AuthType } from "../enums/AuthType";
 import { AuthInfo } from "../types/AuthInfo";
+import { User } from "../types/Lobby";
 import LobbyState from "./LobbyState";
 
 var config = {
@@ -21,7 +22,7 @@ const twitchManager = new UserManager(config);
 
 class Auth {
   auth_info: AuthInfo | undefined;
-  user: any;
+  user: User | undefined;
 
   constructor() {
     makeAutoObservable(this);

@@ -13,6 +13,13 @@ class LobbyManager {
 
   lobbyState(lobby: Lobby) {
     this.setLocalLobby(lobby);
+    this.checkBan();
+  }
+
+  checkBan() {
+    if (this.lobby!.banList!.includes(AuthState.user!.key)) {
+      this.leaveLobby();
+    }
   }
 
   getArticle(key: string, callback: any) {
@@ -62,10 +69,14 @@ class LobbyManager {
         Authorization: "Bearer " + AuthState.auth_info?.access_token,
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status == 200) return response.json();
+      })
       .then((data) => {
-        this.setLocalLobby(data);
-        callback(data);
+        if (data) {
+          this.setLocalLobby(data);
+          callback(data);
+        }
       });
   }
 
@@ -108,6 +119,20 @@ class LobbyManager {
     fetch(
       `/api/lobby/owner/setPublic?lobbyKey=${this.lobby?.key}&isPublic=${!this
         .lobby?.isPublic}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + AuthState.auth_info?.access_token,
+        },
+      }
+    ).then(() => {
+      callback();
+    });
+  }
+
+  banPlayer(playerId: string, callback: any) {
+    fetch(
+      `/api/lobby/owner/ban?lobbyKey=${this.lobby?.key}&userKey=${playerId}`,
       {
         method: "POST",
         headers: {
