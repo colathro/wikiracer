@@ -26,6 +26,10 @@ class ConnectionManager {
       console.log("out callback");
       this.stateCallback(message);
     });
+
+    this.connection.on("LobbyClosed", () => {
+      LobbyState.removeLocalLobby();
+    });
   }
 
   async start(callback: any) {

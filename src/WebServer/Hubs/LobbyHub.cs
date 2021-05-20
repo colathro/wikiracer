@@ -12,10 +12,12 @@ namespace WebServer.Hubs
     public class LobbyHub : Hub
     {
         private readonly LobbyService lobbyService;
+        private readonly UserService userService;
 
-        public LobbyHub(LobbyService _lobbyService)
+        public LobbyHub(LobbyService _lobbyService, UserService _userService)
         {
             this.lobbyService = _lobbyService;
+            this.userService = _userService;
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -30,7 +32,25 @@ namespace WebServer.Hubs
                 {
                     return;
                 }
+
                 player.Active = false;
+                player.LastUpdate = DateTime.UtcNow;
+
+                // pass ownership if owner disconnected
+                if (player.Id == lobby.Owner.Key)
+                {
+                    var newOwner = lobby.Players.FirstOrDefault(pl => pl.Active == true);
+
+                    if (newOwner != default)
+                    {
+                        var newOwnerUser = await this.userService.GetUser(newOwner.Id, newOwner.AuthProvider);
+                        lobby.Owner = newOwnerUser;
+                    }
+                    else
+                    {
+                        lobby.IsOpen = false;
+                    }
+                }
 
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, lobby.Key);
                 await this.lobbyService.UpdateItemAsync(lobby);
@@ -41,6 +61,12 @@ namespace WebServer.Hubs
         {
             // this prevent users from join without join via rest api first
             var lobby = await this.lobbyService.GetLobby(joinKey);
+            if (lobby == null)
+            {
+                await Clients.Caller.SendAsync("LobbyClosed");
+                return;
+            }
+
             var player = lobby.Players.FirstOrDefault(lp => lp.Id == this.GetUserKey());
 
             if (player == default)
@@ -50,6 +76,7 @@ namespace WebServer.Hubs
 
             // ui should only show active users
             player.Active = true;
+            player.LastUpdate = DateTime.UtcNow;
             await this.lobbyService.UpdateItemAsync(lobby);
             await Groups.AddToGroupAsync(Context.ConnectionId, joinKey);
             Context.Items["joinKey"] = joinKey;
@@ -61,7 +88,25 @@ namespace WebServer.Hubs
             {
                 // explicitly leaving the lobby removes progress
                 var lobby = await this.lobbyService.GetLobby((string)joinKey);
+
                 var player = lobby.Players.RemoveAll(lp => lp.Id == this.GetUserKey());
+
+                // pass ownership if owner disconnected
+                if (this.GetUserKey() == lobby.Owner.Key)
+                {
+                    var newOwner = lobby.Players.FirstOrDefault(pl => pl.Active == true);
+
+                    if (newOwner != default)
+                    {
+                        var newOwnerUser = await this.userService.GetUser(newOwner.Id, newOwner.AuthProvider);
+                        lobby.Owner = newOwnerUser;
+                    }
+                    else
+                    {
+                        lobby.IsOpen = false;
+                    }
+                }
+
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, lobby.Key);
                 await this.lobbyService.UpdateItemAsync(lobby);
             }

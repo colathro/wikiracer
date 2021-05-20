@@ -70,7 +70,8 @@ namespace WebServer.Controllers
                     AuthProvider = user.AuthProvider,
                     CurrentArticle = "",
                     Finished = false,
-                    Active = false
+                    Active = false,
+                    LastUpdate = DateTime.UtcNow
                 });
 
                 await this.lobbyService.UpdateItemAsync(lobby);
@@ -93,7 +94,8 @@ namespace WebServer.Controllers
                 Key = this.GenerateLobbyJoinKey(),
                 BanList = new List<string>(),
                 Messages = new List<Message>(),
-                IsPublic = false
+                IsPublic = false,
+                IsOpen = true
             };
 
             await this.lobbyService.AddItemAsync(lobby);

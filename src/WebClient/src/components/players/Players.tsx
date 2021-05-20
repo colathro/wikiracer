@@ -17,13 +17,17 @@ const Players = observer(() => {
               return (
                 <li key={key}>
                   {player.displayName}{" "}
-                  <button
-                    onClick={() => {
-                      ban(player.id);
-                    }}
-                  >
-                    Ban
-                  </button>
+                  {LobbyState.checkOwner() ? (
+                    <button
+                      onClick={() => {
+                        ban(player.id);
+                      }}
+                    >
+                      Ban
+                    </button>
+                  ) : (
+                    <></>
+                  )}
                 </li>
               );
             }

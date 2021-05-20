@@ -1,10 +1,14 @@
 import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 import AuthState from "../state/AuthState";
 import LobbyState from "../state/LobbyState";
 import LobbyFinderView from "./LobbyFinderView";
 import LobbyView from "./LobbyView";
 
 const LoggedInView = observer(() => {
+  useEffect(() => {
+    AuthState.getUser();
+  }, []);
   return (
     <div>
       <div>

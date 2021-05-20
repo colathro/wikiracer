@@ -22,6 +22,12 @@ class LobbyManager {
     }
   }
 
+  checkOwner() {
+    console.log(this.lobby?.owner);
+    console.log(AuthState.user);
+    return this.lobby?.owner.key == AuthState.user?.key;
+  }
+
   getArticle(key: string, callback: any) {
     fetch(`/api/article?key=${key}`, {
       method: "GET",

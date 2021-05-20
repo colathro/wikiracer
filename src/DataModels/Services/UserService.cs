@@ -28,6 +28,20 @@ namespace DataModels.Services
             }
         }
 
+        public async Task<DataModels.CosmosModels.User> GetUser(string key, AuthType authType)
+        {
+            try
+            {
+                var query = $"SELECT * FROM c where c.Key = '{key}' and c.AuthProvider = {(int)authType}";
+                var users = await this.GetItemsAsync(query);
+                return users.FirstOrDefault();
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+        }
+
         public async Task CleanGuestUsers()
         {
             var query = $"SELECT * FROM c where c.CreatedOn <= '{DateTime.UtcNow.AddDays(-1).ToString("o")}' and c.AuthProvider = {(int)AuthType.Guest}";

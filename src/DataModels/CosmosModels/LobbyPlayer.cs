@@ -1,4 +1,5 @@
 using DataModels.CosmosModels.Enums;
+using System;
 
 namespace DataModels.CosmosModels
 {
@@ -11,5 +12,6 @@ namespace DataModels.CosmosModels
         public string CurrentArticle { get; set; }
         public bool Finished { get; set; }
         public bool Active { get; set; }
+        public DateTime LastUpdate { get; set; }
     }
 }
