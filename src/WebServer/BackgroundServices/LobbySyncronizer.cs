@@ -33,32 +33,16 @@ namespace WebServer.BackgroundServices
                     var lobbys = await this.lobbyService.GetAllLobbies();
                     foreach (var lobby in lobbys)
                     {
-                        if (this.lobbyCache.TryGetValue<Lobby>(lobby.Key, out Lobby cachedLobby))
+                        if (!this.lobbyCache.TryGetValue<Lobby>(lobby.Key, out Lobby cachedLobby)
+                            || lobby._etag != cachedLobby._etag)
                         {
-                            if (JsonConvert.SerializeObject(lobby) == JsonConvert.SerializeObject(cachedLobby))
+                        this.lobbyCache.Set<Lobby>(lobby.Key,
+                            lobby,
+                            new MemoryCacheEntryOptions
                             {
-                                continue;
-                            }
-                            else
-                            {
-                                this.lobbyCache.Set<Lobby>(lobby.Key,
-                                    lobby,
-                                    new MemoryCacheEntryOptions
-                                    {
-                                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                                    });
-                                await this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby);
-                            }
-                        }
-                        else
-                        {
-                            this.lobbyCache.Set<Lobby>(lobby.Key,
-                                lobby,
-                                new MemoryCacheEntryOptions
-                                {
-                                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                                });
-                            await this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby);
+                                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                            });
+                        await this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby);
                         }
                     }
                 }
