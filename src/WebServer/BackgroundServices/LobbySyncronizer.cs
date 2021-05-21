@@ -19,9 +19,9 @@ namespace WebServer.BackgroundServices
 
         public LobbySynchronizer(LobbyService _lobbyService, IHubContext<LobbyHub> _lobbyHub)
         {
-        this.lobbyHub = _lobbyHub;
-        this.lobbyService = _lobbyService;
-        this.lobbyCache = new MemoryCache(new MemoryCacheOptions());
+            this.lobbyHub = _lobbyHub;
+            this.lobbyService = _lobbyService;
+            this.lobbyCache = new MemoryCache(new MemoryCacheOptions());
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -30,21 +30,21 @@ namespace WebServer.BackgroundServices
             {
                 try
                 {
-                var lobbys = await this.lobbyService.GetAllLobbies();
-                foreach (var lobby in lobbys)
-                {
-                    if (!this.lobbyCache.TryGetValue<Lobby>(lobby.Key, out Lobby cachedLobby)
-                        || lobby._etag != cachedLobby._etag)
+                    var lobbys = await this.lobbyService.GetAllLobbies();
+                    foreach (var lobby in lobbys)
                     {
-                    this.lobbyCache.Set<Lobby>(lobby.Key,
-                        lobby,
-                        new MemoryCacheEntryOptions
+                        if (!this.lobbyCache.TryGetValue<Lobby>(lobby.Key, out Lobby cachedLobby)
+                            || lobby._etag != cachedLobby._etag)
                         {
-                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                        });
-                    await this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby);
+                        this.lobbyCache.Set<Lobby>(lobby.Key,
+                            lobby,
+                            new MemoryCacheEntryOptions
+                            {
+                                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                            });
+                        await this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby);
+                        }
                     }
-                }
                 }
                 catch
                 {
