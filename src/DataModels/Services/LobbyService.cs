@@ -44,9 +44,9 @@ namespace DataModels.Services
             await this.container.CreateItemAsync(lobby, new PartitionKey(lobby.Key));
         }
 
-        public async Task DeleteItemAsync(string key)
+        public async Task DeleteItemAsync(string id, string key)
         {
-            await this.container.DeleteItemAsync<Lobby>(key, new PartitionKey(key));
+            await this.container.DeleteItemAsync<Lobby>(id, new PartitionKey(key));
         }
 
         public async Task<Lobby> GetItemAsync(string key)
@@ -101,6 +101,17 @@ namespace DataModels.Services
                 "SetCurrentArticle",
                 new PartitionKey(lobbyKey),
                 new[] { lobbyKey, userId, articleKey });
+        }
+
+        public async Task CleanClosedLobbies()
+        {
+            var query = "SELECT * FROM c where c.IsOpen = false";
+            var lobbys = await this.GetItemsAsync(query);
+
+            foreach (var lobby in lobbys)
+            {
+                await this.DeleteItemAsync(lobby.Id, lobby.Key);
+            }
         }
     }
 }
