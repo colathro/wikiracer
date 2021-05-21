@@ -130,10 +130,13 @@ namespace WebServer.Controllers
         [HttpGet("player/article")]
         public async Task<IActionResult> GetArticle([FromQuery] string lobbyKey, [FromQuery] string key)
         {
-            var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
+            var userId = this.GetUserKey();
+            var user = await this.userService.GetUser(userId, this.GetUserProvider());
             key = key.ToLower();
             var article = await this.articleService.GetArticleAsync(key);
             article.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(article.Title);
+
+            await lobbyService.SetCurrentArticle(lobbyKey, userId, key);
             return Ok(article);
         }
 
