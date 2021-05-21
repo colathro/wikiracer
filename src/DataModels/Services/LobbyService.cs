@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DataModels.CosmosModels;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
+using Microsoft.Azure.Cosmos.Scripts;
 
 namespace DataModels.Services
 {
@@ -92,6 +93,14 @@ namespace DataModels.Services
         public async Task UpdateItemAsync(Lobby lobby)
         {
             await this.container.UpsertItemAsync<Lobby>(lobby, new PartitionKey(lobby.Key));
+        }
+
+        public async Task<Lobby> SetCurrentArticle(string lobbyKey, string userId, string articleKey)
+        {
+            return await this.container.Scripts.ExecuteStoredProcedureAsync<Lobby>(
+                "SetCurrentArticle",
+                new PartitionKey(lobbyKey),
+                new[] { lobbyKey, userId, articleKey });
         }
     }
 }
