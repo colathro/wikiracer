@@ -8,10 +8,12 @@ namespace WebServer.BackgroundServices
     public class CleanupService : BackgroundService
     {
         private readonly UserService userService;
+        private readonly LobbyService lobbyService;
 
-        public CleanupService(UserService _userService)
+        public CleanupService(UserService _userService, LobbyService _lobbyService)
         {
             this.userService = _userService;
+            this.lobbyService = _lobbyService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -21,6 +23,7 @@ namespace WebServer.BackgroundServices
                 try
                 {
                     await this.userService.CleanGuestUsers();
+                    await this.lobbyService.CleanClosedLobbies();
                 }
                 catch
                 {
