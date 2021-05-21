@@ -29,7 +29,7 @@ class LobbyManager {
   }
 
   getArticle(key: string, callback: any) {
-    fetch(`/api/article?key=${key}`, {
+    fetch(`/api/lobby/player/article?lobbyKey=${this.lobby?.key}&key=${key}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + AuthState.auth_info?.access_token,
