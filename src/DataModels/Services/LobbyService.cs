@@ -98,7 +98,7 @@ namespace DataModels.Services
         public async Task<Lobby> SetCurrentArticle(string lobbyKey, string userId, string articleKey)
         {
             return await this.container.Scripts.ExecuteStoredProcedureAsync<Lobby>(
-                "SetCurrentArticle", // your stored procedure name
+                "SetCurrentArticle",
                 new PartitionKey(lobbyKey),
                 new[] { lobbyKey, userId, articleKey });
         }
