@@ -102,5 +102,13 @@ namespace DataModels.Services
                 new PartitionKey(lobbyKey),
                 new[] { lobbyKey, userId, articleKey });
         }
+
+        public async Task<Lobby> SetStartEndArticle(string lobbyKey, string startArticleKey, string endArticleKey)
+        {
+            return await this.container.Scripts.ExecuteStoredProcedureAsync<Lobby>(
+                "SetStartEndArticle",
+                new PartitionKey(lobbyKey),
+                new[] { lobbyKey, startArticleKey, endArticleKey });
+        }
     }
 }
