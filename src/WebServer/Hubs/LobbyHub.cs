@@ -77,6 +77,15 @@ namespace WebServer.Hubs
             // ui should only show active users
             player.Active = true;
             player.LastUpdate = DateTime.UtcNow;
+
+            if (lobby.Players.Count(p => p.Active) <= 1)
+            {
+                var newOwnerUser = await this.userService.GetUser(player.Id, player.AuthProvider);
+                lobby.Owner = newOwnerUser;
+            }
+
+            lobby.IsOpen = true;
+
             await this.lobbyService.UpdateItemAsync(lobby);
             await Groups.AddToGroupAsync(Context.ConnectionId, joinKey);
             Context.Items["joinKey"] = joinKey;

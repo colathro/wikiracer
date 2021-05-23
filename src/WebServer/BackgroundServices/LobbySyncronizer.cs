@@ -34,15 +34,15 @@ namespace WebServer.BackgroundServices
                     foreach (var lobby in lobbys)
                     {
                         if (!this.lobbyCache.TryGetValue<Lobby>(lobby.Key, out Lobby cachedLobby)
-                            || lobby._etag != cachedLobby._etag)
+                            || lobby.ETag != cachedLobby.ETag)
                         {
-                        this.lobbyCache.Set<Lobby>(lobby.Key,
-                            lobby,
-                            new MemoryCacheEntryOptions
-                            {
-                                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                            });
-                        await this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby);
+                            this.lobbyCache.Set<Lobby>(lobby.Key,
+                                lobby,
+                                new MemoryCacheEntryOptions
+                                {
+                                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                                });
+                            await this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby);
                         }
                     }
                 }

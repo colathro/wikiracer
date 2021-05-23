@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -110,10 +111,10 @@ namespace DataModels.Services
                 new PartitionKey(lobbyKey),
                 new[] { lobbyKey, startArticleKey, endArticleKey });
         }
-        
+
         public async Task CleanClosedLobbies()
         {
-            var query = "SELECT * FROM c where c.IsOpen = false";
+            var query = $"SELECT * FROM c where c._ts <= {DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds()}";
             var lobbys = await this.GetItemsAsync(query);
 
             foreach (var lobby in lobbys)
