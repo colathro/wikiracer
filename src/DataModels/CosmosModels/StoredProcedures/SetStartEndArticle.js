@@ -21,7 +21,7 @@ function SetStartEndArticle(lobbyKey, startArticleKey, endArticleKey) {
     var requestOptions = {etag: document._etag};
 
     document.StartArticle = startArticleKey;
-    document.EndArticleKey = endArticleKey;
+    document.EndArticle = endArticleKey;
 
     var isAccepted = collection.replaceDocument(document._self, document, requestOptions, function (err, updatedDocument, responseOptions) {
       if (err) throw err;

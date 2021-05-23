@@ -196,7 +196,7 @@ namespace WebServer.Controllers
             return Ok();
         }
 
-        [HttpGet("owner/setarticle")]
+        [HttpPost("owner/setarticle")]
         public async Task<IActionResult> SetArticle([FromQuery] string lobbyKey, [FromQuery] string start, [FromQuery] string finish)
         {
             var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
@@ -210,7 +210,7 @@ namespace WebServer.Controllers
             {
                 return BadRequest();
             }
-            
+
             await this.lobbyService.SetStartEndArticle(lobbyKey, start, finish);
             return Ok();
         }
