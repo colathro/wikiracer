@@ -33,7 +33,10 @@ namespace WebServer
             services.AddControllers();
             services.AddResponseCompression();
 
-            //services.AddApplicationInsightsTelemetry("3b402ab6-f9a9-4597-bac3-1bf57241ddf5");
+            if (!Environment.IsDevelopment())
+            {
+                services.AddApplicationInsightsTelemetry("3b402ab6-f9a9-4597-bac3-1bf57241ddf5");
+            }
 
             services.AddSingleton<UserService>(initializeUserService());
             services.AddSingleton<LobbyService>(initializeLobbyService());
