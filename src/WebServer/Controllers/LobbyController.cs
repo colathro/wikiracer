@@ -196,7 +196,7 @@ namespace WebServer.Controllers
             return Ok();
         }
 
-        [HttpPost("owner/setarticle")]
+        [HttpGet("owner/setarticle")]
         public async Task<IActionResult> SetArticle([FromQuery] string lobbyKey, [FromQuery] string start, [FromQuery] string finish)
         {
             var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
