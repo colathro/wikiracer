@@ -21,7 +21,5 @@ namespace DataModels.CosmosModels
         public string EndArticle { get; set; }
 
         public List<Message> Messages { get; set; }
-
-        public string _etag {get; set;}
     }
 }

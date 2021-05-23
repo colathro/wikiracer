@@ -8,5 +8,11 @@ namespace DataModels.CosmosModels
         public string Id { get; set; }
 
         public string Key { get; set; }
+
+        [JsonProperty(PropertyName = "_ts")]
+        public long TimeStamp { get; set; }
+
+        [JsonProperty(PropertyName = "_etag")]
+        public string ETag { get; set; }
     }
 }
