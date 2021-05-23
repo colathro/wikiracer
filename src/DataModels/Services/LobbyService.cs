@@ -103,6 +103,14 @@ namespace DataModels.Services
                 new[] { lobbyKey, userId, articleKey });
         }
 
+        public async Task<Lobby> SetStartEndArticle(string lobbyKey, string startArticleKey, string endArticleKey)
+        {
+            return await this.container.Scripts.ExecuteStoredProcedureAsync<Lobby>(
+                "SetStartEndArticle",
+                new PartitionKey(lobbyKey),
+                new[] { lobbyKey, startArticleKey, endArticleKey });
+        }
+        
         public async Task CleanClosedLobbies()
         {
             var query = "SELECT * FROM c where c.IsOpen = false";

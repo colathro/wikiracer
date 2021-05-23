@@ -149,6 +149,20 @@ class LobbyManager {
       callback();
     });
   }
+
+  setArticles(startArticle: string, finishArticle: string, callback: any) {
+    fetch(
+      `/api/lobby/owner/setarticle?lobbyKey=${this.lobby?.key}&start=${startArticle}&finish=${finishArticle}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + AuthState.auth_info?.access_token,
+        },
+      }
+    ).then(() => {
+      callback();
+    });
+  }
 }
 
 const LobbyState = new LobbyManager();

@@ -211,6 +211,7 @@ namespace WebServer.Controllers
                 return BadRequest();
             }
 
+            await this.lobbyService.SetStartEndArticle(lobbyKey, start, finish);
             return Ok();
         }
 
