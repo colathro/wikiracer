@@ -3,10 +3,12 @@ import { observer } from "mobx-react-lite";
 import LobbyState from "../state/LobbyState";
 
 const TargetArticles = observer(() => {
+  const [editable, setEditable] = useState(false);
   const [startArticle, setStartArticle] = useState("");
   const [finishArticle, setFinishArticle] = useState("");
 
   const set = () => {
+    setEditable(false);
     LobbyState.setArticles(startArticle, finishArticle, () => {});
   };
 
@@ -16,26 +18,46 @@ const TargetArticles = observer(() => {
         Target Articles:
         <div>
           Start:
-          <input
-            onChange={(e) => {
-              setStartArticle(e.target.value);
-            }}
-            value={startArticle}
-          ></input>
+          {editable ? (
+            <input
+              onChange={(e) => {
+                setStartArticle(e.target.value);
+              }}
+              value={startArticle}
+            />
+          ) : (
+            LobbyState.lobby?.startArticle
+          )}
           Finish:
-          <input
-            onChange={(e) => {
-              setFinishArticle(e.target.value);
-            }}
-            value={finishArticle}
-          ></input>
-          <button
-            onClick={() => {
-              set();
-            }}
-          >
-            Set Articles
-          </button>
+          {editable ? (
+            <input
+              onChange={(e) => {
+                setFinishArticle(e.target.value);
+              }}
+              value={finishArticle}
+            />
+          ) : (
+            LobbyState.lobby?.endArticle
+          )}
+          {LobbyState.checkOwner() ? (
+            editable ? (
+              <button
+                onClick={() => {
+                  set();
+                }}
+              >
+                Set Articles
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setEditable(true);
+                }}
+              >
+                Edit
+              </button>
+            )
+          ) : ( null )}
         </div>
       </div>
     </div>
