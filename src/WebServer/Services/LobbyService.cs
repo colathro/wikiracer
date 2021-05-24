@@ -7,7 +7,7 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
 using Microsoft.Azure.Cosmos.Scripts;
 
-namespace DataModels.Services
+namespace WebServer.Services
 {
 
     public class LobbyService : Service

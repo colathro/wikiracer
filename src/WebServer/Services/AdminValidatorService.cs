@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DataModels.Services
+namespace WebServer.Services
 {
     public static class AdminValidatorService
     {

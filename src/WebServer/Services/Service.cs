@@ -6,7 +6,7 @@ using DataModels.CosmosModels;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
 
-namespace DataModels.Services
+namespace WebServer.Services
 {
 
     public class Service
