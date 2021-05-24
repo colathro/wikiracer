@@ -6,7 +6,7 @@ using DataModels.CosmosModels.Enums;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
 
-namespace DataModels.Services
+namespace WebServer.Services
 {
 
     public class UserService : Service

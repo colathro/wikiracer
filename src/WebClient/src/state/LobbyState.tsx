@@ -28,8 +28,8 @@ class LobbyManager {
     return this.lobby?.owner.key == AuthState.user?.key;
   }
 
-  getArticle(key: string, callback: any) {
-    fetch(`/api/lobby/player/article?lobbyKey=${this.lobby?.key}&key=${key}`, {
+  getArticle(key: string, useStorageAccount: boolean, callback: any) {
+    fetch(`/api/lobby/player/article?lobbyKey=${this.lobby?.key}&key=${key}&useStorageAccount=${useStorageAccount}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + AuthState.auth_info?.access_token,

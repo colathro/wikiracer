@@ -7,7 +7,6 @@ using DataLoader.MwParserFromScratch;
 using System.Text.RegularExpressions;
 using DataLoader.MwParserFromScratch.Nodes;
 using DataModels.StorageModels;
-using DataModels.Services;
 
 namespace DataLoader
 {
@@ -68,14 +67,6 @@ namespace DataLoader
                     }
                 }
             }
-        }
-
-        public static ArticleService initializeArticleService()
-        {
-            string account = "https://wikiracer.documents.azure.com:443/";
-            string key = Environment.GetEnvironmentVariable("COSMOS_KEY");
-            string connectionString = Environment.GetEnvironmentVariable("STORAGE_KEY");
-            return new ArticleService(account, key, connectionString);
         }
 
         public static void Log(string logMessage, TextWriter w)

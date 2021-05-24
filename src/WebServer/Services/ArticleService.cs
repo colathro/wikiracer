@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using DataModels.CosmosModels;
 using DataModels.StorageModels;
 using Microsoft.Azure.Cosmos;
@@ -10,9 +12,14 @@ using System;
 using System.Text;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
+using DataLoader.MwParserFromScratch;
+using DataLoader.MwParserFromScratch.Nodes;
+using DataLoader;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 
-namespace DataModels.Services
+namespace WebServer.Services
 {
 
     public class ArticleService : Service
@@ -112,6 +119,20 @@ namespace DataModels.Services
             {
                 return null;
             }
+        }
+
+        public async Task<Article> GetArticleMediaWikiAsync(string key)
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Api-User-Agent","matt@fivestack.io");
+
+            var response = await client.GetAsync(new Uri($"https://en.wikipedia.org/w/api.php?action=parse&page={key}&prop=wikitext&formatversion=2&format=json"));
+            string result = response.Content.ReadAsStringAsync().Result;
+            var wikiResponse = JsonConvert.DeserializeObject<WikiResponse>(result);
+
+            var textParser = new WikitextParser { Logger = new MyParserLogger() };
+            var ast = textParser.Parse(wikiResponse.parse.wikitext);
+            return Converter.ConvertWikitextToArticle(ast, wikiResponse.parse.title);
         }
 
         public async Task<Article> GetArticleAsync(string key)
@@ -229,4 +250,76 @@ namespace DataModels.Services
             await this.container.UpsertItemAsync<ArticlePointer>(articlePointer, new PartitionKey(articlePointer.Key));
         }
     }
+}
+
+class MyParserLogger : IWikitextParserLogger
+{
+  private class RegexStatistics
+  {
+    public int InvocationCount = 0;
+    public long EllapsedTicks = 0;
+    public TimeSpan Ellapsed => TimeSpan.FromTicks(EllapsedTicks);
+    public TimeSpan AverageEllapsed => TimeSpan.FromTicks(EllapsedTicks / InvocationCount);
+  }
+  private readonly Dictionary<int, int> fallbackDict = new Dictionary<int, int>();
+  private readonly Dictionary<string, RegexStatistics> regexStatDict = new Dictionary<string, RegexStatistics>();
+  private int fallbackCounter;
+  private readonly Stopwatch parserWatch = new Stopwatch();
+  private readonly Stopwatch regexWatch = new Stopwatch();
+  private string text;
+
+  /// <inheritdoc />
+  public void NotifyParsingStarted(string text)
+  {
+    this.text = text;
+    fallbackDict.Clear();
+    fallbackCounter = 0;
+    parserWatch.Restart();
+  }
+
+  /// <inheritdoc />
+  public void NotifyFallback(int offset, int contextStackSize)
+  {
+    if (!fallbackDict.TryGetValue(offset, out int counter)) counter = 0;
+    fallbackDict[offset] = counter + 1;
+    fallbackCounter++;
+  }
+
+  /// <inheritdoc />
+  public void NotifyParsingFinished()
+  {
+    regexStatDict.Clear();
+    fallbackDict.Clear();
+  }
+
+  /// <inheritdoc />
+  public void NotifyRegexMatchingStarted(int offset, Regex expression)
+  {
+    regexWatch.Restart();
+  }
+
+  /// <inheritdoc />
+  public void NotifyRegexMatchingFinished(int offset, Regex expression)
+  {
+    if (!regexStatDict.TryGetValue(expression.ToString(), out RegexStatistics stat))
+    {
+      stat = new RegexStatistics();
+      regexStatDict.Add(expression.ToString(), stat);
+    }
+    stat.EllapsedTicks += regexWatch.ElapsedTicks;
+    stat.InvocationCount++;
+  }
+}
+
+public class WikiResponse
+{
+    public Parse parse {get; set;}
+}
+
+public class Parse
+{
+    public string title {get; set;}
+
+    public string wikitext {get; set;}
+
 }

@@ -5,13 +5,14 @@ import LobbyState from "../state/LobbyState";
 
 const Article = observer(() => {
   const [article, setArticle] = useState(
-    "President_of_the_Policy_and_Resources_Committee_of_Guernsey"
+    "Pet_door"
   );
+  const [useStorageAccount, setUseStorageAccount] = useState(false);
   const [articleData, setArticleData] = useState<any>(undefined);
 
   useEffect(() => {
     AuthState.getUser();
-    LobbyState.getArticle(article, setArticleData);
+    LobbyState.getArticle(article, useStorageAccount, setArticleData);
   }, []);
 
   console.log(articleData);
@@ -27,9 +28,17 @@ const Article = observer(() => {
         Logout
       </button>
       <div>
+      Arrticle Method: {useStorageAccount ? "Storage" : "API"}
+        <button
+            onClick={() => {
+              setUseStorageAccount(!useStorageAccount);
+            }}
+          >
+          Toggle
+        </button>
         <button
           onClick={() => {
-            LobbyState.getArticle(article, setArticleData);
+            LobbyState.getArticle(article, useStorageAccount, setArticleData);
           }}
         >
           Load Article
@@ -52,7 +61,7 @@ const Article = observer(() => {
                             }}
                             key={sind}
                             onClick={() => {
-                              LobbyState.getArticle(span.link, setArticleData);
+                              LobbyState.getArticle(span.link, useStorageAccount, setArticleData);
                             }}
                           >
                             {span.text}
