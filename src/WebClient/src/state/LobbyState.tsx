@@ -23,18 +23,19 @@ class LobbyManager {
   }
 
   checkOwner() {
-    console.log(this.lobby?.owner);
-    console.log(AuthState.user);
     return this.lobby?.owner.key == AuthState.user?.key;
   }
 
   getArticle(key: string, useStorageAccount: boolean, callback: any) {
-    fetch(`/api/lobby/player/article?lobbyKey=${this.lobby?.key}&key=${key}&useStorageAccount=${useStorageAccount}`, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + AuthState.auth_info?.access_token,
-      },
-    })
+    fetch(
+      `/api/lobby/player/article?lobbyKey=${this.lobby?.key}&key=${key}&useStorageAccount=${useStorageAccount}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + AuthState.auth_info?.access_token,
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         callback(data);

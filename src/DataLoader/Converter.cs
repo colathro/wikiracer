@@ -1,4 +1,3 @@
-using System;
 using DataLoader.MwParserFromScratch.Nodes;
 using DataModels.StorageModels;
 using DataModels.StorageModels.Enums;
@@ -50,6 +49,9 @@ namespace DataLoader
                             break;
                         case WikiLink wl:
                             ProcessWikiLink(wl, paragraph.Spans, flag);
+                            break;
+                        case WikiImageLink wil:
+                            ProcessWikiImageLink(wil, paragraph.Spans, flag);
                             break;
                         case FormatSwitch fm:
                             if (fm.SwitchBold)
@@ -117,6 +119,25 @@ namespace DataLoader
             span.Link = ptTarget;
             span.Style = flag.Style;
             span.Type = SpanType.Link;
+
+            spans.Add(span);
+        }
+
+        private static void ProcessWikiImageLink(WikiImageLink node, List<Span> spans, FormatFlag flag)
+        {
+            var span = new Span();
+            var ptTarget = node.Target.ToPlainText();
+
+            span.Link = ptTarget;
+            span.Style = flag.Style;
+            span.Type = SpanType.Image;
+
+            var args = new List<string>();
+            foreach (var arg in node.Arguments)
+            {
+                args.Add(arg.Value.ToPlainText());
+            }
+            span.Args = args;
 
             spans.Add(span);
         }

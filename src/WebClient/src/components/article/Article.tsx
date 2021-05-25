@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import AuthState from "../state/AuthState";
-import LobbyState from "../state/LobbyState";
+import AuthState from "../../state/AuthState";
+import LobbyState from "../../state/LobbyState";
 
 const Article = observer(() => {
-  const [article, setArticle] = useState(
-    "Pet_door"
-  );
+  const [article, setArticle] = useState("Pet_door");
   const [useStorageAccount, setUseStorageAccount] = useState(false);
   const [articleData, setArticleData] = useState<any>(undefined);
 
@@ -28,12 +26,12 @@ const Article = observer(() => {
         Logout
       </button>
       <div>
-      Arrticle Method: {useStorageAccount ? "Storage" : "API"}
+        Arrticle Method: {useStorageAccount ? "Storage" : "API"}
         <button
-            onClick={() => {
-              setUseStorageAccount(!useStorageAccount);
-            }}
-          >
+          onClick={() => {
+            setUseStorageAccount(!useStorageAccount);
+          }}
+        >
           Toggle
         </button>
         <button
@@ -51,6 +49,11 @@ const Article = observer(() => {
                 return (
                   <p key={ind}>
                     {paragraph.spans.map((span: any, sind: any) => {
+                      if (span.type == 2) {
+                        return (
+                          <img src={`/api/image?imageurl=${span.link}`}></img>
+                        );
+                      }
                       if (span.link != null) {
                         return (
                           <a
@@ -61,7 +64,11 @@ const Article = observer(() => {
                             }}
                             key={sind}
                             onClick={() => {
-                              LobbyState.getArticle(span.link, useStorageAccount, setArticleData);
+                              LobbyState.getArticle(
+                                span.link,
+                                useStorageAccount,
+                                setArticleData
+                              );
                             }}
                           >
                             {span.text}

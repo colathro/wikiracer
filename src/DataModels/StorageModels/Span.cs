@@ -1,4 +1,5 @@
 using DataModels.StorageModels.Enums;
+using System.Collections.Generic;
 
 namespace DataModels.StorageModels
 {
@@ -8,5 +9,6 @@ namespace DataModels.StorageModels
         public string Link { get; set; }
         public SpanType Type { get; set; }
         public SpanStyle Style { get; set; }
+        public List<string> Args { get; set; }
     }
 }
