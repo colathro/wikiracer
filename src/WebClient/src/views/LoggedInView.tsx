@@ -1,9 +1,16 @@
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import AuthState from "../state/AuthState";
-import LobbyState from "../state/LobbyState";
 import LobbyFinderView from "./LobbyFinderView";
-import LobbyView from "./LobbyView";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams,
+  useRouteMatch,
+} from "react-router-dom";
+import HowToPlayView from "./HowToPlayView";
 
 const LoggedInView = observer(() => {
   useEffect(() => {
@@ -21,7 +28,14 @@ const LoggedInView = observer(() => {
           Logout
         </button>
       </div>
-      {LobbyState.lobby === null ? <LobbyFinderView /> : <LobbyView />}
+      <Switch>
+        <Route path="/howtoplay">
+          <HowToPlayView />
+        </Route>
+        <Route path="/">
+          <LobbyFinderView />
+        </Route>
+      </Switch>
     </div>
   );
 });

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import AuthState from "../state/AuthState";
 import LobbyState from "../state/LobbyState";
 
 const LobbyFinderView = observer(() => {
   const [lobbies, setLobbies] = useState<any>([]);
+  let history = useHistory();
 
   useEffect(() => {
     AuthState.getUser();
@@ -16,7 +18,7 @@ const LobbyFinderView = observer(() => {
       <button
         onClick={() => {
           LobbyState.createLobby((d: any) => {
-            console.log(d);
+            history.push("/lobby");
           });
         }}
       >
@@ -31,7 +33,9 @@ const LobbyFinderView = observer(() => {
                 {lobby.key} {lobby.owner.displayName}{" "}
                 <button
                   onClick={() => {
-                    LobbyState.joinLobby(lobby.key, () => {});
+                    LobbyState.joinLobby(lobby.key, () => {
+                      history.push("/lobby");
+                    });
                   }}
                 >
                   Join

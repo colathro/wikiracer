@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import LobbyState from "../state/LobbyState";
 import ConnectionState from "../state/ConnectionState";
@@ -9,6 +10,13 @@ import TargetArticles from "../components/TargetArticles";
 
 const LobbyView = observer(() => {
   const [connectionStarted, setConnectionStarted] = useState(false);
+  let history = useHistory();
+
+  if (LobbyState.lobby === null) {
+    // error popup here
+    history.push("/");
+    return <></>;
+  }
 
   useEffect(() => {
     ConnectionState.start(() => {
@@ -26,6 +34,7 @@ const LobbyView = observer(() => {
       <button
         onClick={() => {
           LobbyState.leaveLobby();
+          history.push("/");
         }}
       >
         Leave Lobby
