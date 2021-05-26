@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
-import AuthState from "../state/AuthState";
-import LobbyState from "../state/LobbyState";
+import AuthState from "../../state/AuthState";
+import LobbyState from "../../state/LobbyState";
+import ThemeManager from "../../Themes";
+import styled from "styled-components";
 
-const LobbyFinderView = observer(() => {
+const Test = styled.div`
+  background-color: ${ThemeManager.theme?.background};
+  color: ${ThemeManager.theme?.text};
+`;
+
+const LobbyFinder = observer(() => {
   const [lobbies, setLobbies] = useState<any>([]);
   let history = useHistory();
 
@@ -14,7 +21,7 @@ const LobbyFinderView = observer(() => {
   }, []);
 
   return (
-    <div>
+    <Test>
       <button
         onClick={() => {
           LobbyState.createLobby((d: any) => {
@@ -45,8 +52,8 @@ const LobbyFinderView = observer(() => {
           })}
         </ul>
       </div>
-    </div>
+    </Test>
   );
 });
 
-export default LobbyFinderView;
+export default LobbyFinder;
