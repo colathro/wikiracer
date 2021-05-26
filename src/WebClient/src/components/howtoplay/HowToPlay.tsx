@@ -1,4 +1,4 @@
-const HowToPlayView = () => {
+const HowToPlay = () => {
   return (
     <div>
       <h1>How To Play</h1>
@@ -6,4 +6,4 @@ const HowToPlayView = () => {
   );
 };
 
-export default HowToPlayView;
+export default HowToPlay;
