@@ -21,13 +21,6 @@ const UnauthenticatedRouting = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/ariana">
-          <div>
-            <a href="https://drive.google.com/file/d/14zAxYFIJme47b2Rno69SeVQHJbEgjM9r/view?usp=sharing">
-              Interview docs
-            </a>
-          </div>
-        </Route>
         <Route path="/">
           <LoginView />
         </Route>
