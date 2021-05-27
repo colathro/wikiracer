@@ -1,16 +1,25 @@
 type Theme = {
   background: string;
+  background2: string;
   text: string;
+  text2: string;
+  logo: string;
 };
 
 const dark: Theme = {
-  background: "#000000",
-  text: "#ffffff",
+  background: "#202124",
+  background2: "#35363a",
+  text: "#cccccc",
+  text2: "#7891EC",
+  logo: "darklogo.svg",
 };
 
 const light: Theme = {
   background: "#ffffff",
+  background2: "#ffffff",
   text: "#000000",
+  text2: "#345DF0",
+  logo: "lightlogo.svg",
 };
 
 class ThemeManager {

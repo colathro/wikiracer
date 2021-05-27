@@ -13,17 +13,22 @@ import {
 import HowToPlay from "../components/howtoplay/HowToPlay";
 import Nav from "../components/nav/Nav";
 import styled from "styled-components";
+import Settings from "../components/settings/Settings";
 
 const Layout = styled.div`
   display: flex;
+  flex: 1;
 `;
 
 const NavWrapper = styled.div`
   display: flex;
+  width: 13em;
 `;
 
 const ContentWrapper = styled.div`
   display: flex;
+  flex-direction: column;
+  padding: 2em;
 `;
 
 const LoggedInView = observer(() => {
@@ -37,6 +42,9 @@ const LoggedInView = observer(() => {
       </NavWrapper>
       <ContentWrapper>
         <Switch>
+          <Route path="/settings">
+            <Settings />
+          </Route>
           <Route path="/howtoplay">
             <HowToPlay />
           </Route>
