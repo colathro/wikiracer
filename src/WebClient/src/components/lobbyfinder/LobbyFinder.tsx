@@ -6,10 +6,17 @@ import LobbyState from "../../state/LobbyState";
 import ThemeManager from "../../Themes";
 import styled from "styled-components";
 
-const Test = styled.div`
-  background-color: ${ThemeManager.theme?.background};
-  color: ${ThemeManager.theme?.text};
+const Layout = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 `;
+
+const Container = styled.div`
+  display: flex;
+`;
+
+const Header = styled.h1``;
 
 const LobbyFinder = observer(() => {
   const [lobbies, setLobbies] = useState<any>([]);
@@ -21,7 +28,10 @@ const LobbyFinder = observer(() => {
   }, []);
 
   return (
-    <Test>
+    <Layout>
+      <Container>
+        <Header>Join a Lobby</Header>
+      </Container>
       <button
         onClick={() => {
           LobbyState.createLobby((d: any) => {
@@ -52,7 +62,7 @@ const LobbyFinder = observer(() => {
           })}
         </ul>
       </div>
-    </Test>
+    </Layout>
   );
 });
 

@@ -9,6 +9,7 @@ import HowToHelp from "./HowToHelp";
 import User from "./User";
 import Logo from "./Logo";
 import Spacer from "../generic/Spacer";
+import Footer from "./Footer";
 
 const Layout = styled.div`
   display: flex;
@@ -34,6 +35,7 @@ const Nav = () => {
       <Feedback />
       <Spacer height={1} />
       <HowToHelp />
+      <Footer />
     </Layout>
   );
 };
