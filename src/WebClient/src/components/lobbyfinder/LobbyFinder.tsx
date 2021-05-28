@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
+import styled from "styled-components";
+import ThemeManager from "../../Themes";
 import AuthState from "../../state/AuthState";
 import LobbyState from "../../state/LobbyState";
-import ThemeManager from "../../Themes";
-import styled from "styled-components";
+import CreateLobby from "./CreateLobby";
+import PublicLobbies from "./PublicLobbies";
+import JoinLobby from "./JoinLobby";
 
 const Layout = styled.div`
   display: flex;
@@ -14,54 +17,31 @@ const Layout = styled.div`
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 
-const Header = styled.h1``;
+const Header = styled.h1`
+  font-weight: normal;
+  font-size: 3em;
+  max-width: 50%;
+  border-bottom: 0.5px solid ${ThemeManager.theme?.text};
+`;
 
 const LobbyFinder = observer(() => {
-  const [lobbies, setLobbies] = useState<any>([]);
-  let history = useHistory();
-
-  useEffect(() => {
-    AuthState.getUser();
-    LobbyState.getLobbies(setLobbies);
-  }, []);
-
   return (
     <Layout>
       <Container>
         <Header>Join a Lobby</Header>
+        <JoinLobby />
       </Container>
-      <button
-        onClick={() => {
-          LobbyState.createLobby((d: any) => {
-            history.push("/lobby");
-          });
-        }}
-      >
-        Create Lobby
-      </button>
-      <div>
-        <h1>Lobbies</h1>
-        <ul>
-          {lobbies.map((lobby: any, key: any) => {
-            return (
-              <li key={key}>
-                {lobby.key} {lobby.owner.displayName}{" "}
-                <button
-                  onClick={() => {
-                    LobbyState.joinLobby(lobby.key, () => {
-                      history.push("/lobby");
-                    });
-                  }}
-                >
-                  Join
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <Container>
+        <Header>Create a Lobby</Header>
+        <CreateLobby />
+      </Container>
+      <Container>
+        <Header>Public Lobbies</Header>
+        <PublicLobbies />
+      </Container>
     </Layout>
   );
 });
