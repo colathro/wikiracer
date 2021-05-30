@@ -252,9 +252,22 @@ namespace WebServer.Services
 
         public async Task<IEnumerable<string>> SearchForArticles(string searchString)
         {
-            var query = $"SELECT TOP 10 c.Key FROM c WHERE STARTSWITH(c.Key, '{searchString}', false)";
-            var articles = await this.GetItemsAsync(query);
-            return articles.Select<string>(_ => _.Key).ToList();
+            var queryString = $"SELECT TOP 10 c.Key FROM c WHERE STARTSWITH(c.Key, '{searchString}', false)";
+            var query = this.container.GetItemQueryIterator<ArticlePointer>(new QueryDefinition(queryString));
+            List<ArticlePointer> results = new List<ArticlePointer>();
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+
+                results.AddRange(response.ToList());
+            }
+
+            var ret = new List<string>();
+            foreach(var article in results)
+            {
+                ret.Add(article.Key);
+            }
+            return ret;
         }
     }
 }

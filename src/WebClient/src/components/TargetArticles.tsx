@@ -20,11 +20,15 @@ const TargetArticles = observer(() => {
     LobbyState.setArticles(startArticle, finishArticle, () => {});
   };
 
-  const getSuggestions = (value: any) => {
+  const getSuggestions = async (value: any) => {
     setSuggestionRenderTime(Date.now());
-    var val: Suggestion = { text: value.trim().toLowerCase() };
+    var list = [] as Array<Suggestion>;
+    var data = await LobbyState.searchArticles(value);
+    data.forEach((element: string) => list.push( { text: element }));
+    
+    console.log(list);
   
-    return [val];
+    return list;
   };
 
   const getSuggestionValue = (suggestion: any) => suggestion.text;
@@ -47,8 +51,8 @@ const TargetArticles = observer(() => {
     setStartArticleSuggestions([]);
   };
 
-  const startOnSuggestionsFetchRequested = ({ value }: any) => {
-    setStartArticleSuggestions(getSuggestions(value));
+  const startOnSuggestionsFetchRequested = async ({ value }: any) => {
+    setStartArticleSuggestions(await getSuggestions(value));
   };
 
   const startInputProps = {
@@ -65,8 +69,8 @@ const TargetArticles = observer(() => {
     setFinishArticleSuggestions([]);
   };
 
-  const finishOnSuggestionsFetchRequested = ({ value }: any) => {
-    setFinishArticleSuggestions(getSuggestions(value));
+  const finishOnSuggestionsFetchRequested = async ({ value }: any) => {
+    setFinishArticleSuggestions(await getSuggestions(value));
   };
 
   const endInputProps = {
@@ -88,7 +92,6 @@ const TargetArticles = observer(() => {
               onSuggestionsClearRequested={startOnSuggestionsClearRequested}
               getSuggestionValue={getSuggestionValue}
               renderSuggestion={renderSuggestion}
-              shouldRenderSuggestions={shouldRenderSuggestion}
               inputProps={startInputProps}
             />
           ) : (
@@ -102,7 +105,6 @@ const TargetArticles = observer(() => {
               onSuggestionsClearRequested={finishOnSuggestionsClearRequested}
               getSuggestionValue={getSuggestionValue}
               renderSuggestion={renderSuggestion}
-              shouldRenderSuggestions={shouldRenderSuggestion}
               inputProps={endInputProps}
             />
           ) : (
