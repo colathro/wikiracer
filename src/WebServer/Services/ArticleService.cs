@@ -249,6 +249,13 @@ namespace WebServer.Services
         {
             await this.container.UpsertItemAsync<ArticlePointer>(articlePointer, new PartitionKey(articlePointer.Key));
         }
+
+        public async Task<IEnumerable<string>> SearchForArticles(string searchString)
+        {
+            var query = $"SELECT TOP 10 c.Key FROM c WHERE STARTSWITH(c.Key, '{searchString}', false)";
+            var articles = await this.GetItemsAsync(query);
+            return articles.Select<string>(_ => _.Key).ToList();
+        }
     }
 }
 
