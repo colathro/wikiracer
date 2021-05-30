@@ -25,8 +25,6 @@ const TargetArticles = observer(() => {
     var list = [] as Array<Suggestion>;
     var data = await LobbyState.searchArticles(value);
     data.forEach((element: string) => list.push( { text: element }));
-    
-    console.log(list);
   
     return list;
   };
