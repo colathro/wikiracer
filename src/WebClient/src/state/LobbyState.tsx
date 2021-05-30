@@ -164,6 +164,19 @@ class LobbyManager {
       callback();
     });
   }
+
+  async searchArticles(searchTerm: string) {
+    let res = await fetch(
+      `/api/lobby/owner/search?lobbyKey=${this.lobby?.key}&term=${searchTerm}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + AuthState.auth_info?.access_token,
+        },
+      }
+    )
+    return await res.json();
+  }
 }
 
 const LobbyState = new LobbyManager();

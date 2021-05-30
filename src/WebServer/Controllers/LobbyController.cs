@@ -232,7 +232,8 @@ namespace WebServer.Controllers
         return BadRequest();
       }
 
-      return Ok();
+      var searchResults = await this.articleService.SearchForArticles(term);
+      return Ok(searchResults);
     }
 
     [HttpPost("owner/setpublic")]
