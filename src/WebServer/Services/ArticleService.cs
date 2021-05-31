@@ -252,8 +252,10 @@ namespace WebServer.Services
 
         public async Task<IEnumerable<string>> SearchForArticles(string searchString)
         {
-            var queryString = $"SELECT TOP 10 c.Key FROM c WHERE STARTSWITH(c.Key, '{searchString}', false)";
-            var query = this.container.GetItemQueryIterator<ArticlePointer>(new QueryDefinition(queryString));
+            var queryString = "SELECT TOP 10 c.Key FROM c WHERE STARTSWITH(c.Key, @searchString, false)";
+            var query = this.container.GetItemQueryIterator<ArticlePointer>(
+                new QueryDefinition(queryString)
+                .WithParameter("@searchString", searchString));
             List<ArticlePointer> results = new List<ArticlePointer>();
             while (query.HasMoreResults)
             {
