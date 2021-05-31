@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import AuthState from "../state/AuthState";
+import ThemeManager from "../Themes";
 import LobbyFinder from "../components/lobbyfinder/LobbyFinder";
 import {
   BrowserRouter as Router,
@@ -33,6 +34,7 @@ const ContentWrapper = styled.div`
 `;
 
 const LoggedInView = observer(() => {
+  ThemeManager.leftNotifications = false;
   useEffect(() => {
     AuthState.getUser();
   }, []);

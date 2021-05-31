@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
+import ThemeManager from "../Themes";
 import LobbyState from "../state/LobbyState";
 import ConnectionState from "../state/ConnectionState";
 import Chat from "../components/chat/Chat";
@@ -11,6 +12,8 @@ import TargetArticles from "../components/TargetArticles";
 const LobbyView = observer(() => {
   const [connectionStarted, setConnectionStarted] = useState(false);
   let history = useHistory();
+
+  ThemeManager.leftNotifications = true;
 
   if (LobbyState.lobby === null) {
     // error popup here

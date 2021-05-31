@@ -1,3 +1,5 @@
+import { makeAutoObservable } from "mobx";
+
 type Theme = {
   background: string;
   background2: string;
@@ -24,10 +26,14 @@ const light: Theme = {
 
 class ThemeManager {
   theme: Theme | undefined;
+
+  leftNotifications = false;
+
   constructor() {
     this.tryGetThemeOverride();
     document.body.style.backgroundColor = this.theme!.background;
     document.body.style.color = this.theme!.text;
+    makeAutoObservable(this);
   }
 
   tryGetThemeOverride() {

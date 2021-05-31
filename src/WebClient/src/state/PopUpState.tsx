@@ -1,19 +1,26 @@
 import { makeAutoObservable } from "mobx";
+import crypto from "crypto";
+import { reduceEachTrailingCommentRange } from "typescript";
 
-type Message = {
+export type MessageType = {
+  Id: string;
   Level: Level;
   Text: string;
 };
 
-enum Level {
-  Info,
+export enum Level {
+  Success,
   Warning,
   Error,
 }
 
+const generateUniqueId = () => {
+  return crypto.randomBytes(16).toString("hex");
+};
+
 class PopUpManager {
   displayFinish = false; // flag to display lobby finish
-  messages: Message[] = []; // fifo-ish queue for managing message to display
+  messages: MessageType[] = []; // fifo-ish queue for managing message to display
 
   constructor() {
     makeAutoObservable(this);
@@ -28,37 +35,58 @@ class PopUpManager {
   }
 
   showError(text: string) {
-    const message: Message = {
+    const message: MessageType = {
+      Id: generateUniqueId(),
       Level: Level.Error,
       Text: text,
     };
+    this.schedulePop(message);
     this.messages.push(message);
   }
 
   showInfo(text: string) {
-    const message: Message = {
+    const message: MessageType = {
+      Id: generateUniqueId(),
       Level: Level.Error,
       Text: text,
     };
+    this.schedulePop(message);
     this.messages.push(message);
   }
 
-  popMessage(position: number) {
-    this.messages.splice(position, 1);
+  showSuccess(text: string) {
+    const message: MessageType = {
+      Id: generateUniqueId(),
+      Level: Level.Success,
+      Text: text,
+    };
+    this.schedulePop(message);
+    this.messages.push(message);
   }
 
-  popOldestMessage() {
-    if (this.messages.length >= 1) {
-      this.messages.splice(0, 1);
+  schedulePop(message: MessageType) {
+    setTimeout(() => {
+      PopUpState.popMessage(message);
+    }, 5000);
+  }
+
+  popMessage(message: MessageType) {
+    var position = this.messages.findIndex((val) => {
+      if (val.Id === message.Id) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    if (position === -1) {
+      return; // user closed message
     }
+    this.messages.splice(position, 1);
   }
 }
 
 var PopUpState = new PopUpManager();
 
-// bop the oldest message every 5 seconds
-setTimeout(() => {
-  PopUpState.popOldestMessage();
-}, 5000);
+PopUpState.showSuccess("Woot, first message!");
 
 export default PopUpState;
