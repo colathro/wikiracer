@@ -9,7 +9,8 @@ type Suggestion = {
 
 const TargetArticles = observer(() => {
   const [editable, setEditable] = useState(false);
-  const [suggestionRenderTime, setSuggestionRenderTime] = useState(Date.now());
+  const [isLoading, setIsLoading] = useState(false);
+  const [lastRequestId, setRequestId] = useState(null as any);
   const [startArticle, setStartArticle] = useState(LobbyState.lobby?.startArticle ?? "");
   const [startArticleSuggestions, setStartArticleSuggestions] = useState([] as Array<Suggestion>);
   const [finishArticleSuggestions, setFinishArticleSuggestions] = useState([] as Array<Suggestion>);
@@ -20,8 +21,37 @@ const TargetArticles = observer(() => {
     LobbyState.setArticles(startArticle, finishArticle, () => {});
   };
 
+  const loadStartSuggestions = (value: any) => {
+    // Cancel the previous request
+    if (lastRequestId !== null) {
+      setRequestId(null);
+    }
+    
+    setIsLoading(true);
+    
+    // Fake request
+    setRequestId(setTimeout(async () => {
+      setIsLoading(false);
+      setStartArticleSuggestions(await getSuggestions(value));
+    }, 1000));
+  }
+
+  const loadFinishSuggestions = (value: any) => {
+    // Cancel the previous request
+    if (lastRequestId !== null) {
+      setRequestId(null);
+    }
+    
+    setIsLoading(true);
+    
+    // Fake request
+    setRequestId(setTimeout(async () => {
+      setIsLoading(false);
+      setFinishArticleSuggestions(await getSuggestions(value));
+    }, 1000));
+  }
+
   const getSuggestions = async (value: any) => {
-    setSuggestionRenderTime(Date.now());
     var list = [] as Array<Suggestion>;
     var data = await LobbyState.searchArticles(value);
     data.forEach((element: string) => list.push( { text: element }));
@@ -49,8 +79,8 @@ const TargetArticles = observer(() => {
     setStartArticleSuggestions([]);
   };
 
-  const startOnSuggestionsFetchRequested = async ({ value }: any) => {
-    setStartArticleSuggestions(await getSuggestions(value));
+  const startOnSuggestionsFetchRequested = ({ value }: any) => {
+    loadStartSuggestions(value);
   };
 
   const startInputProps = {
@@ -68,7 +98,7 @@ const TargetArticles = observer(() => {
   };
 
   const finishOnSuggestionsFetchRequested = async ({ value }: any) => {
-    setFinishArticleSuggestions(await getSuggestions(value));
+    loadFinishSuggestions(value);
   };
 
   const endInputProps = {
@@ -80,7 +110,7 @@ const TargetArticles = observer(() => {
   return (
     <div>
       <div>
-        Target Articles:
+        Target Articles: {(isLoading ? 'Loading...' : '')}
         <div>
           Start:
           {editable ? (
