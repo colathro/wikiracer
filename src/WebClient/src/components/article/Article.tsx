@@ -4,7 +4,7 @@ import AuthState from "../../state/AuthState";
 import LobbyState from "../../state/LobbyState";
 
 const Article = observer(() => {
-  const [article, setArticle] = useState("Pet_door");
+  const [article, setArticle] = useState("Shia Islam");
   const [useStorageAccount, setUseStorageAccount] = useState(false);
   const [articleData, setArticleData] = useState<any>(undefined);
 
