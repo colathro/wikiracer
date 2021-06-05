@@ -3,6 +3,7 @@ import ThemeManager from "../../Themes";
 import { observer } from "mobx-react-lite";
 import LobbyState from "../../state/LobbyState";
 import { useHistory } from "react-router-dom";
+import PopupState from '../../state/PopUpState';
 
 const Layout = styled.div`
   display: flex;
@@ -23,6 +24,7 @@ const CreateLobby = observer(() => {
       <Anchor
         onClick={() => {
           LobbyState.createLobby((d: any) => {
+            PopupState.showSuccess("Successfully created a lobby, invite your friends!");
             history.push("/lobby");
           });
         }}
