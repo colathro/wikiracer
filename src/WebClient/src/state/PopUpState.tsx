@@ -44,10 +44,10 @@ class PopUpManager {
     this.messages.push(message);
   }
 
-  showInfo(text: string) {
+  showWarning(text: string) {
     const message: MessageType = {
       Id: generateUniqueId(),
-      Level: Level.Error,
+      Level: Level.Warning,
       Text: text,
     };
     this.schedulePop(message);
@@ -86,7 +86,5 @@ class PopUpManager {
 }
 
 var PopUpState = new PopUpManager();
-
-PopUpState.showSuccess("Woot, first message!");
 
 export default PopUpState;

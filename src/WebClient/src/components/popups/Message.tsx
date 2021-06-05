@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
-import PopUpState, { MessageType } from "../../state/PopUpState";
+import PopUpState, { Level, MessageType } from "../../state/PopUpState";
 
 type props = {
   message: MessageType;
@@ -12,9 +12,11 @@ type props = {
 const Layout = styled.div`
   pointer-events: auto;
   display: flex;
-  margin: 20px;
+  margin: 1em;
+  margin-top: 0em;
+  margin-bottom: 1em;
   border: 1px solid ${ThemeManager.theme?.text};
-  width: 280px;
+  width: 360px;
   background-color: ${ThemeManager.theme?.background2};
 `;
 
@@ -26,7 +28,9 @@ const Container = styled.div`
   margin: 14px;
 `;
 
-const MessageText = styled.div``;
+const MessageText = styled.div`
+margin-left: 1em;
+margin-right: 1em;`;
 
 const Close = styled.a`
   color: ${ThemeManager.theme?.text2};
@@ -36,10 +40,26 @@ const Close = styled.a`
   }
 `;
 
+const Image = styled.img`
+height: 2em;`;
+
 const Message = observer((props: props) => {
+  let targetSvg: string;
+  switch (props.message.Level) {
+    case Level.Success:
+      targetSvg = "images/icons/success.svg";
+      break;
+    case Level.Error:
+      targetSvg = "images/icons/error.svg";
+      break;
+    case Level.Warning:
+      targetSvg = "images/icons/warning.svg";
+      break;
+  }
   return (
     <Layout>
       <Container>
+        <Image src={targetSvg}></Image>
         <MessageText>{props.message.Text}</MessageText>
         <Close
           onClick={() => {
