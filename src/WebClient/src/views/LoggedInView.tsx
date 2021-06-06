@@ -15,6 +15,8 @@ import HowToPlay from "../components/howtoplay/HowToPlay";
 import Nav from "../components/nav/Nav";
 import styled from "styled-components";
 import Settings from "../components/settings/Settings";
+import LobbyState from "../state/LobbyState";
+import ConnectionState from "../state/ConnectionState";
 
 const Layout = styled.div`
   display: flex;
@@ -37,6 +39,8 @@ const LoggedInView = observer(() => {
   ThemeManager.leftNotifications = false;
   useEffect(() => {
     AuthState.getUser();
+    LobbyState.removeLocalLobby();
+    ConnectionState.cleanConnection();
   }, []);
   return (
     <Layout>

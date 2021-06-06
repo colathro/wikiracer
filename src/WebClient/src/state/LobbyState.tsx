@@ -107,7 +107,6 @@ class LobbyManager {
     if (this.lobby === null) {
       return true;
     }
-    ConnectionState.leaveLobby();
     this.removeLocalLobby();
   }
 
@@ -174,7 +173,7 @@ class LobbyManager {
           Authorization: "Bearer " + AuthState.auth_info?.access_token,
         },
       }
-    )
+    );
     return await res.json();
   }
 }
