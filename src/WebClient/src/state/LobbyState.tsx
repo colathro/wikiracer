@@ -42,8 +42,8 @@ class LobbyManager {
       });
   }
 
-  getLobbies(callback: any) {
-    fetch(`/api/lobby/public`, {
+  getLobbies(callback: any, page: number = 0) {
+    fetch(`/api/lobby/public?page=${page}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + AuthState.auth_info?.access_token,

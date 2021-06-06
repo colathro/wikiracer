@@ -36,8 +36,10 @@ namespace WebServer.Controllers
     [HttpGet("public")]
     public async Task<IActionResult> GetPublicLobbies([FromQuery] int page)
     {
-      var lobbies = await this.lobbyService.GetActiveLobbies();
-      return Ok(lobbies);
+      var response = new PublicLobbyResponse();
+      response.Lobbies = await this.lobbyService.GetActiveLobbies(page);
+      response.Pages = await this.lobbyService.GetActiveLobbiesCount() / 10;
+      return Ok(response);
     }
 
     [HttpPost("join")]

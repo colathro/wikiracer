@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataModels.CosmosModels;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Fluent;
-using Microsoft.Azure.Cosmos.Scripts;
 
 namespace WebServer.Services
 {
@@ -14,11 +12,17 @@ namespace WebServer.Services
     {
         public LobbyService(string _account, string _accessKey) : base(_account, _accessKey, "wikiracer", "lobbies") { }
 
-        public async Task<IList<Lobby>> GetActiveLobbies()
+        public async Task<IList<Lobby>> GetActiveLobbies(int page = 0)
         {
             var query = "SELECT * FROM c where c.IsPublic = true";
-            var lobbys = await this.GetItemsAsync(query);
+            var lobbys = await this.GetItemsPagedAsync(query, page);
             return lobbys.ToList();
+        }
+
+        public async Task<int> GetActiveLobbiesCount()
+        {
+            var query = "SELECT VALUE COUNT(c) FROM c where c.IsPublic = true";
+            return await this.GetCountAsync(query);
         }
 
         public async Task<IList<Lobby>> GetAllLobbies()
@@ -43,6 +47,14 @@ namespace WebServer.Services
         public async Task AddItemAsync(Lobby lobby)
         {
             await this.container.CreateItemAsync(lobby, new PartitionKey(lobby.Key));
+        }
+
+        public async Task<int> GetCountAsync(string queryString)
+        {
+            var qd = new QueryDefinition(queryString);
+            var query = this.container.GetItemQueryIterator<int>(qd);
+            var response = await query.ReadNextAsync();
+            return response.First();
         }
 
         public async Task DeleteItemAsync(string id, string key)
@@ -75,6 +87,26 @@ namespace WebServer.Services
             }
 
             return results;
+        }
+
+        public async Task<IEnumerable<Lobby>> GetItemsPagedAsync(string queryString, int page)
+        {
+            var requestOptions = new QueryRequestOptions
+                {
+                    MaxItemCount = 10
+                };
+            var query = this.container.GetItemQueryIterator<Lobby>(new QueryDefinition(queryString), null, requestOptions);
+            List<Lobby> results = new List<Lobby>();
+            FeedResponse<Lobby> response;
+
+            response = await query.ReadNextAsync(); // first page always
+
+            for (int i = 0; i < page; i++)
+            {
+                response = await query.ReadNextAsync(); // if we are requesting more get next pages
+            }
+
+            return response.ToList();
         }
 
         public async Task<IEnumerable<Lobby>> GetItemsAsync(QueryDefinition queryDef)

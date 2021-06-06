@@ -6,6 +6,7 @@ type Theme = {
   text: string;
   text2: string;
   logo: string;
+  player: string;
 };
 
 const dark: Theme = {
@@ -14,6 +15,7 @@ const dark: Theme = {
   text: "#cccccc",
   text2: "#7891EC",
   logo: "darklogo.svg",
+  player: "images/dark/player.svg",
 };
 
 const light: Theme = {
@@ -22,6 +24,7 @@ const light: Theme = {
   text: "#000000",
   text2: "#345DF0",
   logo: "lightlogo.svg",
+  player: "images/light/player.svg",
 };
 
 class ThemeManager {

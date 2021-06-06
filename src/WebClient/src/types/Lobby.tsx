@@ -35,3 +35,8 @@ export type User = {
   createdOn: Date;
   key: string;
 };
+
+export type PublicLobbyResponse = {
+  lobbies: Lobby[];
+  pages: number;
+};
