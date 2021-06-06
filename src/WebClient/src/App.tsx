@@ -1,12 +1,12 @@
 import { observer } from "mobx-react-lite";
 import AuthState from "./state/AuthState";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Router, Switch, Route, Link } from "react-router-dom";
 import styled from "styled-components";
-import ThemeManager from "./Themes";
 import LoginView from "./views/LoginView";
 import LoggedInView from "./views/LoggedInView";
 import LobbyView from "./views/LobbyView";
 import Messages from "./components/popups/Messages";
+import history from "./History";
 
 const Layout = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ const LandingView = observer(() => {
 
 const UnauthenticatedRouting = () => {
   return (
-    <Router>
+    <Router history={history}>
       <Switch>
         <Route path="/">
           <LoginView />
@@ -44,7 +44,7 @@ const UnauthenticatedRouting = () => {
 
 const AuthenticatedRouting = () => {
   return (
-    <Router>
+    <Router history={history}>
       <Switch>
         <Route path="/lobby">
           <LobbyView />
