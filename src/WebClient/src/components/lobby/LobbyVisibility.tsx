@@ -28,8 +28,8 @@ const LobbyVisibility = observer(() => {
         }}
       >
         {LobbyState.lobby?.isPublic
-          ? "Make Lobby Public"
-          : "Make Lobby Private"}
+          ? "Make Lobby Private"
+          : "Make Lobby Public"}
       </Toggle>
     </Layout>
   );
