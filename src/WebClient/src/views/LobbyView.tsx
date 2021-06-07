@@ -4,10 +4,7 @@ import { observer } from "mobx-react-lite";
 import ThemeManager from "../Themes";
 import LobbyState from "../state/LobbyState";
 import ConnectionState from "../state/ConnectionState";
-import Chat from "../components/chat/Chat";
-import Players from "../components/players/Players";
-import Article from "../components/article/Article";
-import TargetArticles from "../components/TargetArticles";
+import Lobby from "../components/lobby/Lobby";
 
 const LobbyView = observer(() => {
   const [connectionStarted, setConnectionStarted] = useState(false);
@@ -31,37 +28,7 @@ const LobbyView = observer(() => {
     return <h1>Loading...</h1>;
   }
 
-  return (
-    <div>
-      <div>{LobbyState.lobby!.key}</div>
-      <button
-        onClick={() => {
-          LobbyState.leaveLobby();
-          history.push("/");
-        }}
-      >
-        Leave Lobby
-      </button>
-      <div>
-        <Players />
-        <Chat />
-        <div>
-          Lobby Visibility: {LobbyState.lobby?.isPublic ? "Public" : "Private"}
-        </div>
-        <button
-          onClick={() => {
-            LobbyState.setPublic(() => {});
-          }}
-        >
-          Toggle Public
-        </button>
-        <TargetArticles />
-      </div>
-      <div>
-        <Article />
-      </div>
-    </div>
-  );
+  return <Lobby />;
 });
 
 export default LobbyView;

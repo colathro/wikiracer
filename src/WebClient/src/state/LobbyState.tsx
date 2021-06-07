@@ -164,17 +164,23 @@ class LobbyManager {
     });
   }
 
-  async searchArticles(searchTerm: string) {
-    let res = await fetch(
-      `/api/lobby/owner/search?lobbyKey=${this.lobby?.key}&term=${searchTerm}`,
+  async searchArticles(
+    searchTerm: React.MutableRefObject<string>,
+    callback: any
+  ) {
+    fetch(
+      `/api/lobby/owner/search?lobbyKey=${this.lobby?.key}&term=${searchTerm.current}`,
       {
         method: "GET",
         headers: {
           Authorization: "Bearer " + AuthState.auth_info?.access_token,
         },
       }
-    );
-    return await res.json();
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        callback(data);
+      });
   }
 }
 
