@@ -30,6 +30,7 @@ const MenuWrapper = styled.div`
 
 const Menu = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: space-around;
   justify-content: space-between;

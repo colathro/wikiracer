@@ -1,5 +1,3 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
