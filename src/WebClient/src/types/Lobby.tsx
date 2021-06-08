@@ -3,13 +3,14 @@ import { AuthType } from "../enums/AuthType";
 export type Lobby = {
   players: LobbyPlayer[];
   banList: string[];
-  owner: User;
-  running: boolean;
+  owner: Owner;
   isPublic: boolean;
   key: string;
   startArticle: string;
   endArticle: string;
   messages: Message[];
+  startTime: Date;
+  endTime: Date;
 };
 
 export type LobbyPlayer = {
@@ -26,6 +27,12 @@ export type Message = {
   id: string;
   author: LobbyPlayer;
   text: string;
+};
+
+export type Owner = {
+  id: string;
+  displayName: string;
+  authProvider: AuthType;
 };
 
 export type User = {

@@ -83,7 +83,6 @@ const PublicLobbies = observer(() => {
   };
 
   useEffect(() => {
-    AuthState.getUser();
     LobbyState.getLobbies(setLobbies, 0);
   }, []);
   return (

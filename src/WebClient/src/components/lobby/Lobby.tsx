@@ -10,6 +10,7 @@ import Article from "../article/Article";
 import TargetArticles from "./TargetArticles";
 import LobbyTitle from "./LobbyTitle";
 import LobbyVisibility from "./LobbyVisibility";
+import LobbyControls from "./LobbyControls";
 
 const LobbyWrapper = styled.div`
   display: flex;
@@ -55,6 +56,7 @@ const Lobby = observer(() => {
             <OwnerMenu>
               <LobbyVisibility />
               <TargetArticles />
+              <LobbyControls />
             </OwnerMenu>
           ) : (
             <></>

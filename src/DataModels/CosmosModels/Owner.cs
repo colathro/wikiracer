@@ -4,12 +4,10 @@ using System;
 
 namespace DataModels.CosmosModels
 {
-    public class User : Record
+    public class Owner
     {
         public AuthType AuthProvider { get; set; }
+        public string Id { get; set; }
         public string DisplayName { get; set; }
-        public string Avatar { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public List<string> GameIds { get; set; }
     }
 }

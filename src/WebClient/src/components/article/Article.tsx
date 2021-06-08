@@ -1,26 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
-import AuthState from "../../state/AuthState";
 import LobbyState from "../../state/LobbyState";
+import Lobby from "../lobby/Lobby";
 
 const ArticleWrapper = styled.div`
   overflow-y: scroll;
 `;
 
 const Article = observer(() => {
-  const [article, setArticle] = useState("atom");
+  const currentArticle = useRef("");
   const [useStorageAccount, setUseStorageAccount] = useState(false);
   const [articleData, setArticleData] = useState<any>(undefined);
 
-  useEffect(() => {
-    AuthState.getUser();
-    LobbyState.getArticle(article, useStorageAccount, setArticleData);
-  }, []);
+  if (currentArticle.current == "") {
+    LobbyState.getArticle(
+      LobbyState.lobby?.startArticle!,
+      useStorageAccount,
+      (data: any) => {
+        currentArticle.current = LobbyState.lobby?.startArticle!;
+        setArticleData(data);
+      }
+    );
+  }
 
   return (
     <ArticleWrapper>
-      Arrticle Method: {useStorageAccount ? "Storage" : "API"}
+      Article Method: {useStorageAccount ? "Storage" : "API"}
       <button
         onClick={() => {
           setUseStorageAccount(!useStorageAccount);
@@ -30,7 +36,7 @@ const Article = observer(() => {
       </button>
       <button
         onClick={() => {
-          LobbyState.getArticle(article, useStorageAccount, setArticleData);
+          LobbyState.getArticle("atom", useStorageAccount, setArticleData);
         }}
       >
         Load Article
@@ -61,7 +67,10 @@ const Article = observer(() => {
                             LobbyState.getArticle(
                               span.link,
                               useStorageAccount,
-                              setArticleData
+                              (data: any) => {
+                                currentArticle.current = span.link;
+                                setArticleData(data);
+                              }
                             );
                           }}
                         >

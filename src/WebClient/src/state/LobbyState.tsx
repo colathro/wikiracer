@@ -23,7 +23,13 @@ class LobbyManager {
   }
 
   checkOwner() {
-    return this.lobby?.owner.key == AuthState.user?.key;
+    return this.lobby?.owner.id === AuthState.user?.key;
+  }
+
+  isStarted() {
+    return (
+      this.lobby?.startTime! >= new Date() && this.lobby?.endTime! >= new Date()
+    );
   }
 
   getArticle(key: string, useStorageAccount: boolean, callback: any) {
@@ -160,6 +166,17 @@ class LobbyManager {
         },
       }
     ).then(() => {
+      callback();
+    });
+  }
+
+  startGame(callback: any) {
+    fetch(`/api/lobby/owner/start?lobbyKey=${this.lobby?.key}`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+      },
+    }).then(() => {
       callback();
     });
   }
