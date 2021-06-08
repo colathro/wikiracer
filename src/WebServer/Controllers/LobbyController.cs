@@ -22,15 +22,21 @@ namespace WebServer.Controllers
     private readonly LobbyService lobbyService;
     private readonly UserService userService;
     private readonly ArticleService articleService;
+    private readonly GameService gameService;
 
     private static Random random = new Random((int)DateTime.Now.Ticks);
 
-    public LobbyController(LobbyService _lobbyService, UserService _userService, ArticleService _articleService, ILogger<LobbyController> _logger)
+    public LobbyController(LobbyService _lobbyService,
+      UserService _userService,
+      ArticleService _articleService,
+      GameService _gameService,
+      ILogger<LobbyController> _logger)
     {
       this.logger = _logger;
       this.lobbyService = _lobbyService;
       this.userService = _userService;
       this.articleService = _articleService;
+      this.gameService = _gameService;
     }
 
     [HttpGet("public")]
@@ -90,7 +96,7 @@ namespace WebServer.Controllers
       players.Add(this.ConvertUserToLobbyPlayer(user));
       var lobby = new Lobby
       {
-        Owner = user,
+        Owner = new Owner{Id = user.Key, AuthProvider = user.AuthProvider},
         Players = players,
         Id = Guid.NewGuid().ToString(),
         Key = this.GenerateLobbyJoinKey(),
@@ -132,15 +138,48 @@ namespace WebServer.Controllers
     [HttpGet("player/article")]
     public async Task<IActionResult> GetArticle([FromQuery] string lobbyKey, [FromQuery] string key, [FromQuery] bool useStorageAccount)
     {
-      var userId = this.GetUserKey();
-      var user = await this.userService.GetUser(userId, this.GetUserProvider());
+      var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
+      var lobby = await this.lobbyService.GetLobby(lobbyKey);
+
+      if (!CallerIsInLobby(lobby, user))
+      {
+        return BadRequest();
+      }
+
+      bool updateGame = true;
       key = key.ToLower();
+
+      if (key != lobby.StartArticle) // if its not the start article
+      {
+        if (!IsGameRunning(lobby)) // and the game is not running
+        {
+          return BadRequest("not started");
+        }
+      }
+
+      if (!IsGameRunning(lobby)) // if game is runnning
+      {
+        updateGame = false; // dont update game as its not there yet - start will
+      }
+
       var article = useStorageAccount ? 
         await this.articleService.GetArticleAsync(key) 
         : await this.articleService.GetArticleMediaWikiAsync(key);
       article.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(article.Title);
 
-      await lobbyService.SetCurrentArticle(lobbyKey, userId, key);
+      await lobbyService.SetCurrentArticle(lobbyKey, user.Key, key);
+      
+      if (updateGame)
+      {
+        var game = await this.gameService.GetItemAsync(lobby.GameId);
+        var nagivation = new GameNavigation{
+          Timestamp = DateTime.UtcNow,
+          Article = article.Title
+        };
+        game.GameHistories.FirstOrDefault(gh => gh.Player.Id == user.Key)?.Navigations.Add(nagivation);
+        await this.gameService.UpdateItemAsync(game);
+      }
+
       return Ok(article);
     }
 
@@ -260,6 +299,73 @@ namespace WebServer.Controllers
       return Ok();
     }
 
+    [HttpPost("owner/start")]
+    public async Task<IActionResult> Start([FromQuery] string lobbyKey)
+    {
+      var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
+      var lobby = await this.lobbyService.GetLobby(lobbyKey);
+      if (lobby == default)
+      {
+        return NotFound();
+      }
+
+      if (!CallerIsOwner(lobby, user))
+      {
+        return BadRequest("not owner");
+      }
+
+      if (lobby.EndTime.AddSeconds(20) > DateTime.UtcNow)
+      {
+        return BadRequest("cooldown"); // game isn't over - can't start another
+      }
+
+      if (!IsStartAndFinishSet(lobby)){
+        return BadRequest("startfinish");
+      }
+
+      var gameId = Guid.NewGuid().ToString();
+
+      var now = DateTime.UtcNow;
+
+      var game = new Game{
+        Id = gameId,
+        Key = gameId,
+        Finished = false,
+        GameHistories = new List<GameHistory>(),
+        StartArticle = lobby.StartArticle,
+        FinishArticle = lobby.EndArticle
+      };
+
+      foreach(var player in lobby.Players)
+      {
+        if (player.Active){
+          // foreach player in the lobby, add a history for them
+          var gameHistory = new GameHistory{
+            Player = player,
+            Navigations = new List<GameNavigation>{ 
+              new GameNavigation{Article=lobby.StartArticle, Timestamp=now
+              }
+            }
+          };
+
+          game.GameHistories.Add(gameHistory);
+
+          var playerUser = await this.userService.GetUser(player.Id, player.AuthProvider);
+          playerUser.GameIds.Add(gameId);
+          await this.userService.UpdateItemAsync(playerUser);
+        }
+      }
+
+      lobby.GameId = gameId;
+      lobby.StartTime = now.AddSeconds(10); 
+      lobby.EndTime = now.AddMinutes(4);
+
+      await this.lobbyService.UpdateItemAsync(lobby);
+      await this.gameService.AddItemAsync(game);
+
+      return Ok();
+    }
+
     private bool CallerIsInLobby(Lobby lobby, User user)
     {
       return lobby.Players.Count(p => p.Id == user.Key) <= 1;
@@ -267,7 +373,7 @@ namespace WebServer.Controllers
 
     private bool CallerIsOwner(Lobby lobby, User user)
     {
-      return lobby.Owner.Key == user.Key;
+      return lobby.Owner.Id == user.Key;
     }
 
     private string GetUserKey()
@@ -278,6 +384,15 @@ namespace WebServer.Controllers
     private string GetUserProvider()
     {
       return this.HttpContext.User.FindFirst("iss").Value;
+    }
+
+    private bool IsGameRunning(Lobby lobby){
+      return lobby.StartTime <= DateTime.UtcNow 
+        && DateTime.UtcNow <= lobby.EndTime;
+    }
+
+    private bool IsStartAndFinishSet(Lobby lobby){
+      return !string.IsNullOrWhiteSpace(lobby.StartArticle) && !string.IsNullOrWhiteSpace(lobby.EndArticle);
     }
   }
 }

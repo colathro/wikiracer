@@ -37,14 +37,19 @@ namespace WebServer.Hubs
         player.LastUpdate = DateTime.UtcNow;
 
         // pass ownership if owner disconnected
-        if (player.Id == lobby.Owner.Key)
+        if (player.Id == lobby.Owner.Id)
         {
           var newOwner = lobby.Players.FirstOrDefault(pl => pl.Active == true);
 
           if (newOwner != default)
           {
             var newOwnerUser = await this.userService.GetUser(newOwner.Id, newOwner.AuthProvider);
-            lobby.Owner = newOwnerUser;
+            var newOwnerObject = new Owner{
+              Id = newOwnerUser.Key,
+              AuthProvider = newOwnerUser.AuthProvider,
+              DisplayName = newOwnerUser.DisplayName
+            };
+            lobby.Owner = newOwnerObject;
           }
           else
           {
@@ -81,7 +86,12 @@ namespace WebServer.Hubs
       if (lobby.Players.Count(p => p.Active) <= 1)
       {
         var newOwnerUser = await this.userService.GetUser(player.Id, player.AuthProvider);
-        lobby.Owner = newOwnerUser;
+        var newOwnerObject = new Owner{
+              Id = newOwnerUser.Key,
+              AuthProvider = newOwnerUser.AuthProvider,
+              DisplayName = newOwnerUser.DisplayName
+            };
+        lobby.Owner = newOwnerObject;
       }
 
       lobby.IsOpen = true;
@@ -101,14 +111,19 @@ namespace WebServer.Hubs
         var player = lobby.Players.RemoveAll(lp => lp.Id == this.GetUserKey());
 
         // pass ownership if owner disconnected
-        if (this.GetUserKey() == lobby.Owner.Key)
+        if (this.GetUserKey() == lobby.Owner.Id)
         {
           var newOwner = lobby.Players.FirstOrDefault(pl => pl.Active == true);
 
           if (newOwner != default)
           {
             var newOwnerUser = await this.userService.GetUser(newOwner.Id, newOwner.AuthProvider);
-            lobby.Owner = newOwnerUser;
+            var newOwnerObject = new Owner{
+              Id = newOwnerUser.Key,
+              AuthProvider = newOwnerUser.AuthProvider,
+              DisplayName = newOwnerUser.DisplayName
+            };
+            lobby.Owner = newOwnerObject;
           }
           else
           {

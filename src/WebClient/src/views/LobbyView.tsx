@@ -5,10 +5,15 @@ import ThemeManager from "../Themes";
 import LobbyState from "../state/LobbyState";
 import ConnectionState from "../state/ConnectionState";
 import Lobby from "../components/lobby/Lobby";
+import AuthState from "../state/AuthState";
 
 const LobbyView = observer(() => {
   const [connectionStarted, setConnectionStarted] = useState(false);
   let history = useHistory();
+
+  useEffect(() => {
+    AuthState.getUser();
+  }, []);
 
   ThemeManager.leftNotifications = true;
 

@@ -71,6 +71,11 @@ namespace WebServer.Services
             await this.container.CreateItemAsync(user, new PartitionKey(user.Key));
         }
 
+        public async Task UpdateItemAsync(DataModels.CosmosModels.User user)
+        {
+            await this.container.UpsertItemAsync<DataModels.CosmosModels.User>(user, new PartitionKey(user.Key));
+        }
+
         public AuthType MapAuthType(string provider)
         {
             if (provider == "https://id.twitch.tv/oauth2")

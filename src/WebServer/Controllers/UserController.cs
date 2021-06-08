@@ -56,7 +56,13 @@ namespace WebServer.Controllers
 
     private async Task<User> InitializeUser(string key, string name, string provider)
     {
-      var user = new User { Id = Guid.NewGuid().ToString(), Key = key, DisplayName = name, AuthProvider = this.userService.MapAuthType(provider), CreatedOn = DateTime.UtcNow };
+      var user = new User { Id = Guid.NewGuid().ToString(),
+        Key = key,
+        DisplayName = name,
+        AuthProvider = this.userService.MapAuthType(provider),
+        CreatedOn = DateTime.UtcNow,
+        GameIds = new List<string>()
+      };
       await this.userService.AddItemAsync(user);
       return user;
     }
