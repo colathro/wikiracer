@@ -10,37 +10,22 @@ const ArticleWrapper = styled.div`
 
 const Article = observer(() => {
   const currentArticle = useRef("");
-  const [useStorageAccount, setUseStorageAccount] = useState(false);
   const [articleData, setArticleData] = useState<any>(undefined);
 
+  useEffect(() => {
+    LobbyState.articleHook = setArticleData;
+    LobbyState.articleRef = currentArticle;
+  }, []);
+
   if (currentArticle.current == "") {
-    LobbyState.getArticle(
-      LobbyState.lobby?.startArticle!,
-      useStorageAccount,
-      (data: any) => {
-        currentArticle.current = LobbyState.lobby?.startArticle!;
-        setArticleData(data);
-      }
-    );
+    LobbyState.getArticle(LobbyState.lobby?.startArticle!, (data: any) => {
+      currentArticle.current = LobbyState.lobby?.startArticle!;
+      setArticleData(data);
+    });
   }
 
   return (
     <ArticleWrapper>
-      Article Method: {useStorageAccount ? "Storage" : "API"}
-      <button
-        onClick={() => {
-          setUseStorageAccount(!useStorageAccount);
-        }}
-      >
-        Toggle
-      </button>
-      <button
-        onClick={() => {
-          LobbyState.getArticle("atom", useStorageAccount, setArticleData);
-        }}
-      >
-        Load Article
-      </button>
       {articleData != undefined ? (
         <div>
           <h1>{articleData!.title}</h1>
@@ -64,14 +49,10 @@ const Article = observer(() => {
                           }}
                           key={sind}
                           onClick={() => {
-                            LobbyState.getArticle(
-                              span.link,
-                              useStorageAccount,
-                              (data: any) => {
-                                currentArticle.current = span.link;
-                                setArticleData(data);
-                              }
-                            );
+                            LobbyState.getArticle(span.link, (data: any) => {
+                              currentArticle.current = span.link;
+                              setArticleData(data);
+                            });
                           }}
                         >
                           {span.text}

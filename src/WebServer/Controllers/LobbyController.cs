@@ -254,6 +254,11 @@ namespace WebServer.Controllers
         return BadRequest();
       }
 
+      if (IsGameRunning(lobby)) 
+      {
+        return BadRequest("game running");
+      }
+
       await this.lobbyService.SetStartEndArticle(lobbyKey, start, finish);
       return Ok();
     }
@@ -273,6 +278,11 @@ namespace WebServer.Controllers
         return BadRequest();
       }
 
+      if (IsGameRunning(lobby)) 
+      {
+        return BadRequest("game running");
+      }
+
       var searchResults = await this.articleService.SearchForArticles(term);
       return Ok(searchResults);
     }
@@ -290,6 +300,11 @@ namespace WebServer.Controllers
       if (!CallerIsOwner(lobby, user))
       {
         return BadRequest();
+      }
+
+      if (IsGameRunning(lobby)) 
+      {
+        return BadRequest("game running");
       }
 
       lobby.IsPublic = isPublic;
@@ -312,6 +327,11 @@ namespace WebServer.Controllers
       if (!CallerIsOwner(lobby, user))
       {
         return BadRequest("not owner");
+      }
+
+      if (IsGameRunning(lobby)) 
+      {
+        return BadRequest("game running");
       }
 
       if (lobby.EndTime.AddSeconds(20) > DateTime.UtcNow)
@@ -358,7 +378,7 @@ namespace WebServer.Controllers
 
       lobby.GameId = gameId;
       lobby.StartTime = now.AddSeconds(10); 
-      lobby.EndTime = now.AddMinutes(4);
+      lobby.EndTime = now.AddMinutes(4).AddSeconds(10);
 
       await this.lobbyService.UpdateItemAsync(lobby);
       await this.gameService.AddItemAsync(game);
@@ -387,7 +407,10 @@ namespace WebServer.Controllers
     }
 
     private bool IsGameRunning(Lobby lobby){
-      return lobby.StartTime <= DateTime.UtcNow 
+      if (lobby.StartTime == DateTime.MinValue){
+        return false;
+      }
+      return lobby.StartTime.AddSeconds(-10) <= DateTime.UtcNow 
         && DateTime.UtcNow <= lobby.EndTime;
     }
 
