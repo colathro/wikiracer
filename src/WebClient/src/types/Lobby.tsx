@@ -11,6 +11,7 @@ export type Lobby = {
   messages: Message[];
   startTime: Date;
   endTime: Date;
+  gameId: string;
 };
 
 export type LobbyPlayer = {

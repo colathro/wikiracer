@@ -1,10 +1,13 @@
 import { makeAutoObservable } from "mobx";
 import AuthState from "./AuthState";
-import ConnectionState from "./ConnectionState";
 import { Lobby } from "../types/Lobby";
+import PopUpState from "./PopUpState";
+import TimerState from "./TimerState";
 
 class LobbyManager {
   lobby: Lobby | null;
+  articleHook: React.Dispatch<any> | undefined;
+  articleRef: React.MutableRefObject<string> | undefined;
 
   constructor() {
     this.lobby = JSON.parse(localStorage.getItem("lobby")!) as Lobby;
@@ -13,6 +16,30 @@ class LobbyManager {
 
   lobbyState(lobby: Lobby) {
     this.setLocalLobby(lobby);
+
+    if (
+      (this.isStarting || this.isStarted()) &&
+      this.lobby?.startArticle != this.articleRef!.current
+    ) {
+      this.getArticle(lobby.startArticle!, (data: any) => {
+        this.articleRef!.current = lobby.startArticle!;
+        this.articleHook!(data);
+      });
+    }
+
+    console.log(TimerState);
+
+    if (this.lobby?.gameId! !== TimerState.gameId!) {
+      console.log("timer reset");
+      TimerState.resetTimer();
+    }
+
+    if (this.isStarting() || this.isStarted()) {
+      if (TimerState.gameId !== this.lobby?.gameId!) {
+        // game is running and its correct Id
+        TimerState.startTimer(lobby.startTime!, lobby.endTime!, lobby.gameId);
+      }
+    }
     this.checkBan();
   }
 
@@ -28,13 +55,30 @@ class LobbyManager {
 
   isStarted() {
     return (
-      this.lobby?.startTime! >= new Date() && this.lobby?.endTime! >= new Date()
+      new Date(this.lobby?.startTime!) <= new Date() &&
+      new Date(this.lobby?.endTime!) >= new Date()
     );
   }
 
-  getArticle(key: string, useStorageAccount: boolean, callback: any) {
+  isStarting() {
+    var starting = new Date(this.lobby?.startTime!);
+    starting.setSeconds(-10);
+    return (
+      starting <= new Date() && new Date(this.lobby?.startTime!) >= new Date()
+    );
+  }
+
+  shouldStart(lobby: Lobby) {
+    return lobby.startTime! >= new Date() && lobby.endTime! >= new Date();
+  }
+
+  getArticle(key: string, callback: any) {
+    if (!LobbyState.isStarted() && key != LobbyState.lobby?.startArticle) {
+      PopUpState.showError("Wait for game to start!");
+      return;
+    }
     fetch(
-      `/api/lobby/player/article?lobbyKey=${this.lobby?.key}&key=${key}&useStorageAccount=${useStorageAccount}`,
+      `/api/lobby/player/article?lobbyKey=${this.lobby?.key}&key=${key}&useStorageAccount=false`,
       {
         method: "GET",
         headers: {

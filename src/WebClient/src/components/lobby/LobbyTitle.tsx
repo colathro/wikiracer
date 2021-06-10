@@ -6,6 +6,7 @@ import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
 
 import Logo from "../nav/Logo";
+import TimerState from "../../state/TimerState";
 
 const Layout = styled.div`
   display: flex;
@@ -44,6 +45,9 @@ const LobbyTitle = observer(() => {
       <LogoContainer>
         <Logo />
       </LogoContainer>
+      {TimerState.timeLeft?.minutes}
+      {":"}
+      {TimerState.timeLeft?.seconds}
       <ButtonContainer>
         <LobbyKey />
         <Leave

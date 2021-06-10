@@ -17,6 +17,7 @@ import styled from "styled-components";
 import Settings from "../components/settings/Settings";
 import LobbyState from "../state/LobbyState";
 import ConnectionState from "../state/ConnectionState";
+import TimerState from "../state/TimerState";
 
 const Layout = styled.div`
   display: flex;
@@ -41,6 +42,7 @@ const LoggedInView = observer(() => {
     AuthState.getUser();
     LobbyState.removeLocalLobby();
     ConnectionState.cleanConnection();
+    TimerState.resetTimer();
   }, []);
   return (
     <Layout>
