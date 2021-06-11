@@ -59,7 +59,11 @@ const DisabledInput = styled.input``;
 
 const EnabledInput = styled.input``;
 
-const TargetArticles = observer(() => {
+type props = {
+  owner: boolean;
+};
+
+const TargetArticles = observer((props: props) => {
   console.log(LobbyState.lobby?.endArticle);
   const [editable, setEditable] = useState(false);
   const [awaiting, setAwaiting] = useState(false);

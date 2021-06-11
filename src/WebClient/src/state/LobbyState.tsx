@@ -18,7 +18,7 @@ class LobbyManager {
     this.setLocalLobby(lobby);
 
     if (
-      (this.isStarting || this.isStarted()) &&
+      (!this.isStarting() || !this.isStarted()) &&
       this.lobby?.startArticle != this.articleRef!.current
     ) {
       this.getArticle(lobby.startArticle!, (data: any) => {

@@ -1,6 +1,55 @@
-import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
+import styled from "styled-components";
+import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
+import { AuthType } from "../../enums/AuthType";
+
+const Layout = styled.div`
+  display: flex;
+  height: 20em;
+  border: 1px solid ${ThemeManager.theme?.text};
+`;
+
+const Wrapper = styled.div`
+  margin: 0.5em;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+`;
+
+const PlayersWrapper = styled.div`
+  border: 1px solid ${ThemeManager.theme?.text};
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: scroll;
+`;
+
+const PlayerWrapper = styled.div`
+  display: flex;
+  margin: 0.5em;
+  justify-content: space-between;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const UserIconWrapper = styled.span`
+  vertical-align: middle;
+`;
+
+const UserIcon = styled.img`
+  height: 0.9em;
+  margin-right: 0.3em;
+`;
+
+const Ban = styled.a`
+  color: ${ThemeManager.theme?.text2};
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 const Players = observer(() => {
   const ban = (playerId: string) => {
@@ -8,33 +57,43 @@ const Players = observer(() => {
   };
 
   return (
-    <div>
-      Players:
-      <div>
-        <ul>
+    <Layout>
+      <Wrapper>
+        <PlayersWrapper>
           {LobbyState.lobby?.players.map((player, key) => {
             if (player.active) {
               return (
-                <li key={key}>
-                  {player.displayName}{" "}
+                <PlayerWrapper key={key}>
+                  <span>
+                    {player.authProvider === AuthType.Twitch ? (
+                      <UserIconWrapper>
+                        <UserIcon
+                          src={"/images/TwitchGlitchPurple.svg"}
+                        ></UserIcon>
+                      </UserIconWrapper>
+                    ) : (
+                      <></>
+                    )}
+                    {player.displayName}
+                  </span>
                   {LobbyState.checkOwner() ? (
-                    <button
+                    <Ban
                       onClick={() => {
                         ban(player.id);
                       }}
                     >
                       Ban
-                    </button>
+                    </Ban>
                   ) : (
                     <></>
                   )}
-                </li>
+                </PlayerWrapper>
               );
             }
           })}
-        </ul>
-      </div>
-    </div>
+        </PlayersWrapper>
+      </Wrapper>
+    </Layout>
   );
 });
 

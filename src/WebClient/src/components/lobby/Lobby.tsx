@@ -9,6 +9,7 @@ import Players from "../players/Players";
 import Article from "../article/Article";
 import TargetArticles from "./TargetArticles";
 import LobbyTitle from "./LobbyTitle";
+import LobbyTimer from "./LobbyTimer";
 import LobbyVisibility from "./LobbyVisibility";
 import LobbyControls from "./LobbyControls";
 
@@ -52,14 +53,17 @@ const Lobby = observer(() => {
       <MenuWrapper>
         <Menu>
           <LobbyTitle />
+          <LobbyTimer />
           {LobbyState.checkOwner() ? (
             <OwnerMenu>
               <LobbyVisibility />
-              <TargetArticles />
+              <TargetArticles owner={true} />
               <LobbyControls />
             </OwnerMenu>
           ) : (
-            <></>
+            <OwnerMenu>
+              <TargetArticles owner={false} />
+            </OwnerMenu>
           )}
           <Players />
           <Chat />

@@ -24,14 +24,6 @@ const SendWrapper = styled.div`
   display: flex;
 `;
 
-const Send = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
 const ChatWrapper = styled.div`
   border: 1px solid ${ThemeManager.theme?.text};
   display: flex;
