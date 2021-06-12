@@ -38,6 +38,10 @@ const UserIconWrapper = styled.span`
   vertical-align: middle;
 `;
 
+const CurrentArticle = styled.span`
+  color: ${ThemeManager.theme?.text3};
+`;
+
 const UserIcon = styled.img`
   height: 0.9em;
   margin-right: 0.3em;
@@ -76,6 +80,7 @@ const Players = observer(() => {
                     )}
                     {player.displayName}
                   </span>
+                  <CurrentArticle>{player.currentArticle}</CurrentArticle>
                   {LobbyState.checkOwner() ? (
                     <Ban
                       onClick={() => {

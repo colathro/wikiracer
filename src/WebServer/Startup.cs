@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using WebServer.Services;
 using WebServer.Hubs;
+using System;
 using System.Threading.Tasks;
 using System.Text;
 using WebServer.BackgroundServices;
@@ -40,7 +41,7 @@ namespace WebServer
 
             services.AddSingleton<UserService>(initializeUserService());
             services.AddSingleton<LobbyService>(initializeLobbyService());
-            services.AddSingleton<ArticleService>(initializeArticleService());
+            services.AddScoped<IMediaWikiService, MediaWikiService>();
             services.AddSingleton<GameService>(initializeGameService());
             services.AddSingleton<IConfiguration>(Configuration);
 
@@ -108,8 +109,11 @@ namespace WebServer
             });
 
             services.AddSignalR();
-
-            services.AddHttpClient();
+            services.AddHttpClient<IMediaWikiService, MediaWikiService>(client =>
+            {
+                client.BaseAddress = new Uri("https://en.wikipedia.org/w/api.php");
+                client.DefaultRequestHeaders.Add("Api-User-Agent","colton@fivestack.io");
+            });
             services.AddHostedService<LobbySynchronizer>();
             services.AddHostedService<CleanupService>();
 
@@ -168,14 +172,6 @@ namespace WebServer
             string account = "https://wikiracer.documents.azure.com:443/";
             string key = this.Configuration["COSMOS_KEY"];
             return new UserService(account, key);
-        }
-
-        private ArticleService initializeArticleService()
-        {
-            string account = "https://wikiracer.documents.azure.com:443/";
-            string key = this.Configuration["COSMOS_KEY"];
-            string connectionString = this.Configuration["STORAGE_KEY"];
-            return new ArticleService(account, key, connectionString);
         }
 
         private GameService initializeGameService()

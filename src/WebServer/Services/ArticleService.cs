@@ -2,274 +2,56 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using DataModels.CosmosModels;
+using System.Text.Json;
 using DataModels.StorageModels;
-using Microsoft.Azure.Cosmos;
-using Newtonsoft.Json;
-using System.IO;
 using System;
-using System.Text;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
 using DataLoader.MwParserFromScratch;
 using DataLoader.MwParserFromScratch.Nodes;
 using DataLoader;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
+public interface IMediaWikiService{
+    Task<Article> GetArticleMediaWikiAsync(string key);
+    Task<object> GetSearchMediaWikiAsync(string searchString);
+}
 
 namespace WebServer.Services
 {
-
-    public class ArticleService : Service
+    public class MediaWikiService : IMediaWikiService
     {
-        protected readonly string storageContainerName = "articles";
-        protected readonly CloudBlobContainer cloudBlobContainer;
-        protected readonly CloudBlobClient cloudBlobClient;
-        protected readonly CloudStorageAccount cloudStorageAccount;
+        private readonly HttpClient _httpClient;
 
-        protected const string baseURL = "https://wikiracer.blob.core.windows.net/articles/";
-
-        public ArticleService(string _account, string _accessKey, string _storageConnectionString) : base(_account, _accessKey, "wikiracer", "articles")
+        public MediaWikiService(HttpClient httpClient)
         {
-            CloudStorageAccount.TryParse(_storageConnectionString, out this.cloudStorageAccount);
-            this.cloudBlobClient = this.cloudStorageAccount.CreateCloudBlobClient();
-            this.cloudBlobContainer = cloudBlobContainer = cloudBlobClient.GetContainerReference(storageContainerName);
-        }
-
-        public async Task AddArticleAsync(Article article, bool redirect = false, string redirectTarget = "")
-        {
-            if (redirect)
-            {
-                ArticlePointer newArticlePointer = new ArticlePointer
-                {
-                    Key = article.Title,
-                    Id = article.Title,
-                    Redirect = true,
-                    RedirectTarget = redirectTarget
-                };
-                await this.container.UpsertItemAsync(newArticlePointer, new PartitionKey(newArticlePointer.Key));
-            }
-            else
-            {
-                var cloudBlockBlob = await this.UploadArticle(article);
-                ArticlePointer newArticlePointer = new ArticlePointer
-                {
-                    Link = cloudBlockBlob.Uri.ToString(),
-                    Key = article.Title,
-                    Id = article.Title
-                };
-                await this.container.UpsertItemAsync(newArticlePointer, new PartitionKey(newArticlePointer.Key));
-            }
-        }
-
-        private async Task<CloudBlockBlob> UploadArticle(Article article)
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                string cleanTitle = Encoding.ASCII.GetString(
-                    Encoding.Convert(
-                        Encoding.UTF8,
-                        Encoding.GetEncoding(
-                            Encoding.ASCII.EncodingName,
-                            new EncoderReplacementFallback(string.Empty),
-                            new DecoderExceptionFallback()
-                            ),
-                    Encoding.UTF8.GetBytes(article.Title)
-                    )
-                );
-
-                if (cleanTitle == "")
-                {
-                    cleanTitle = Guid.NewGuid().ToString();
-                }
-
-                var serializedJson = JsonConvert.SerializeObject(article);
-                StreamWriter writer = new StreamWriter(memoryStream);
-                writer.Write(serializedJson);
-                writer.Flush();
-                memoryStream.Position = 0;
-                CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(cleanTitle);
-                await cloudBlockBlob.UploadFromStreamAsync(memoryStream);
-                return cloudBlockBlob;
-            }
-        }
-
-        public async Task DeleteArticleAsync(string key)
-        {
-            await DeleteArticle(key);
-            await this.container.DeleteItemAsync<ArticlePointer>(key, new PartitionKey(key));
-        }
-
-        private async Task DeleteArticle(string key)
-        {
-            CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(key);
-            await cloudBlockBlob.DeleteAsync();
-        }
-
-        public async Task<ArticlePointer> GetItemAsync(string key)
-        {
-            try
-            {
-                ItemResponse<ArticlePointer> response = await this.container.ReadItemAsync<ArticlePointer>(key, new PartitionKey(key));
-                return response.Resource;
-            }
-            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                return null;
-            }
+            this._httpClient = httpClient;
         }
 
         public async Task<Article> GetArticleMediaWikiAsync(string key)
         {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Api-User-Agent","matt@fivestack.io");
-
-            var response = await client.GetAsync(new Uri($"https://en.wikipedia.org/w/api.php?action=parse&page={key}&prop=wikitext&formatversion=2&format=json"));
+            var response = await this._httpClient.GetAsync(
+                    $"?action=parse&page={key}&prop=wikitext&formatversion=2&format=json&redirects=true"
+                );
             string result = response.Content.ReadAsStringAsync().Result;
-            var wikiResponse = JsonConvert.DeserializeObject<WikiResponse>(result);
+            var wikiResponse = JsonSerializer.Deserialize<WikiResponse>(result);
 
             var textParser = new WikitextParser { Logger = new MyParserLogger() };
             var ast = textParser.Parse(wikiResponse.parse.wikitext);
+
             return Converter.ConvertWikitextToArticle(ast, wikiResponse.parse.title);
         }
 
-        public async Task<Article> GetArticleAsync(string key)
+        public async Task<object> GetSearchMediaWikiAsync(string searchString)
         {
-            key = key.Replace("_", " ");
-            ItemResponse<ArticlePointer> response = await this.container.ReadItemAsync<ArticlePointer>(key, new PartitionKey(key));
-            var ptr = response.Resource;
+            var response = await this._httpClient.GetAsync(
+                    $"?action=opensearch&search={searchString}&redirects=resolve&namespace=0"
+                );
+            string result = response.Content.ReadAsStringAsync().Result;
+            dynamic wikiResponse = JsonSerializer.Deserialize<dynamic>(result);
 
-            if (ptr.Redirect)
-            {
-                try
-                {
-                    string target = baseURL + ptr.Key;
-                    CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(ptr.Key);
-                    string content = await cloudBlockBlob.DownloadTextAsync();
-                    var article = JsonConvert.DeserializeObject<Article>(content);
-                    return article;
-                }
-                catch
-                {
-                    try
-                    {
-                        var aptr = await this.GetItemAsync(ptr.RedirectTarget);
+            var searchResponse = wikiResponse[1].EnumerateArray();
 
-                        CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(aptr.Key);
-                        string content = await cloudBlockBlob.DownloadTextAsync();
-                        var article = JsonConvert.DeserializeObject<Article>(content);
-                        return article;
-                    }
-                    catch
-                    {
-                        try
-                        {
-                            var aptr = await this.GetItemAsync(ptr.RedirectTarget.ToLower());
-
-                            CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(aptr.Key);
-                            string content = await cloudBlockBlob.DownloadTextAsync();
-                            var article = JsonConvert.DeserializeObject<Article>(content);
-                            return article;
-                        }
-                        catch
-                        {
-                            var aptr = await this.GetItemAsync(ptr.RedirectTarget.ToLower());
-
-                            CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(aptr.Key.ToLower());
-                            string content = await cloudBlockBlob.DownloadTextAsync();
-                            var article = JsonConvert.DeserializeObject<Article>(content);
-                            return article;
-                        }
-                    }
-                }
-
-            }
-            else
-            {
-                CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(ptr.Key);
-                string content = await cloudBlockBlob.DownloadTextAsync();
-                var article = JsonConvert.DeserializeObject<Article>(content);
-                return article;
-            }
-        }
-
-        public async Task<IEnumerable<ArticlePointer>> GetPointersAsync(string queryString)
-        {
-            var query = this.container.GetItemQueryIterator<ArticlePointer>(new QueryDefinition(queryString));
-            List<ArticlePointer> results = new List<ArticlePointer>();
-            while (query.HasMoreResults)
-            {
-                var response = await query.ReadNextAsync();
-
-                results.AddRange(response.ToList());
-            }
-
-            return results;
-        }
-
-        public async Task<IEnumerable<Article>> GetItemsAsync(string queryString)
-        {
-            var query = this.container.GetItemQueryIterator<ArticlePointer>(new QueryDefinition(queryString));
-            List<ArticlePointer> results = new List<ArticlePointer>();
-            while (query.HasMoreResults)
-            {
-                var response = await query.ReadNextAsync();
-
-                results.AddRange(response.ToList());
-            }
-
-            List<Article> articles = new List<Article>();
-
-            foreach (ArticlePointer ptr in results)
-            {
-                if (ptr.Redirect)
-                {
-                    var aptr = await this.GetItemAsync(ptr.RedirectTarget);
-
-                    CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(aptr.Key);
-                    string content = await cloudBlockBlob.DownloadTextAsync();
-                    var article = JsonConvert.DeserializeObject<Article>(content);
-                    articles.Add(article);
-                }
-                else
-                {
-                    CloudBlockBlob cloudBlockBlob = this.cloudBlobContainer.GetBlockBlobReference(ptr.Key);
-                    string content = await cloudBlockBlob.DownloadTextAsync();
-                    var article = JsonConvert.DeserializeObject<Article>(content);
-                    articles.Add(article);
-                }
-            }
-
-            return articles;
-        }
-
-        public async Task UpdateItemAsync(ArticlePointer articlePointer)
-        {
-            await this.container.UpsertItemAsync<ArticlePointer>(articlePointer, new PartitionKey(articlePointer.Key));
-        }
-
-        public async Task<IEnumerable<string>> SearchForArticles(string searchString)
-        {
-            var queryString = "SELECT TOP 10 c.Key FROM c WHERE STARTSWITH(c.Key, @searchString, false)";
-            var query = this.container.GetItemQueryIterator<ArticlePointer>(
-                new QueryDefinition(queryString)
-                .WithParameter("@searchString", searchString));
-            List<ArticlePointer> results = new List<ArticlePointer>();
-            while (query.HasMoreResults)
-            {
-                var response = await query.ReadNextAsync();
-
-                results.AddRange(response.ToList());
-            }
-
-            var ret = new List<string>();
-            foreach(var article in results)
-            {
-                ret.Add(article.Key);
-            }
-            return ret;
+            return searchResponse;
         }
     }
 }
@@ -343,5 +125,4 @@ public class Parse
     public string title {get; set;}
 
     public string wikitext {get; set;}
-
 }

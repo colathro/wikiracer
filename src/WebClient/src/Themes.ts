@@ -5,6 +5,7 @@ type Theme = {
   background2: string;
   text: string;
   text2: string;
+  text3: string;
   logo: string;
   player: string;
 };
@@ -14,6 +15,7 @@ const dark: Theme = {
   background2: "#35363a",
   text: "#cccccc",
   text2: "#7891EC",
+  text3: "#bdbdbd",
   logo: "darklogo.svg",
   player: "images/dark/player.svg",
 };
@@ -23,6 +25,7 @@ const light: Theme = {
   background2: "#ffffff",
   text: "#000000",
   text2: "#345DF0",
+  text3: "#787878",
   logo: "lightlogo.svg",
   player: "images/light/player.svg",
 };

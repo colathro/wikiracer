@@ -21,21 +21,21 @@ namespace WebServer.Controllers
     private readonly ILogger logger;
     private readonly LobbyService lobbyService;
     private readonly UserService userService;
-    private readonly ArticleService articleService;
+    private readonly IMediaWikiService mediaWikiService;
     private readonly GameService gameService;
 
     private static Random random = new Random((int)DateTime.Now.Ticks);
 
     public LobbyController(LobbyService _lobbyService,
       UserService _userService,
-      ArticleService _articleService,
+      IMediaWikiService _mediaWikiService,
       GameService _gameService,
       ILogger<LobbyController> _logger)
     {
       this.logger = _logger;
       this.lobbyService = _lobbyService;
       this.userService = _userService;
-      this.articleService = _articleService;
+      this.mediaWikiService = _mediaWikiService;
       this.gameService = _gameService;
     }
 
@@ -147,7 +147,6 @@ namespace WebServer.Controllers
       }
 
       bool updateGame = true;
-      key = key.ToLower();
 
       if (key != lobby.StartArticle) // if its not the start article
       {
@@ -157,17 +156,21 @@ namespace WebServer.Controllers
         }
       }
 
-      if (!IsGameRunning(lobby)) // if game is runnning
+      if (!IsGameRunning(lobby) || key == lobby.StartArticle) // if game is runnning or this is the start article
       {
-        updateGame = false; // dont update game as its not there yet - start will
+        updateGame = false; // dont update game as its not there yet - start will add it
       }
 
-      var article = useStorageAccount ? 
-        await this.articleService.GetArticleAsync(key) 
-        : await this.articleService.GetArticleMediaWikiAsync(key);
-      article.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(article.Title);
+      if (lobby.Players.First(p => p.Id == user.Key).Finished && IsGameRunning(lobby)) // check if player already finished
+      {
+        return BadRequest("already finished");
+      }
 
-      await lobbyService.SetCurrentArticle(lobbyKey, user.Key, key);
+      var article = await this.mediaWikiService.GetArticleMediaWikiAsync(key);
+
+      bool isFinished = article.Title == lobby.EndArticle;
+
+      await lobbyService.SetCurrentArticle(lobbyKey, user.Key, article.Title, isFinished);
       
       if (updateGame)
       {
@@ -176,7 +179,15 @@ namespace WebServer.Controllers
           Timestamp = DateTime.UtcNow,
           Article = article.Title
         };
-        game.GameHistories.FirstOrDefault(gh => gh.Player.Id == user.Key)?.Navigations.Add(nagivation);
+
+        var gameHistory = game.GameHistories.FirstOrDefault(gh => gh.Player.Id == user.Key);
+        gameHistory.Navigations.Add(nagivation);
+
+        if(key != lobby.StartArticle)
+        {
+          gameHistory.Player.Finished = true;
+        }
+
         await this.gameService.UpdateItemAsync(game);
       }
 
@@ -283,7 +294,7 @@ namespace WebServer.Controllers
         return BadRequest("game running");
       }
 
-      var searchResults = await this.articleService.SearchForArticles(term);
+      var searchResults = await this.mediaWikiService.GetSearchMediaWikiAsync(term);
       return Ok(searchResults);
     }
 
@@ -358,6 +369,10 @@ namespace WebServer.Controllers
 
       foreach(var player in lobby.Players)
       {
+        // reset each user to default
+        player.CurrentArticle = lobby.StartArticle;
+        player.Finished = false;
+
         if (player.Active){
           // foreach player in the lobby, add a history for them
           var gameHistory = new GameHistory{
@@ -378,7 +393,7 @@ namespace WebServer.Controllers
 
       lobby.GameId = gameId;
       lobby.StartTime = now.AddSeconds(10); 
-      lobby.EndTime = now.AddMinutes(4).AddSeconds(10);
+      lobby.EndTime = now.AddSeconds(20).AddSeconds(10);
 
       await this.lobbyService.UpdateItemAsync(lobby);
       await this.gameService.AddItemAsync(game);

@@ -1,11 +1,12 @@
 import { makeAutoObservable } from "mobx";
 import AuthState from "./AuthState";
-import { Lobby } from "../types/Lobby";
+import { Lobby, LobbyPlayer } from "../types/Lobby";
 import PopUpState from "./PopUpState";
 import TimerState from "./TimerState";
 
 class LobbyManager {
   lobby: Lobby | null;
+  me: LobbyPlayer | undefined;
   articleHook: React.Dispatch<any> | undefined;
   articleRef: React.MutableRefObject<string> | undefined;
 
@@ -16,10 +17,13 @@ class LobbyManager {
 
   lobbyState(lobby: Lobby) {
     this.setLocalLobby(lobby);
+    this.checkBan();
+    this.updateMe();
 
     if (
       (!this.isStarting() || !this.isStarted()) &&
-      this.lobby?.startArticle != this.articleRef!.current
+      this.lobby?.startArticle != this.articleRef!.current &&
+      this.lobby?.startArticle != undefined
     ) {
       this.getArticle(lobby.startArticle!, (data: any) => {
         this.articleRef!.current = lobby.startArticle!;
@@ -28,9 +32,15 @@ class LobbyManager {
     }
 
     console.log(TimerState);
-
-    if (this.lobby?.gameId! !== TimerState.gameId!) {
+    if (
+      this.lobby?.gameId! !== TimerState.gameId! &&
+      TimerState.gameId! !== undefined
+    ) {
       console.log("timer reset");
+      this.getArticle(lobby.startArticle!, (data: any) => {
+        this.articleRef!.current = lobby.startArticle!;
+        this.articleHook!(data);
+      });
       TimerState.resetTimer();
     }
 
@@ -40,7 +50,6 @@ class LobbyManager {
         TimerState.startTimer(lobby.startTime!, lobby.endTime!, lobby.gameId);
       }
     }
-    this.checkBan();
   }
 
   checkBan() {
@@ -51,6 +60,19 @@ class LobbyManager {
 
   checkOwner() {
     return this.lobby?.owner.id === AuthState.user?.key;
+  }
+
+  updateMe() {
+    console.log(this.lobby);
+    const me = this.lobby?.players.filter(
+      (player) => player.id === AuthState.user?.key
+    )[0];
+    console.log(me);
+    this.me = me;
+  }
+
+  meFinished() {
+    return this.me?.finished;
   }
 
   isStarted() {
@@ -86,9 +108,24 @@ class LobbyManager {
         },
       }
     )
-      .then((response) => response.json())
+      .then(async (response) => {
+        if (response.status === 400) {
+          const err = await response.text();
+          if (err === "already finished") {
+            PopUpState.showSuccess(
+              "You are already finished! Wait for the round to end."
+            );
+            return null;
+          }
+        }
+        const resp = await response.json();
+        console.log(resp);
+        return resp;
+      })
       .then((data) => {
-        callback(data);
+        if (data != null) {
+          callback(data);
+        }
       });
   }
 

@@ -59,7 +59,6 @@ class TimerManager {
   }
 
   setTimeLeft(timeLeft: TimeLeft) {
-    console.log(timeLeft);
     this.timeLeft = timeLeft;
   }
 

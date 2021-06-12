@@ -17,13 +17,6 @@ const Article = observer(() => {
     LobbyState.articleRef = currentArticle;
   }, []);
 
-  if (currentArticle.current == "") {
-    LobbyState.getArticle(LobbyState.lobby?.startArticle!, (data: any) => {
-      currentArticle.current = LobbyState.lobby?.startArticle!;
-      setArticleData(data);
-    });
-  }
-
   return (
     <ArticleWrapper>
       {articleData != undefined ? (
