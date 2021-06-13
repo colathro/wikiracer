@@ -390,7 +390,7 @@ namespace WebServer.Controllers
         player.CurrentArticle = lobby.StartArticle;
         player.Finished = false;
 
-        if (player.Active){
+        if (player.Active) {
           // foreach player in the lobby, add a history for them
           var gameHistory = new GameHistory{
             Player = player,
@@ -410,7 +410,10 @@ namespace WebServer.Controllers
 
       lobby.GameId = gameId;
       lobby.StartTime = now.AddSeconds(10); 
-      lobby.EndTime = now.AddSeconds(20).AddSeconds(10);
+      lobby.EndTime = now.AddMinutes(4).AddSeconds(10);
+
+      game.StartTime = lobby.StartTime;
+      game.FinishTime = lobby.EndTime;
 
       await this.lobbyService.UpdateItemAsync(lobby);
       await this.gameService.AddItemAsync(game);

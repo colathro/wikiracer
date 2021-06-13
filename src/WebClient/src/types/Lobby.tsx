@@ -54,6 +54,8 @@ export type Game = {
   finished: boolean;
   startArticle: string;
   finishArticle: string;
+  startTime: Date;
+  finishTime: Date;
   gameHistories: GameHistory[];
 };
 

@@ -62,7 +62,7 @@ class TimerManager {
 
     this.timerId = setInterval(() => {
       this.setTimeLeft(calculateTimeLeft(this.startTime!, this.endTime!));
-    }, 500);
+    }, 250);
   }
 
   setTimeLeft(timeLeft: TimeLeft) {

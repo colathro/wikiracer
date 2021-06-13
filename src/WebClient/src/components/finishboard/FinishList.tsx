@@ -4,6 +4,7 @@ import styled from "styled-components";
 import ThemeManager from "../../Themes";
 import PopUpState from "../../state/PopUpState";
 import LobbyState from "../../state/LobbyState";
+import FinishRecord from "./FinishRecord";
 
 const calculateTimeLeft = (start: Date, end: Date) => {
   let difference = +end - +start;
@@ -34,36 +35,30 @@ const InnerWrapper = styled.div`
   flex-direction: column;
 `;
 
-const FinishRecord = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
-`;
-
-const User = styled.span``;
-
-const FinishTime = styled.span``;
-
 const FinishList = observer(() => {
   const gameHistories = LobbyState.game?.gameHistories;
   return (
     <FinishWrapper>
       <InnerWrapper>
-        {gameHistories!.map((history) => {
-          const timeLeft = calculateTimeLeft(
-            new Date(LobbyState.lobby?.startTime!),
-            new Date(history.player.finishedTime)
-          );
-          return (
-            <FinishRecord>
-              <User>{history.player.displayName}</User>
-              <FinishTime>
-                Finished in: {timeLeft.minutes}:{timeLeft.seconds}.
-                {timeLeft.milliseconds}
-              </FinishTime>
-            </FinishRecord>
-          );
-        })}
+        {gameHistories != undefined ? (
+          gameHistories!.map((history, ind) => {
+            const timeLeft = calculateTimeLeft(
+              new Date(LobbyState.lobby?.startTime!),
+              new Date(history.player.finishedTime)
+            );
+            return (
+              <FinishRecord
+                game={LobbyState.game!}
+                timeLeft={timeLeft}
+                history={history}
+                ind={ind}
+                finished={history.player.finished}
+              ></FinishRecord>
+            );
+          })
+        ) : (
+          <></>
+        )}
       </InnerWrapper>
     </FinishWrapper>
   );

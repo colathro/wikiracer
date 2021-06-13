@@ -13,7 +13,7 @@ const Layout = styled.div`
 const TimerContainer = styled.div`
   display: flex;
   justify-content: space-around;
-  font-size: 5em;
+  font-size: 4em;
   user-select: none;
 `;
 

@@ -3,12 +3,11 @@ import AuthState from "./AuthState";
 import { Game, Lobby, LobbyPlayer } from "../types/Lobby";
 import PopUpState from "./PopUpState";
 import TimerState from "./TimerState";
+import SharedReferences from "./SharedReferences";
 
 class LobbyManager {
   lobby: Lobby | null;
   me: LobbyPlayer | undefined;
-  articleHook: React.Dispatch<any> | undefined;
-  articleRef: React.MutableRefObject<string> | undefined;
   game: Game | undefined;
 
   constructor() {
@@ -22,31 +21,42 @@ class LobbyManager {
     this.updateMe();
 
     if (
-      (!this.isStarting() || !this.isStarted()) &&
-      this.lobby?.startArticle != this.articleRef!.current &&
+      this.isStarting() &&
+      this.lobby?.startArticle != SharedReferences.articleRef!.current &&
+      this.lobby?.startArticle != undefined
+    ) {
+      console.log("settings start");
+      this.getArticle(lobby.startArticle!, (data: any) => {
+        SharedReferences.articleRef!.current = lobby.startArticle!;
+        SharedReferences.articleHook!(data);
+      });
+    } else if (
+      !this.isStarting() &&
+      !this.isStarted() &&
+      this.lobby?.startArticle != SharedReferences.articleRef!.current &&
       this.lobby?.startArticle != undefined
     ) {
       this.getArticle(lobby.startArticle!, (data: any) => {
-        this.articleRef!.current = lobby.startArticle!;
-        this.articleHook!(data);
+        SharedReferences.articleRef!.current = lobby.startArticle!;
+        SharedReferences.articleHook!(data);
       });
     }
 
-    console.log(TimerState);
     if (
       this.lobby?.gameId! !== TimerState.gameId! &&
       TimerState.gameId! !== undefined
     ) {
       console.log("timer reset");
       this.getArticle(lobby.startArticle!, (data: any) => {
-        this.articleRef!.current = lobby.startArticle!;
-        this.articleHook!(data);
+        SharedReferences.articleRef!.current = lobby.startArticle!;
+        SharedReferences.articleHook!(data);
       });
       TimerState.resetTimer();
     }
 
     if (this.isStarting() || this.isStarted()) {
       if (TimerState.gameId !== this.lobby?.gameId!) {
+        console.log("starting timer");
         // game is running and its correct Id
         TimerState.startTimer(lobby.startTime!, lobby.endTime!, lobby.gameId);
       }
@@ -210,6 +220,7 @@ class LobbyManager {
       return true;
     }
     this.removeLocalLobby();
+    TimerState.resetTimer();
   }
 
   setLocalLobby(lobby: Lobby) {

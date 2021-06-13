@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { observer } from "mobx-react-lite";
 import LobbyState from "../../state/LobbyState";
 import Lobby from "../lobby/Lobby";
+import SharedReferences from "../../state/SharedReferences";
 
 const ArticleWrapper = styled.div`
   overflow-y: scroll;
@@ -12,10 +13,12 @@ const Article = observer(() => {
   const currentArticle = useRef("");
   const [articleData, setArticleData] = useState<any>(undefined);
 
-  useEffect(() => {
-    LobbyState.articleHook = setArticleData;
-    LobbyState.articleRef = currentArticle;
-  }, []);
+  if (SharedReferences.articleHook != setArticleData) {
+    SharedReferences.articleHook = setArticleData;
+  }
+  if (SharedReferences.articleRef != currentArticle) {
+    SharedReferences.articleRef = currentArticle;
+  }
 
   return (
     <ArticleWrapper>
@@ -43,7 +46,9 @@ const Article = observer(() => {
                           key={sind}
                           onClick={() => {
                             LobbyState.getArticle(span.link, (data: any) => {
+                              console.log(currentArticle.current);
                               currentArticle.current = span.link;
+                              console.log(currentArticle.current);
                               setArticleData(data);
                             });
                           }}
