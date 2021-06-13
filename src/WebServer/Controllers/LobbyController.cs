@@ -183,15 +183,32 @@ namespace WebServer.Controllers
         var gameHistory = game.GameHistories.FirstOrDefault(gh => gh.Player.Id == user.Key);
         gameHistory.Navigations.Add(nagivation);
 
-        if(key != lobby.StartArticle)
+        if (key != lobby.StartArticle)
         {
           gameHistory.Player.Finished = true;
+          gameHistory.Player.FinishedTime = DateTime.UtcNow;
         }
 
         await this.gameService.UpdateItemAsync(game);
       }
 
       return Ok(article);
+    }
+
+    [HttpGet("player/currentgame")]
+    public async Task<IActionResult> GetGame([FromQuery] string lobbyKey)
+    {
+      var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
+      var lobby = await this.lobbyService.GetLobby(lobbyKey);
+
+      if (!CallerIsInLobby(lobby, user))
+      {
+        return BadRequest();
+      }
+
+      var game = await this.gameService.GetItemAsync(lobby.GameId);
+
+      return Ok(game);
     }
 
     [HttpPost("player/message")]

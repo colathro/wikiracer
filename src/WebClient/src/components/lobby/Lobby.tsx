@@ -12,6 +12,7 @@ import LobbyTitle from "./LobbyTitle";
 import LobbyTimer from "./LobbyTimer";
 import LobbyVisibility from "./LobbyVisibility";
 import LobbyControls from "./LobbyControls";
+import Finish from "../popups/Finish";
 
 const LobbyWrapper = styled.div`
   display: flex;
@@ -47,6 +48,7 @@ const OwnerMenu = styled.div`
 const Lobby = observer(() => {
   return (
     <LobbyWrapper>
+      <Finish />
       <ArticleWrapper>
         <Article />
       </ArticleWrapper>

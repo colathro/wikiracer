@@ -1,6 +1,5 @@
 import { makeAutoObservable } from "mobx";
 import crypto from "crypto";
-import { reduceEachTrailingCommentRange } from "typescript";
 
 export type MessageType = {
   Id: string;

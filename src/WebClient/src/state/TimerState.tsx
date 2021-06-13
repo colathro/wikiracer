@@ -1,4 +1,6 @@
 import { makeAutoObservable } from "mobx";
+import LobbyState from "./LobbyState";
+import PopUpState from "./PopUpState";
 
 type TimeLeft = {
   countDown: boolean;
@@ -32,6 +34,11 @@ const calculateTimeLeft = (start: Date, end: Date) => {
       minutes: 0,
       seconds: 0,
     };
+
+    TimerState.resetTimer();
+    LobbyState.getGame(() => {
+      PopUpState.showFinish();
+    });
   }
 
   return timeLeft;

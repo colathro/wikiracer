@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import AuthState from "./AuthState";
-import { Lobby, LobbyPlayer } from "../types/Lobby";
+import { Game, Lobby, LobbyPlayer } from "../types/Lobby";
 import PopUpState from "./PopUpState";
 import TimerState from "./TimerState";
 
@@ -9,6 +9,7 @@ class LobbyManager {
   me: LobbyPlayer | undefined;
   articleHook: React.Dispatch<any> | undefined;
   articleRef: React.MutableRefObject<string> | undefined;
+  game: Game | undefined;
 
   constructor() {
     this.lobby = JSON.parse(localStorage.getItem("lobby")!) as Lobby;
@@ -186,6 +187,20 @@ class LobbyManager {
     )
       .then((response) => response.json())
       .then((data) => {
+        callback(data);
+      });
+  }
+
+  getGame(callback: any) {
+    fetch(`/api/lobby/player/currentgame?lobbyKey=${this.lobby?.key}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.game = data;
         callback(data);
       });
   }

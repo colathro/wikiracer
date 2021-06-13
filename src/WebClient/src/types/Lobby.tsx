@@ -21,6 +21,7 @@ export type LobbyPlayer = {
   authProvider: AuthType;
   currentArticle: string;
   finished: boolean;
+  finishedTime: Date;
   active: boolean;
 };
 
@@ -47,4 +48,21 @@ export type User = {
 export type PublicLobbyResponse = {
   lobbies: Lobby[];
   pages: number;
+};
+
+export type Game = {
+  finished: boolean;
+  startArticle: string;
+  finishArticle: string;
+  gameHistories: GameHistory[];
+};
+
+export type GameHistory = {
+  player: LobbyPlayer;
+  navigations: GameNavigation[];
+};
+
+export type GameNavigation = {
+  timestamp: Date;
+  article: string;
 };

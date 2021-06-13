@@ -11,6 +11,7 @@ namespace DataModels.CosmosModels
         public AuthType AuthProvider { get; set; }
         public string CurrentArticle { get; set; }
         public bool Finished { get; set; }
+        public DateTime FinishedTime { get; set; }
         public bool Active { get; set; }
         public DateTime LastUpdate { get; set; }
     }
