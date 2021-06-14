@@ -126,8 +126,8 @@ class LobbyManager {
             PopUpState.showSuccess(
               "You are already finished! Wait for the round to end."
             );
-            return null;
           }
+          return null;
         }
         const resp = await response.json();
         console.log(resp);

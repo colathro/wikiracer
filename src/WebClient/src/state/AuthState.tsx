@@ -4,6 +4,7 @@ import { AuthType } from "../enums/AuthType";
 import { AuthInfo } from "../types/AuthInfo";
 import { User } from "../types/Lobby";
 import LobbyState from "./LobbyState";
+import PopUpState from "./PopUpState";
 
 var config = {
   authority: " https://id.twitch.tv/oauth2/",
@@ -66,9 +67,10 @@ class Auth {
         Authorization: "Bearer " + token_response.data,
       },
     })
-      .then((response) => response.json())
+      .then(async (response) => {
+        return response.json();
+      })
       .then((data) => {
-        console.log(data);
         const temp_auth_info = {
           access_token: token_response.data,
           display_name: data.displayName,
