@@ -1,13 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
-import AuthState from "../../state/AuthState";
-import LobbyState from "../../state/LobbyState";
 import CreateLobby from "./CreateLobby";
 import PublicLobbies from "./PublicLobbies";
 import JoinLobby from "./JoinLobby";
+
+const BigLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const BetaBannerWrapper = styled.div`
+  display: flex;
+`;
+
+const BannerText = styled.div`
+  background-color: yellow;
+  padding: 0.5em;
+`;
 
 const Layout = styled.div`
   display: flex;
@@ -29,20 +40,29 @@ const Header = styled.h1`
 
 const LobbyFinder = observer(() => {
   return (
-    <Layout>
-      <Container>
-        <Header>Join a Lobby</Header>
-        <JoinLobby />
-      </Container>
-      <Container>
-        <Header>Create a Lobby</Header>
-        <CreateLobby />
-      </Container>
-      <Container>
-        <Header>Public Lobbies</Header>
-        <PublicLobbies />
-      </Container>
-    </Layout>
+    <BigLayout>
+      <BetaBannerWrapper>
+        <BannerText>
+          Wiki Racer is currently in closed beta. This means all features and
+          data is subject to deletion. Expect all your history to be
+          periodically removed while we develop!
+        </BannerText>
+      </BetaBannerWrapper>
+      <Layout>
+        <Container>
+          <Header>Join a Lobby</Header>
+          <JoinLobby />
+        </Container>
+        <Container>
+          <Header>Create a Lobby</Header>
+          <CreateLobby />
+        </Container>
+        <Container>
+          <Header>Public Lobbies</Header>
+          <PublicLobbies />
+        </Container>
+      </Layout>
+    </BigLayout>
   );
 });
 
