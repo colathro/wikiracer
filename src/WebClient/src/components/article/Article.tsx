@@ -1,16 +1,34 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, createRef } from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
 import LobbyState from "../../state/LobbyState";
 import Lobby from "../lobby/Lobby";
 import SharedReferences from "../../state/SharedReferences";
+import ArticleTitle from "./ArticleTitle";
+import ArticleSpan from "./ArticleSpan";
+import ArticleHeader from "./ArticleHeader";
+import ArticleLink from "./ArticleLink";
+import ArticleImage from "./ArticleImage";
 
 const ArticleWrapper = styled.div`
   overflow-y: scroll;
 `;
 
+const ArticleInner = styled.div`
+  margin: 1.5em;
+  margin-top: 0.5em;
+`;
+
+const Paragraph = styled.p`
+  font-family: sans-serif;
+  font: Arial;
+  font-size: 14px;
+  line-height: 22.5px;
+`;
+
 const Article = observer(() => {
   const currentArticle = useRef("");
+  const scrollRef = createRef<HTMLDivElement>();
   const [articleData, setArticleData] = useState<any>(undefined);
 
   if (SharedReferences.articleHook != setArticleData) {
@@ -19,54 +37,47 @@ const Article = observer(() => {
   if (SharedReferences.articleRef != currentArticle) {
     SharedReferences.articleRef = currentArticle;
   }
+  if (SharedReferences.scrollRef != scrollRef) {
+    SharedReferences.scrollRef = scrollRef;
+  }
 
   return (
-    <ArticleWrapper>
+    <ArticleWrapper ref={scrollRef}>
       {articleData != undefined ? (
-        <div>
-          <h1>{articleData!.title}</h1>
+        <ArticleInner>
+          <ArticleTitle title={articleData!.title}></ArticleTitle>
           {articleData!.paragraphs.map((paragraph: any, ind: any) => {
             if (paragraph.level === 0) {
+              if (paragraph.spans[0]?.type! === 2) {
+                return <ArticleImage span={paragraph.spans[0]}></ArticleImage>;
+              }
               return (
-                <p key={ind}>
+                <Paragraph key={ind}>
                   {paragraph.spans.map((span: any, sind: any) => {
-                    if (span.type == 2) {
-                      return (
-                        <img src={`/api/image?imageurl=${span.link}`}></img>
-                      );
-                    }
                     if (span.link != null) {
                       return (
-                        <a
-                          style={{
-                            cursor: "pointer",
-                            color: "blue",
-                            textDecoration: "underline",
-                          }}
+                        <ArticleLink
                           key={sind}
-                          onClick={() => {
+                          span={span}
+                          click={() => {
                             LobbyState.getArticle(span.link, (data: any) => {
-                              console.log(currentArticle.current);
                               currentArticle.current = span.link;
-                              console.log(currentArticle.current);
                               setArticleData(data);
                             });
                           }}
-                        >
-                          {span.text}
-                        </a>
+                        ></ArticleLink>
                       );
                     }
-                    return <span key={sind}>{span.text}</span>;
+                    return <ArticleSpan key={sind} span={span}></ArticleSpan>;
                   })}
-                </p>
+                </Paragraph>
               );
             }
             if (paragraph.level >= 1) {
-              return <h1>{paragraph.spans[0].text}</h1>;
+              return <ArticleHeader paragraph={paragraph}></ArticleHeader>;
             }
           })}
-        </div>
+        </ArticleInner>
       ) : (
         <div>not loaded</div>
       )}

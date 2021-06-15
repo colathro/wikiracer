@@ -40,6 +40,14 @@ class LobbyManager {
         SharedReferences.articleRef!.current = lobby.startArticle!;
         SharedReferences.articleHook!(data);
       });
+    } else if (
+      SharedReferences.articleRef!.current === "" &&
+      this.isStarted()
+    ) {
+      this.getArticle(this.me?.currentArticle!, (data: any) => {
+        SharedReferences.articleRef!.current = this.me?.currentArticle!;
+        SharedReferences.articleHook!(data);
+      });
     }
 
     if (
@@ -135,6 +143,7 @@ class LobbyManager {
       })
       .then((data) => {
         if (data != null) {
+          SharedReferences.scrollRef!.current?.scrollTo(0, 0);
           callback(data);
         }
       });

@@ -25,6 +25,8 @@ namespace DataLoader
         {
             var lines = wikiText.EnumChildren();
 
+            bool hardStop = false;
+
             foreach (var line in lines)
             {
                 var flag = new FormatFlag();
@@ -45,6 +47,15 @@ namespace DataLoader
                     switch (inline)
                     {
                         case PlainText pt:
+                            if (paragraph.Level == 2)
+                            {
+                                if (CleanText(pt.Content).Contains("See also") || 
+                                    CleanText(pt.Content).Contains("References") ||
+                                    CleanText(pt.Content).Contains("External links"))
+                                {
+                                    hardStop = true; // we don't want anything below see also - its ugly and we avoid lots of category:* stuff
+                                }
+                            }
                             ProcessPlainText(pt, paragraph.Spans, flag);
                             break;
                         case WikiLink wl:
@@ -84,6 +95,11 @@ namespace DataLoader
                         default:
                             break;
                     }
+                }
+
+                if (hardStop)
+                {
+                    break;
                 }
 
                 article.Paragraphs.Add(paragraph);
