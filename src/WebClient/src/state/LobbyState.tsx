@@ -25,7 +25,6 @@ class LobbyManager {
       this.lobby?.startArticle != SharedReferences.articleRef!.current &&
       this.lobby?.startArticle != undefined
     ) {
-      console.log("settings start");
       this.getArticle(lobby.startArticle!, (data: any) => {
         SharedReferences.articleRef!.current = lobby.startArticle!;
         SharedReferences.articleHook!(data);
@@ -54,7 +53,6 @@ class LobbyManager {
       this.lobby?.gameId! !== TimerState.gameId! &&
       TimerState.gameId! !== undefined
     ) {
-      console.log("timer reset");
       this.getArticle(lobby.startArticle!, (data: any) => {
         SharedReferences.articleRef!.current = lobby.startArticle!;
         SharedReferences.articleHook!(data);
@@ -64,7 +62,6 @@ class LobbyManager {
 
     if (this.isStarting() || this.isStarted()) {
       if (TimerState.gameId !== this.lobby?.gameId!) {
-        console.log("starting timer");
         // game is running and its correct Id
         TimerState.startTimer(lobby.startTime!, lobby.endTime!, lobby.gameId);
       }
