@@ -3,9 +3,9 @@ using WebServer.Services;
 using WebServer.Hubs;
 using DataModels.CosmosModels;
 using System.Threading;
-using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -31,6 +31,9 @@ namespace WebServer.BackgroundServices
         try
         {
           var lobbys = await this.lobbyService.GetAllLobbies();
+
+          List<Task> tasks = new List<Task>();
+
           foreach (var lobby in lobbys)
           {
             if (!this.lobbyCache.TryGetValue<Lobby>(lobby.Key, out Lobby cachedLobby)
@@ -42,9 +45,12 @@ namespace WebServer.BackgroundServices
                   {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
                   });
-              await this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby);
+
+              tasks.Add(this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby));
             }
           }
+
+          await Task.WhenAll(tasks);
         }
         catch
         {
@@ -52,7 +58,7 @@ namespace WebServer.BackgroundServices
         }
         finally
         {
-          await Task.Delay(500);
+          await Task.Delay(250);
         }
       }
     }
