@@ -19,6 +19,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="AspNet.Security.OAuth.Twitch" Version="5.0.4" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.33" />
+    <PackageReference Include="Profanity.Detector" Version="0.1.8" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DataModels.CosmosModels;
 using Microsoft.Azure.Cosmos;
 
+
 namespace WebServer.Services
 {
 
@@ -128,12 +129,20 @@ namespace WebServer.Services
             await this.container.UpsertItemAsync<Lobby>(lobby, new PartitionKey(lobby.Key));
         }
 
-        public async Task<Lobby> SetCurrentArticle(string lobbyKey, string userId, string articleKey, bool isFinished)
+        public async Task SetCurrentArticle(string lobbyKey, string userId, string articleKey, bool isFinished)
         {
-            return await this.container.Scripts.ExecuteStoredProcedureAsync<Lobby>(
+            await this.container.Scripts.ExecuteStoredProcedureAsync<int>(
                 "SetCurrentArticle",
                 new PartitionKey(lobbyKey),
                 new[] { lobbyKey, userId, articleKey, isFinished.ToString() });
+        }
+
+        public async Task SendMesage(string lobbyKey, Message message)
+        {
+            await this.container.Scripts.ExecuteStoredProcedureAsync<int>(
+                "AddMessage",
+                new PartitionKey(lobbyKey),
+                new dynamic[] { lobbyKey, message });
         }
 
         public async Task<Lobby> SetStartEndArticle(string lobbyKey, string startArticleKey, string endArticleKey)

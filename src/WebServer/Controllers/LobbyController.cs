@@ -3,10 +3,9 @@ using Microsoft.Extensions.Logging;
 using WebServer.Services;
 using DataModels.CosmosModels;
 using System.Collections.Generic;
-using DataModels.StorageModels;
 using System;
 using System.Text;
-using System.Globalization;
+using ProfanityDetector = ProfanityFilter;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -216,7 +215,13 @@ namespace WebServer.Controllers
     {
       if (message.Length >= 145)
       {
-        return BadRequest();
+        return BadRequest("length");
+      }
+
+      var filter = new ProfanityDetector.ProfanityFilter();
+
+      if (filter.ContainsProfanity(message)){
+        return BadRequest("profanity");
       }
 
       var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
@@ -238,9 +243,7 @@ namespace WebServer.Controllers
         Text = message
       };
 
-      lobby.Messages.Add(messageObject);
-
-      await this.lobbyService.UpdateItemAsync(lobby);
+      await this.lobbyService.SendMesage(lobbyKey, messageObject);
 
       return Ok();
     }
