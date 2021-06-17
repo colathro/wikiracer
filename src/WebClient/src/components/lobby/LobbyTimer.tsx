@@ -31,6 +31,14 @@ const CountDownContainer = styled.div`
   user-select: none;
 `;
 
+const Toggle = styled.a`
+  color: ${ThemeManager.theme?.text2};
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const CountDownSeconds = styled.span``;
 
 const LobbyTimer = observer(() => {
@@ -62,6 +70,17 @@ const LobbyTimer = observer(() => {
           ? "0" + TimerState.timeLeft?.seconds!
           : TimerState.timeLeft?.seconds!}
       </TimerContainer>
+      {LobbyState.lobby?.startArticle != undefined ? (
+        <Toggle
+          onClick={() => {
+            LobbyState.backToStart();
+          }}
+        >
+          Reset Back To {LobbyState.lobby?.startArticle!}
+        </Toggle>
+      ) : (
+        <></>
+      )}
     </Layout>
   );
 });

@@ -20,7 +20,6 @@ const Toggle = styled.a`
 const LobbyControls = observer(() => {
   return (
     <Layout>
-      {LobbyState.isStarted() ? "Game Running" : "Waiting To Start"}
       <Toggle
         onClick={() => {
           LobbyState.startGame(() => {});

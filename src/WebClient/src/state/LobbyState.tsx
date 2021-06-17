@@ -110,6 +110,13 @@ class LobbyManager {
     return lobby.startTime! >= new Date() && lobby.endTime! >= new Date();
   }
 
+  backToStart() {
+    this.getArticle(this.lobby!.startArticle!, (data: any) => {
+      SharedReferences.articleRef!.current = this.lobby!.startArticle!;
+      SharedReferences.articleHook!(data);
+    });
+  }
+
   getArticle(key: string, callback: any) {
     if (!LobbyState.isStarted() && key != LobbyState.lobby?.startArticle) {
       PopUpState.showError("Wait for game to start!");
