@@ -23,7 +23,6 @@ const Anchor = styled.a`
 
 const AnchorInactive = styled.span`
   color: ${ThemeManager.theme?.text};
-  text-decoration: underline;
 `;
 
 const List = styled.div`
@@ -87,6 +86,14 @@ const PublicLobbies = observer(() => {
   }, []);
   return (
     <Layout>
+      <Anchor
+        onClick={() => {
+          setLobbies(undefined);
+          LobbyState.getLobbies(setLobbies, 0);
+        }}
+      >
+        Refresh
+      </Anchor>
       <List>
         {pbr?.lobbies.map((lobby: Lobby, key: any) => {
           return (
@@ -150,7 +157,7 @@ const PublicLobbies = observer(() => {
               const row = [];
               const bot = page - 1;
               const top = Math.min(page + 4, pbr?.pages!);
-              for (var i = bot; i < top; i++) {
+              for (var i = bot; i <= top; i++) {
                 const p = i;
                 if (i === page) {
                   row.push(<AnchorInactive key={i}>{i}</AnchorInactive>);
@@ -174,7 +181,7 @@ const PublicLobbies = observer(() => {
             gotoPage(page + 1);
           }}
         >
-          {page === pbr?.pages! - 1 ? "" : "Next"}
+          {page === pbr?.pages! ? "" : "Next"}
         </Anchor>
       </PagesWrapper>
     </Layout>

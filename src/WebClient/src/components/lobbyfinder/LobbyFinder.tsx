@@ -29,6 +29,7 @@ const Layout = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 4em;
 `;
 
 const Header = styled.h1`
