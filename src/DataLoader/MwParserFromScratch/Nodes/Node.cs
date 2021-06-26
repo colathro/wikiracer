@@ -253,13 +253,11 @@ namespace DataLoader.MwParserFromScratch.Nodes
             if (ParentCollection == null)
                 throw new InvalidOperationException("Cannot remove the node that is not attached to its parent via a collection.");
             var result = ParentCollection.Remove(this);
-            Debug.Assert(result);
         }
 
         internal TNode Attach<TNode>(TNode newNode)
             where TNode : Node
         {
-            Debug.Assert(newNode != null);
             // Make a deep copy, if needed.
             if (newNode.ParentNode != null)
                 newNode = (TNode)newNode.Clone();
@@ -287,20 +285,12 @@ namespace DataLoader.MwParserFromScratch.Nodes
 
         internal void SetLineInfo(int lineNumber1, int linePosition1, int lineNumber2, int linePosition2)
         {
-            Debug.Assert(lineNumber1 >= 0);
-            Debug.Assert(linePosition1 >= 0);
-            Debug.Assert(lineNumber2 >= 0);
-            Debug.Assert(linePosition2 >= 0);
-            Debug.Assert(lineNumber1 < lineNumber2 || lineNumber1 == lineNumber2 && linePosition1 <= linePosition2);
-            Debug.Assert(Annotation<LineInfoAnnotation>() == null);
             AddAnnotation(new LineInfoAnnotation(lineNumber1, linePosition1, lineNumber2, linePosition2));
         }
 
         internal void SetLineInfo(Node node)
         {
-            Debug.Assert(node != null);
             var source = node.Annotation<LineInfoAnnotation>();
-            Debug.Assert(Annotation<LineInfoAnnotation>() == null);
             AddAnnotation(new LineInfoAnnotation(source.StartLineNumber, source.StartLinePosition, source.EndLineNumber,
                 source.EndLinePosition));
         }
@@ -308,12 +298,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
         internal void ExtendLineInfo(int lineNumber2, int linePosition2)
         {
             var annotation = Annotation<LineInfoAnnotation>();
-            Debug.Assert(annotation != null);
-            Debug.Assert(lineNumber2 >= 0);
-            Debug.Assert(linePosition2 >= 0);
-            // We won't allow the span to shrink.
-            Debug.Assert(annotation.StartLineNumber < lineNumber2
-                         || annotation.StartLineNumber == lineNumber2 && annotation.StartLinePosition <= linePosition2);
             annotation.EndLineNumber = lineNumber2;
             annotation.EndLinePosition = linePosition2;
         }
@@ -357,8 +341,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
         public Node Clone()
         {
             var newInst = CloneCore();
-            Debug.Assert(newInst != null);
-            Debug.Assert(newInst.GetType() == this.GetType());
             return newInst;
         }
 
@@ -404,8 +386,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
         internal virtual void ToPlainTextCore(StringBuilder builder, NodePlainTextFormatter formatter)
         {
             // The default implementation is to write nothing.
-            Debug.Assert(builder != null);
-            Debug.Assert(formatter != null);
         }
 
         private class LineInfoAnnotation

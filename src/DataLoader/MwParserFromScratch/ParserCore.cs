@@ -119,9 +119,6 @@ namespace DataLoader.MwParserFromScratch
         /// </summary>
         private T ParseSuccessful<T>(T value, bool setLineNumber = true) where T : Node
         {
-            Debug.Assert(value != null);
-            // At least we've consumed something. Or empty WIKITEXT.
-            Debug.Assert(position >= CurrentContext.StartingPosition);
             if (setLineNumber)
             {
                 value.SetLineInfo(CurrentContext.StartingLineNumber,
@@ -169,7 +166,6 @@ namespace DataLoader.MwParserFromScratch
         /// <returns>The string of token that has been successfully matched. OR <c>null</c> is such attempt failed.</returns>
         private string LookAheadToken(string tokenMatcher)
         {
-            Debug.Assert(tokenMatcher[0] != '^');
             Regex re;
             lock (tokenMatcherCache)
             {
@@ -183,9 +179,6 @@ namespace DataLoader.MwParserFromScratch
             }
             var m = re.Match(fulltext, position);
             if (!m.Success) return null;
-            Debug.Assert(position == m.Index);
-            // We want to move forward.
-            Debug.Assert(m.Length > 0, "A successful matching should consume at least 1 character.");
             return m.Value;
         }
 
@@ -221,14 +214,12 @@ namespace DataLoader.MwParserFromScratch
 
             public bool IsTerminated(string str, int startIndex)
             {
-                Debug.Assert(str != null);
                 if (Terminator == null) return false;
                 return Terminator.IsTerminated(str, startIndex);
             }
 
             public int FindTerminator(string str, int startIndex, IWikitextParserLogger logger)
             {
-                Debug.Assert(str != null);
                 if (Terminator == null) return -1;
                 return Terminator.Search(str, startIndex, logger);
             }
@@ -278,7 +269,6 @@ namespace DataLoader.MwParserFromScratch
 
             private Terminator(string expr)
             {
-                Debug.Assert(expr[0] != '^');
                 matcher = new Regex(@"\G(" + expr + ")");
                 searcher = new Regex(expr);
             }

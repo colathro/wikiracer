@@ -74,7 +74,6 @@ namespace DataLoader.MwParserFromScratch
             if (ConsumeToken(@"\{\{\{") == null)
                 return ParseFailed<ArgumentReference>();
             var name = ParseWikitext();
-            Debug.Assert(name != null);
             var defaultValue = ConsumeToken(@"\|") != null ? ParseWikitext() : null;
             // For {{{A|b|c}}, we should consume and discard c .
             // Parsing is still needed in order to handle the cases like {{{A|b|c{{T}}}}}
@@ -114,12 +113,10 @@ namespace DataLoader.MwParserFromScratch
                 ParseStart(":", false);
                 if (!ParseRun(RunParsingMode.ExpandableText, node.Name, true))
                 {
-                    Debug.Assert(false, "We have ensured we can read something. Wierd.");
                     Fallback();
                     return ParseFailed(node);
                 }
                 Accept();
-                Debug.Assert(LookAheadToken(@"\|") == null);
                 if (ConsumeToken(":") != null)
                 {
                     // Parse 1st argument.
@@ -158,13 +155,11 @@ namespace DataLoader.MwParserFromScratch
         {
             ParseStart(@"=", false);
             var a = ParseWikitext();
-            Debug.Assert(a != null);
             if (ConsumeToken(@"=") != null)
             {
                 // name=value
                 CurrentContext.Terminator = null;
                 var value = ParseWikitext();
-                Debug.Assert(value != null);
                 return ParseSuccessful(new TemplateArgument(a, value));
             }
             return ParseSuccessful(new TemplateArgument(null, a));
@@ -207,8 +202,6 @@ namespace DataLoader.MwParserFromScratch
                     {
                         attr.Value = ParseAttributeValue(ValueQuoteType.None);
                         attr.Quote = ValueQuoteType.None;
-                        Debug.Assert(attr.Value != null,
-                            "ParseAttributeValue(ValueQuoteType.None) should always be successful.");
                     }
                     ws = ConsumeToken(@"\s+");
                 } /* else, we have <tag attrName > */
@@ -289,9 +282,6 @@ namespace DataLoader.MwParserFromScratch
             }
             closingTagMatch = matcher.Match(closingTag);
         CLOSE_TAG:
-            Debug.Assert(closingTagMatch.Success);
-            Debug.Assert(closingTagMatch.Groups[1].Success);
-            Debug.Assert(closingTagMatch.Groups[2].Success);
             tag.ClosingTagName = closingTagMatch.Groups[1].Value != tag.Name
                 ? closingTagMatch.Groups[1].Value
                 : null;
@@ -342,7 +332,6 @@ namespace DataLoader.MwParserFromScratch
                     }
                     break;
                 default:
-                    Debug.Assert(false);
                     break;
             }
             return ParseFailed<Wikitext>();

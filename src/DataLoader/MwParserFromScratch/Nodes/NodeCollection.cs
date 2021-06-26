@@ -31,7 +31,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
 
         internal NodeCollection(Node owner)
         {
-            Debug.Assert(owner != null);
             _Owner = owner;
         }
 
@@ -62,7 +61,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
             node.PreviousNode = LastNode;
             if (LastNode == null)
             {
-                Debug.Assert(FirstNode == null);
                 FirstNode = node;
                 LastNode = node;
             }
@@ -97,7 +95,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
             }
             if (LastNode == null)
             {
-                Debug.Assert(FirstNode == null);
                 FirstNode = source.FirstNode;
                 LastNode = source.LastNode;
             }
@@ -160,9 +157,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
 
         internal void InsertBefore(TNode node, TNode newNode)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(node.ParentNode == _Owner);
-            Debug.Assert(newNode != null);
             newNode = _Owner.Attach(newNode);
             newNode.ParentCollection = this;
             var prev = node.PreviousNode;
@@ -173,7 +167,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
             }
             else
             {
-                Debug.Assert(FirstNode == node);
                 FirstNode = newNode;
                 newNode.PreviousNode = null;
             }
@@ -183,9 +176,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
 
         internal void InsertAfter(TNode node, TNode newNode)
         {
-            Debug.Assert(node != null);
-            Debug.Assert(node.ParentNode == _Owner);
-            Debug.Assert(newNode != null);
             newNode = _Owner.Attach(newNode);
             newNode.ParentCollection = this;
             node.NextNode = newNode;
@@ -198,7 +188,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
             }
             else
             {
-                Debug.Assert(LastNode == node);
                 newNode.NextNode = null;
                 LastNode = newNode;
             }
@@ -262,7 +251,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
         bool INodeCollection.Remove(Node item)
         {
             if (item.ParentCollection != this) return false;
-            Debug.Assert(item.ParentNode == _Owner);
             item.ParentCollection = null;
             _Owner.Detach(item);
             if (item == FirstNode)
@@ -271,7 +259,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
             }
             else
             {
-                Debug.Assert(item.PreviousNode != null);
                 item.PreviousNode.NextNode = item.NextNode;
             }
             if (item == LastNode)
@@ -280,7 +267,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
             }
             else
             {
-                Debug.Assert(item.NextNode != null);
                 item.NextNode.PreviousNode = item.PreviousNode;
             }
             item.PreviousNode = item.NextNode = null;
@@ -323,7 +309,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
 
             public MyEnumerator(NodeCollection<TNode> owner)
             {
-                Debug.Assert(owner != null);
                 _Owner = owner;
             }
         }

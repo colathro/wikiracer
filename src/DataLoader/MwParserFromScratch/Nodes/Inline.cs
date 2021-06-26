@@ -746,7 +746,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
                     sb.Append(">");
                     return sb.ToString();
                 default:
-                    Debug.Assert(false);
                     break;
             }
             if (TagStyle != TagStyle.NotClosed)

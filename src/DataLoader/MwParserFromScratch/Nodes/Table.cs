@@ -245,7 +245,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
             }
             else
             {
-                Debug.Assert(Attributes.Count == 0);
             }
             sb.Append(IsHeader ? '!' : '|');
             sb.Append(Content);

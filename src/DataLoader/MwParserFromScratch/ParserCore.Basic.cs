@@ -34,7 +34,6 @@ namespace DataLoader.MwParserFromScratch
             {
                 // Failed to read a \n , which means we've reached a terminator.
                 // This is guaranteed in ParseLineEnd
-                Debug.Assert(NeedsTerminate());
                 return ParseSuccessful(node);
             }
             // Otherwise, check whether we meet a terminator before reading another line.
@@ -79,7 +78,6 @@ namespace DataLoader.MwParserFromScratch
         /// <returns>The extra paragraph, or <see cref="EMPTY_LINE_NODE"/>. If parsing attempt failed, <c>null</c>.</returns>
         private LineNode ParseLineEnd(LineNode lastNode)
         {
-            Debug.Assert(lastNode != null);
             var unclosedParagraph = lastNode as Paragraph;
             if (unclosedParagraph != null && !unclosedParagraph.Compact)
                 unclosedParagraph = null;
@@ -160,7 +158,6 @@ namespace DataLoader.MwParserFromScratch
                 // Last node cannot be a closed paragraph.
                 // It can't because ParseLineEnd is invoked immediately after a last node is parsed,
                 // and only ParseLineEnd can close a paragraph.
-                Debug.Assert(!(lastNode is Paragraph), "Last node cannot be a closed paragraph.");
                 // Rather, last node is LINE node of other type (LIST_ITEM/HEADING).
                 // Remember we've already consumed a '\n' , and the spaces after it.
                 // The situation here is just like the "special case" mentioned above.
@@ -235,7 +232,6 @@ namespace DataLoader.MwParserFromScratch
                 var headingTerminator = barExpr + "(?!=)";
                 ParseStart(headingTerminator, false);   // <-- A
                 var temp = ConsumeToken(barExpr);
-                Debug.Assert(temp != null);
                 var node = new Heading();
                 var parsedSegments = new List<IInlineContainer>();
                 while (true)
@@ -317,7 +313,6 @@ namespace DataLoader.MwParserFromScratch
                 var paraTail = (PlainText)mergeTo.Inlines.LastNode;
                 paraTail.Content += "\n";
                 IWikitextLineInfo paraTailSpan = paraTail;
-                Debug.Assert(((IWikitextLineInfo)mergeTo).EndLinePosition == paraTailSpan.EndLinePosition);
                 paraTail.ExtendLineInfo(paraTailSpan.EndLineNumber + 1, 0);
                 mergeTo.ExtendLineInfo(paraTailSpan.EndLineNumber + 1, 0);
             }
@@ -446,13 +441,11 @@ namespace DataLoader.MwParserFromScratch
         {
             ParseStart(@"=", false);
             var a = ParseWikitext();
-            Debug.Assert(a != null);
             if (ConsumeToken(@"=") != null)
             {
                 // name=value
                 CurrentContext.Terminator = null;
                 var value = ParseWikitext();
-                Debug.Assert(value != null);
                 return ParseSuccessful(new WikiImageLinkArgument(a, value));
             }
             return ParseSuccessful(new WikiImageLinkArgument(null, a));
@@ -558,7 +551,6 @@ namespace DataLoader.MwParserFromScratch
                 case 5:
                     return ParseSuccessful(new FormatSwitch(true, true));
                 default:
-                    Debug.Assert(false);
                     return ParseFailed<FormatSwitch>();
             }
         }

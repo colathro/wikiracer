@@ -106,13 +106,6 @@ namespace DataLoader.MwParserFromScratch.Nodes
 
         internal static PlainText AppendWithLineInfo(this IInlineContainer container, string text, int lineNumber1, int linePosition1, int lineNumber2, int linePosition2)
         {
-            Debug.Assert(container != null);
-            Debug.Assert(text != null);
-            Debug.Assert(lineNumber1 >= 0);
-            Debug.Assert(linePosition1 >= 0);
-            Debug.Assert(lineNumber2 >= 0);
-            Debug.Assert(linePosition2 >= 0);
-            Debug.Assert(lineNumber1 < lineNumber2 || lineNumber1 == lineNumber2 && linePosition1 <= linePosition2);
             var pt = container.Inlines.LastNode as PlainText;
             if (pt == null)
             {

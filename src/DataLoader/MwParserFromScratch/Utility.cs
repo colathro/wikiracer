@@ -97,8 +97,6 @@ namespace DataLoader.MwParserFromScratch
             }
             if (state == 2)
             {
-                // Remove trailing space.
-                Debug.Assert(sb[sb.Length - 1] == ' ');
                 return sb.ToString(0, sb.Length - 1);
             }
             return sb.ToString();
