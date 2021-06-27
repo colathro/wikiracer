@@ -26,7 +26,7 @@ const Layout = styled.div`
 
 const NavWrapper = styled.div`
   display: flex;
-  width: 13em;
+  width: 16em;
 `;
 
 const ContentWrapper = styled.div`

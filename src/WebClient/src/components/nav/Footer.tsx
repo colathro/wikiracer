@@ -1,6 +1,7 @@
 import ThemeManager from "../../Themes";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
+import { Link } from "@fluentui/react/lib/Link";
 
 const Layout = styled.div`
   display: flex;
@@ -12,16 +13,6 @@ const Layout = styled.div`
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-const Anchor = styled.a`
-  display: flex;
-  font-size: 0.75em;
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const Footer = () => {
@@ -37,8 +28,8 @@ const Footer = () => {
   return (
     <Layout>
       <Container>
-        <Anchor onClick={navigateCookie}>Cookie Policy</Anchor>
-        <Anchor onClick={navigatePrivacy}>Privacy Policy</Anchor>
+        <Link onClick={navigateCookie}>Cookie Policy</Link>
+        <Link onClick={navigatePrivacy}>Privacy Policy</Link>
       </Container>
     </Layout>
   );
