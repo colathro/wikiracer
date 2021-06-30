@@ -6,11 +6,11 @@ import LobbyState from "../../state/LobbyState";
 import AuthState from "../../state/AuthState";
 import { useHistory } from "react-router-dom";
 import { Lobby, PublicLobbyResponse } from "../../types/Lobby";
+import { PrimaryButton, Icon, Text, Link, Spinner } from "@fluentui/react";
 
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1;
 `;
 
 const Anchor = styled.a`
@@ -28,22 +28,31 @@ const AnchorInactive = styled.span`
 const List = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1;
+  min-height: 500px;
 `;
 
 const PagesWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  max-width: 50%;
   margin: 1em;
   margin-top: 3em;
+  width: 500px;
 `;
 
 const LobbyWrapper = styled.div`
   display: flex;
   margin: 1em;
   justify-content: space-between;
-  max-width: 50%;
+  width: 500px;
+`;
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  margin: 1em;
+  align-items: center;
+  justify-content: center;
+  width: 500px;
+  height: 500px;
 `;
 
 const Owner = styled.div``;
@@ -84,16 +93,32 @@ const PublicLobbies = observer(() => {
   useEffect(() => {
     LobbyState.getLobbies(setLobbies, 0);
   }, []);
+  if (pbr == undefined) {
+    return (
+      <Layout>
+        <List>
+          <LoaderWrapper>
+            <Spinner label="Loading public lobbies..." />
+          </LoaderWrapper>
+        </List>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
-      <Anchor
-        onClick={() => {
-          setLobbies(undefined);
-          LobbyState.getLobbies(setLobbies, 0);
-        }}
-      >
-        Refresh
-      </Anchor>
+      <Owner>
+        <PrimaryButton
+          onClick={() => {
+            setLobbies(undefined);
+            setTimeout(() => {
+              LobbyState.getLobbies(setLobbies, 0);
+            }, 500);
+          }}
+        >
+          Refresh
+        </PrimaryButton>
+      </Owner>
       <List>
         {pbr?.lobbies.map((lobby: Lobby, key: any) => {
           return (
@@ -107,7 +132,7 @@ const PublicLobbies = observer(() => {
                     }).length
                   }
                 </PlayersText>
-                <Player src={ThemeManager.theme?.player}></Player>
+                <Icon iconName="People" />
               </Players>
               <Anchor
                 onClick={() => {
@@ -123,13 +148,15 @@ const PublicLobbies = observer(() => {
         })}
       </List>
       <PagesWrapper>
-        <Anchor
-          onClick={() => {
-            gotoPage(page - 1);
-          }}
-        >
-          {page === 0 ? "" : "Previous"}
-        </Anchor>
+        <Text>
+          <Link
+            onClick={() => {
+              gotoPage(page - 1);
+            }}
+          >
+            {page === 0 ? "" : "Previous"}
+          </Link>
+        </Text>
         {page === 0
           ? runCallback(() => {
               const row = [];
@@ -137,17 +164,23 @@ const PublicLobbies = observer(() => {
               for (var i = 0; i <= top; i++) {
                 const p = i;
                 if (i === page) {
-                  row.push(<AnchorInactive key={i}>{i}</AnchorInactive>);
+                  row.push(
+                    <Text>
+                      <AnchorInactive key={i}>{i}</AnchorInactive>
+                    </Text>
+                  );
                 } else {
                   row.push(
-                    <Anchor
-                      onClick={() => {
-                        gotoPage(p);
-                      }}
-                      key={i}
-                    >
-                      {i}
-                    </Anchor>
+                    <Text>
+                      <Anchor
+                        onClick={() => {
+                          gotoPage(p);
+                        }}
+                        key={i}
+                      >
+                        {i}
+                      </Anchor>
+                    </Text>
                   );
                 }
               }
@@ -160,29 +193,37 @@ const PublicLobbies = observer(() => {
               for (var i = bot; i <= top; i++) {
                 const p = i;
                 if (i === page) {
-                  row.push(<AnchorInactive key={i}>{i}</AnchorInactive>);
+                  row.push(
+                    <Text>
+                      <AnchorInactive key={i}>{i}</AnchorInactive>
+                    </Text>
+                  );
                 } else {
                   row.push(
-                    <Anchor
-                      onClick={() => {
-                        gotoPage(p);
-                      }}
-                      key={i}
-                    >
-                      {i}
-                    </Anchor>
+                    <Text>
+                      <Anchor
+                        onClick={() => {
+                          gotoPage(p);
+                        }}
+                        key={i}
+                      >
+                        {i}
+                      </Anchor>
+                    </Text>
                   );
                 }
               }
               return row;
             })}
-        <Anchor
-          onClick={() => {
-            gotoPage(page + 1);
-          }}
-        >
-          {page === pbr?.pages! ? "" : "Next"}
-        </Anchor>
+        <Text>
+          <Anchor
+            onClick={() => {
+              gotoPage(page + 1);
+            }}
+          >
+            {page === pbr?.pages! ? "" : "Next"}
+          </Anchor>
+        </Text>
       </PagesWrapper>
     </Layout>
   );

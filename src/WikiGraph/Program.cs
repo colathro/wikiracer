@@ -26,7 +26,13 @@ namespace WikiGraph
 
             rootCommand.Handler = CommandHandler.Create<int>(Run);
 
-            await rootCommand.InvokeAsync(args);
+            // await rootCommand.InvokeAsync(args);
+
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = File.OpenRead("C:\\Users\\carlos\\Desktop\\test123");
+            Dictionary<string, WikiNode> graph = (Dictionary<string, WikiNode>)formatter.Deserialize(stream);
+            stream.Close();
+            Console.WriteLine("test");
         }
 
         public static void Run(int start)
@@ -71,9 +77,13 @@ namespace WikiGraph
             var newDict = new Dictionary<string, WikiNode>(con);
 
             FileStream stream = File.Create("test123");
-            var formatter = new BinaryFormatter();
+
+            System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(newDict.GetType());
+
+            //var formatter = new BinaryFormatter();
             Console.WriteLine("Serializing vector");
-            formatter.Serialize(stream, newDict);
+            // formatter.Serialize(stream, newDict);
+            x.Serialize(stream, newDict);
             stream.Close();
             Console.WriteLine("Done.");
         }

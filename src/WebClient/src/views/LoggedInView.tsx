@@ -34,6 +34,7 @@ const ContentWrapper = styled.div`
   flex: 1;
   flex-direction: column;
   padding: 2em;
+  margin-left: 2em;
 `;
 
 const LoggedInView = observer(() => {

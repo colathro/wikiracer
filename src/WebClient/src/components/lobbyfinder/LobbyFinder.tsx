@@ -4,6 +4,7 @@ import ThemeManager from "../../Themes";
 import CreateLobby from "./CreateLobby";
 import PublicLobbies from "./PublicLobbies";
 import JoinLobby from "./JoinLobby";
+import { MessageBar, MessageBarType } from "@fluentui/react";
 
 const BigLayout = styled.div`
   display: flex;
@@ -13,6 +14,7 @@ const BigLayout = styled.div`
 
 const BetaBannerWrapper = styled.div`
   display: flex;
+  max-width: 1000px;
 `;
 
 const BannerText = styled.div`
@@ -29,7 +31,8 @@ const Layout = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 4em;
+  margin-bottom: 2em;
+  margin-top: 2em;
 `;
 
 const Header = styled.h1`
@@ -43,23 +46,20 @@ const LobbyFinder = observer(() => {
   return (
     <BigLayout>
       <BetaBannerWrapper>
-        <BannerText>
+        <MessageBar messageBarType={MessageBarType.warning}>
           Wiki Racer is currently in closed beta. This means all features and
           data is subject to deletion. Expect all your history to be
           periodically removed while we develop!
-        </BannerText>
+        </MessageBar>
       </BetaBannerWrapper>
       <Layout>
         <Container>
-          <Header>Join a Lobby</Header>
-          <JoinLobby />
-        </Container>
-        <Container>
-          <Header>Create a Lobby</Header>
           <CreateLobby />
         </Container>
         <Container>
-          <Header>Public Lobbies</Header>
+          <JoinLobby />
+        </Container>
+        <Container>
           <PublicLobbies />
         </Container>
       </Layout>

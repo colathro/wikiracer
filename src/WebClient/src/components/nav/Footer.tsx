@@ -1,7 +1,7 @@
 import ThemeManager from "../../Themes";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import { Link } from "@fluentui/react/lib/Link";
+import { Link, Text } from "@fluentui/react";
 
 const Layout = styled.div`
   display: flex;
@@ -28,8 +28,12 @@ const Footer = () => {
   return (
     <Layout>
       <Container>
-        <Link onClick={navigateCookie}>Cookie Policy</Link>
-        <Link onClick={navigatePrivacy}>Privacy Policy</Link>
+        <Text>
+          <Link onClick={navigateCookie}>Cookie policy</Link>
+        </Text>
+        <Text>
+          <Link onClick={navigatePrivacy}>Privacy policy</Link>
+        </Text>
       </Container>
     </Layout>
   );
