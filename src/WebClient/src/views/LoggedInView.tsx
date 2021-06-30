@@ -26,15 +26,24 @@ const Layout = styled.div`
 
 const NavWrapper = styled.div`
   display: flex;
+  position: fixed;
   width: 16em;
+  overflow-y: hidden;
 `;
 
 const ContentWrapper = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 2em;
-  margin-left: 2em;
+  margin: 4em;
+  margin-left: 20em;
+  margin-top: 1em;
+  align-content: center;
+`;
+
+const Content = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const LoggedInView = observer(() => {
@@ -51,17 +60,19 @@ const LoggedInView = observer(() => {
         <Nav />
       </NavWrapper>
       <ContentWrapper>
-        <Switch>
-          <Route path="/settings">
-            <Settings />
-          </Route>
-          <Route path="/howtoplay">
-            <HowToPlay />
-          </Route>
-          <Route path="/">
-            <LobbyFinder />
-          </Route>
-        </Switch>
+        <Content>
+          <Switch>
+            <Route path="/settings">
+              <Settings />
+            </Route>
+            <Route path="/howtoplay">
+              <HowToPlay />
+            </Route>
+            <Route path="/">
+              <LobbyFinder />
+            </Route>
+          </Switch>
+        </Content>
       </ContentWrapper>
     </Layout>
   );

@@ -8,8 +8,9 @@ import { MessageBar, MessageBarType } from "@fluentui/react";
 
 const BigLayout = styled.div`
   display: flex;
+  max-width: 1000px;
   flex-direction: column;
-  flex: 1;
+  align-content: center;
 `;
 
 const BetaBannerWrapper = styled.div`
@@ -25,7 +26,6 @@ const BannerText = styled.div`
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1;
 `;
 
 const Container = styled.div`
@@ -53,9 +53,6 @@ const LobbyFinder = observer(() => {
         </MessageBar>
       </BetaBannerWrapper>
       <Layout>
-        <Container>
-          <CreateLobby />
-        </Container>
         <Container>
           <JoinLobby />
         </Container>

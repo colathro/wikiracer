@@ -6,11 +6,20 @@ import LobbyState from "../../state/LobbyState";
 import AuthState from "../../state/AuthState";
 import { useHistory } from "react-router-dom";
 import { Lobby, PublicLobbyResponse } from "../../types/Lobby";
-import { PrimaryButton, Icon, Text, Link, Spinner } from "@fluentui/react";
+import {
+  PrimaryButton,
+  Icon,
+  Text,
+  Link,
+  Spinner,
+  IconButton,
+  IIconProps,
+} from "@fluentui/react";
 
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
 `;
 
 const Anchor = styled.a`
@@ -28,7 +37,8 @@ const AnchorInactive = styled.span`
 const List = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 500px;
+  height: 500px;
+  overflow-y: scroll;
 `;
 
 const PagesWrapper = styled.div`
@@ -36,14 +46,12 @@ const PagesWrapper = styled.div`
   justify-content: space-between;
   margin: 1em;
   margin-top: 3em;
-  width: 500px;
 `;
 
 const LobbyWrapper = styled.div`
   display: flex;
   margin: 1em;
   justify-content: space-between;
-  width: 500px;
 `;
 
 const LoaderWrapper = styled.div`
@@ -51,7 +59,6 @@ const LoaderWrapper = styled.div`
   margin: 1em;
   align-items: center;
   justify-content: center;
-  width: 500px;
   height: 500px;
 `;
 
@@ -66,6 +73,8 @@ const PlayersText = styled.div`
 `;
 
 const Player = styled.img``;
+
+const refreshIcon: IIconProps = { iconName: "Refresh" };
 
 const PublicLobbies = observer(() => {
   let history = useHistory();
@@ -96,6 +105,17 @@ const PublicLobbies = observer(() => {
   if (pbr == undefined) {
     return (
       <Layout>
+        <IconButton
+          onClick={() => {
+            setLobbies(undefined);
+            setTimeout(() => {
+              LobbyState.getLobbies(setLobbies, 0);
+            }, 500);
+          }}
+          iconProps={refreshIcon}
+        >
+          Refresh
+        </IconButton>
         <List>
           <LoaderWrapper>
             <Spinner label="Loading public lobbies..." />
@@ -107,18 +127,17 @@ const PublicLobbies = observer(() => {
 
   return (
     <Layout>
-      <Owner>
-        <PrimaryButton
-          onClick={() => {
-            setLobbies(undefined);
-            setTimeout(() => {
-              LobbyState.getLobbies(setLobbies, 0);
-            }, 500);
-          }}
-        >
-          Refresh
-        </PrimaryButton>
-      </Owner>
+      <IconButton
+        onClick={() => {
+          setLobbies(undefined);
+          setTimeout(() => {
+            LobbyState.getLobbies(setLobbies, 0);
+          }, 500);
+        }}
+        iconProps={refreshIcon}
+      >
+        Refresh
+      </IconButton>
       <List>
         {pbr?.lobbies.map((lobby: Lobby, key: any) => {
           return (
@@ -134,7 +153,7 @@ const PublicLobbies = observer(() => {
                 </PlayersText>
                 <Icon iconName="People" />
               </Players>
-              <Anchor
+              <PrimaryButton
                 onClick={() => {
                   LobbyState.joinLobby(lobby.key, () => {
                     history.push("/lobby");
@@ -142,20 +161,21 @@ const PublicLobbies = observer(() => {
                 }}
               >
                 Join
-              </Anchor>
+              </PrimaryButton>
             </LobbyWrapper>
           );
         })}
       </List>
       <PagesWrapper>
         <Text>
-          <Link
+          <PrimaryButton
             onClick={() => {
               gotoPage(page - 1);
             }}
+            disabled={page === 0}
           >
-            {page === 0 ? "" : "Previous"}
-          </Link>
+            Previous
+          </PrimaryButton>
         </Text>
         {page === 0
           ? runCallback(() => {
@@ -216,13 +236,14 @@ const PublicLobbies = observer(() => {
               return row;
             })}
         <Text>
-          <Anchor
+          <PrimaryButton
             onClick={() => {
               gotoPage(page + 1);
             }}
+            disabled={page === pbr?.pages!}
           >
-            {page === pbr?.pages! ? "" : "Next"}
-          </Anchor>
+            Next
+          </PrimaryButton>
         </Text>
       </PagesWrapper>
     </Layout>
