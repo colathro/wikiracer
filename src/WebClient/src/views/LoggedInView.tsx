@@ -28,7 +28,6 @@ const NavWrapper = styled.div`
   display: flex;
   position: fixed;
   width: 16em;
-  overflow-y: hidden;
 `;
 
 const ContentWrapper = styled.div`

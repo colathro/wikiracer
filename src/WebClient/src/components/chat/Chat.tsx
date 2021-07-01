@@ -9,12 +9,10 @@ import ChatControls from "./ChatControls";
 
 const Layout = styled.div`
   display: flex;
-  height: 20em;
-  border: 1px solid ${ThemeManager.theme?.text};
+  flex: 1;
 `;
 
 const Wrapper = styled.div`
-  margin: 0.5em;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -25,12 +23,9 @@ const SendWrapper = styled.div`
 `;
 
 const ChatWrapper = styled.div`
-  border: 1px solid ${ThemeManager.theme?.text};
   display: flex;
   flex: 1;
-  margin-bottom: 0.5em;
   flex-direction: column-reverse;
-  overflow-y: scroll;
 `;
 
 const ChatInner = styled.div`

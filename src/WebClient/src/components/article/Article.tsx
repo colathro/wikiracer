@@ -12,6 +12,7 @@ import ArticleImage from "./ArticleImage";
 
 const ArticleWrapper = styled.div`
   overflow-y: scroll;
+  padding-right: 4em;
 `;
 
 const ArticleInner = styled.div`

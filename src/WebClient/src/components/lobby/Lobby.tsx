@@ -22,22 +22,24 @@ const LobbyWrapper = styled.div`
 const ArticleWrapper = styled.div`
   display: flex;
   flex: 1;
+  flex-direction: column;
+  margin-left: 20em;
+  align-content: center;
   height: 100vh;
 `;
 
 const MenuWrapper = styled.div`
-  width: 25em;
+  width: 16em;
   display: flex;
-  border-left: 1px solid ${ThemeManager.theme?.text};
+  position: fixed;
+  height: 100vh;
 `;
 
 const Menu = styled.div`
   display: flex;
-  flex: 1;
   flex-direction: column;
-  align-items: space-around;
-  justify-content: space-between;
-  margin: 1em;
+  flex: 1;
+  padding: 1em;
 `;
 
 const OwnerMenu = styled.div`
@@ -49,9 +51,6 @@ const Lobby = observer(() => {
   return (
     <LobbyWrapper>
       <Finish />
-      <ArticleWrapper>
-        <Article />
-      </ArticleWrapper>
       <MenuWrapper>
         <Menu>
           <LobbyTitle />
@@ -71,6 +70,9 @@ const Lobby = observer(() => {
           <Chat />
         </Menu>
       </MenuWrapper>
+      <ArticleWrapper>
+        <Article />
+      </ArticleWrapper>
     </LobbyWrapper>
   );
 });

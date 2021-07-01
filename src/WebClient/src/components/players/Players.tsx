@@ -6,8 +6,6 @@ import { AuthType } from "../../enums/AuthType";
 
 const Layout = styled.div`
   display: flex;
-  height: 20em;
-  border: 1px solid ${ThemeManager.theme?.text};
 `;
 
 const Wrapper = styled.div`
@@ -18,11 +16,9 @@ const Wrapper = styled.div`
 `;
 
 const PlayersWrapper = styled.div`
-  border: 1px solid ${ThemeManager.theme?.text};
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow-y: scroll;
 `;
 
 const PlayerWrapper = styled.div`

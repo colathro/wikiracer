@@ -4,6 +4,10 @@ import styled from "styled-components";
 import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
 import Emotes from "./Emotes";
+import { TextField, MaskedTextField } from "@fluentui/react/lib/TextField";
+import { IIconProps, initializeIcons } from "@fluentui/react";
+import { TooltipHost, ITooltipHostStyles } from "@fluentui/react/lib/Tooltip";
+import { IconButton } from "@fluentui/react/lib/Button";
 
 const Layout = styled.div`
   display: flex;
@@ -16,7 +20,6 @@ const Send = styled.a`
   &:hover {
     text-decoration: underline;
   }
-  margin-right: 1em;
 `;
 
 const InputWrapper = styled.div`
@@ -26,7 +29,6 @@ const InputWrapper = styled.div`
 
 const Input = styled.input`
   flex: 1;
-  margin-right: 1em;
 `;
 
 const ShowEmotesWrapper = styled.div`
@@ -39,7 +41,6 @@ const ShowEmotes = styled.a`
   &:hover {
     text-decoration: underline;
   }
-  margin-right: 1em;
 `;
 
 const DropUpContainer = styled.div`
@@ -97,23 +98,26 @@ const ChatControls = observer(() => {
   return (
     <Layout>
       <InputWrapper>
-        <Input
-          onChange={(e) => {
+        <TextField
+          onChange={(e: any) => {
             setMessage(e.target.value);
           }}
           onKeyUp={(ev) => {
             handleKey(ev);
           }}
           value={message}
-        ></Input>
+        ></TextField>
       </InputWrapper>
-      <Send
-        onClick={() => {
-          send();
-        }}
-      >
-        Send
-      </Send>
+      <TooltipHost content="Send Message">
+        <IconButton
+          iconProps={{ iconName: "Send" }}
+          title="Emoji"
+          ariaLabel="Emoji"
+          onClick={() => {
+            send();
+          }}
+        />
+      </TooltipHost>
       <ShowEmotesWrapper>
         {dropUpShow ? (
           <DropUpContainer>
@@ -134,13 +138,16 @@ const ChatControls = observer(() => {
         ) : (
           <></>
         )}
-        <ShowEmotes
-          onClick={() => {
-            setDropUpShow(!dropUpShow);
-          }}
-        >
-          Emotes
-        </ShowEmotes>
+        <TooltipHost content="Show Emojis">
+          <IconButton
+            iconProps={{ iconName: "Emoji2" }}
+            title="Emoji"
+            ariaLabel="Emoji"
+            onClick={() => {
+              setDropUpShow(!dropUpShow);
+            }}
+          />
+        </TooltipHost>
       </ShowEmotesWrapper>
     </Layout>
   );

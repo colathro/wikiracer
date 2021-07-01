@@ -11,7 +11,7 @@ const Layout = styled.div`
   flex-direction: column-reverse;
   position: fixed;
   height: 100vh;
-  ${(props) => (props.theme.leftNotification ? "" : "right: 0px;")}
+  right: 0px;
 `;
 
 const Messages = observer(() => {

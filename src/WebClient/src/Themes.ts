@@ -44,7 +44,8 @@ class ThemeManager {
 
   tryGetThemeOverride() {
     const theme = localStorage.getItem("themeOverride");
-    if (theme === null) {
+    this.theme = light;
+    /*     if (theme === null) {
       const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
       if (darkThemeMq.matches) {
         // Theme set to dark.
@@ -60,7 +61,7 @@ class ThemeManager {
       } else {
         this.theme = light;
       }
-    }
+    } */
   }
 
   setDarkOverride() {
