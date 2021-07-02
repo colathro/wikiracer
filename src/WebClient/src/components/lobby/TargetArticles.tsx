@@ -7,7 +7,6 @@ import ThemeManager from "../../Themes";
 const Layout = styled.div`
   flex-direction: column;
   display: flex;
-  height: 12em;
 `;
 
 const Toggle = styled.a`
@@ -64,7 +63,6 @@ type props = {
 };
 
 const TargetArticles = observer((props: props) => {
-  console.log(LobbyState.lobby?.endArticle);
   const [editable, setEditable] = useState(false);
   const [awaiting, setAwaiting] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);

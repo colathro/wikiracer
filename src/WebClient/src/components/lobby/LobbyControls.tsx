@@ -2,31 +2,25 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
+import { PrimaryButton } from "@fluentui/react/lib/Button";
 
 const Layout = styled.div`
   display: flex;
   margin-top: 1em;
   margin-bottom: 1em;
-`;
-
-const Toggle = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
+  justify-content: center;
 `;
 
 const LobbyControls = observer(() => {
   return (
     <Layout>
-      <Toggle
+      <PrimaryButton
         onClick={() => {
           LobbyState.startGame(() => {});
         }}
       >
         Start Game
-      </Toggle>
+      </PrimaryButton>
     </Layout>
   );
 });

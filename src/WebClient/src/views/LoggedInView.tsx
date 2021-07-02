@@ -28,6 +28,7 @@ const NavWrapper = styled.div`
   display: flex;
   position: fixed;
   width: 16em;
+  max-width: 16em;
   height: 100vh;
 `;
 

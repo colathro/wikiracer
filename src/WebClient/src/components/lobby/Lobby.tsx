@@ -30,7 +30,9 @@ const ArticleWrapper = styled.div`
 
 const MenuWrapper = styled.div`
   width: 16em;
+  max-width: 16em;
   display: flex;
+  flex: 1;
   position: fixed;
   height: 100vh;
 `;
@@ -40,6 +42,8 @@ const Menu = styled.div`
   flex-direction: column;
   flex: 1;
   padding: 1em;
+  max-width: 16em;
+  justify-content: space-between;
 `;
 
 const OwnerMenu = styled.div`

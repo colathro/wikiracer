@@ -10,13 +10,7 @@ import { IconButton } from "@fluentui/react/lib/Button";
 import { IButtonProps } from "@fluentui/react/lib/Button";
 import { Text, ITextProps } from "@fluentui/react/lib/Text";
 import { ProgressIndicator } from "@fluentui/react/lib/ProgressIndicator";
-import {
-  IPersonaProps,
-  IPersonaSharedProps,
-  Persona,
-  PersonaSize,
-  PersonaPresence,
-} from "@fluentui/react/lib/Persona";
+import { IPersonaProps, Persona } from "@fluentui/react/lib/Persona";
 
 const Layout = styled.div`
   display: flex;

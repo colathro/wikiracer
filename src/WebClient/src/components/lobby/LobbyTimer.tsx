@@ -4,6 +4,7 @@ import styled from "styled-components";
 import ThemeManager from "../../Themes";
 import TimerState from "../../state/TimerState";
 import LobbyState from "../../state/LobbyState";
+import { Spinner } from "@fluentui/react/lib/Spinner";
 
 const Layout = styled.div`
   display: flex;
@@ -56,7 +57,7 @@ const LobbyTimer = observer(() => {
   if (!LobbyState.isStarted() && !LobbyState.isStarting()) {
     return (
       <Layout>
-        <WaitingContainer>Waiting for host</WaitingContainer>
+        <Spinner label="Waiting for host to start game..." />
       </Layout>
     );
   }

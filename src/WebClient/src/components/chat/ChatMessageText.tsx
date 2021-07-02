@@ -1,16 +1,12 @@
 import styled from "styled-components";
-import ThemeManager from "../../Themes";
+import { Text } from "@fluentui/react";
 import Emotes from "./Emotes";
 
-const Layout = styled.span`
-  vertical-align: middle;
-`;
+const Layout = styled.span``;
 
 const EmoteIcon = styled.img`
-  height: 1em;
+  height: 1.5em;
 `;
-
-const Text = styled.span``;
 
 type props = {
   text: string;
