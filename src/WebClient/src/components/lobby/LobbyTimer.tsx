@@ -5,30 +5,20 @@ import ThemeManager from "../../Themes";
 import TimerState from "../../state/TimerState";
 import LobbyState from "../../state/LobbyState";
 import { Spinner } from "@fluentui/react/lib/Spinner";
+import { Text, ITextProps } from "@fluentui/react/lib/Text";
+import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
 
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  margin-right: 16px;
 `;
 
 const TimerContainer = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   font-size: 4em;
-  user-select: none;
-`;
-
-const WaitingContainer = styled.span`
-  display: flex;
-  justify-content: space-around;
-  font-size: 3em;
-  user-select: none;
-`;
-
-const CountDownContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  font-size: 5em;
   user-select: none;
 `;
 
@@ -47,8 +37,10 @@ const LobbyTimer = observer(() => {
     return (
       <Layout>
         <TimerContainer>
-          Starting in
-          <CountDownSeconds>{TimerState.timeLeft?.seconds}</CountDownSeconds>
+          <Text variant="xLarge">
+            Starting in{" "}
+            <CountDownSeconds>{TimerState.timeLeft?.seconds}</CountDownSeconds>
+          </Text>
         </TimerContainer>
       </Layout>
     );
@@ -65,20 +57,22 @@ const LobbyTimer = observer(() => {
   return (
     <Layout>
       <TimerContainer>
-        {TimerState.timeLeft?.minutes}
-        {":"}
-        {TimerState.timeLeft?.seconds! < 10
-          ? "0" + TimerState.timeLeft?.seconds!
-          : TimerState.timeLeft?.seconds!}
+        <Text variant="xLarge">
+          Time Left: {TimerState.timeLeft?.minutes}
+          {":"}
+          {TimerState.timeLeft?.seconds! < 10
+            ? "0" + TimerState.timeLeft?.seconds!
+            : TimerState.timeLeft?.seconds!}
+        </Text>
       </TimerContainer>
       {LobbyState.lobby?.startArticle != undefined ? (
-        <Toggle
+        <DefaultButton
           onClick={() => {
             LobbyState.backToStart();
           }}
         >
-          Reset Back To {LobbyState.lobby?.startArticle!}
-        </Toggle>
+          Reset Back To Start
+        </DefaultButton>
       ) : (
         <></>
       )}

@@ -11,5 +11,8 @@ namespace DataModels.CosmosModels
         public DateTime StartTime { get; set; }
         public DateTime FinishTime { get; set; }
         public List<GameHistory> GameHistories { get; set; }
+        public bool RewardIssued { get; set; }
+        public int ExperienceReward { get; set; }
+        public int CoinReward { get; set; }
     }
 }

@@ -3,55 +3,106 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
-import Logo from "../nav/Logo";
+import {
+  mergeStyleSets,
+  DelayedRender,
+  Callout,
+  Text,
+  TextField,
+} from "@fluentui/react";
+import { useBoolean, useId } from "@fluentui/react-hooks";
+import { DefaultButton } from "@fluentui/react/lib/Button";
+import { Label } from "@fluentui/react/lib/Label";
 
 const Layout = styled.div`
   display: flex;
-  flex-direction: column;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin-top: 1em;
-`;
-
-const LogoContainer = styled.div`
-  display: flex;
-  flex: 1;
   justify-content: center;
 `;
 
-const Leave = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
 const LobbyKey = observer(() => {
-  return <div>Join Code: {LobbyState.lobby!.key}</div>;
-});
-
-const LobbyTitle = observer(() => {
-  let history = useHistory();
+  const lobby = LobbyState.lobby!.key;
+  const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] =
+    useBoolean(false);
+  const buttonId = useId("callout-button");
 
   return (
     <Layout>
-      <ButtonContainer>
-        <LobbyKey />
-        <Leave
-          onClick={() => {
-            LobbyState.leaveLobby();
-            history.push("/");
-          }}
+      <DefaultButton
+        id={buttonId}
+        className={styles.button}
+        onClick={toggleIsCalloutVisible}
+      >
+        Invite Friends
+      </DefaultButton>
+      {isCalloutVisible && (
+        <Callout
+          className={styles.callout}
+          target={`#${buttonId}`}
+          onDismiss={toggleIsCalloutVisible}
+          role="status"
+          aria-live="assertive"
         >
-          Leave Lobby
-        </Leave>
-      </ButtonContainer>
+          <Label></Label>
+          <TextField label="Lobby Key:" value={lobby} readOnly />
+        </Callout>
+      )}
     </Layout>
   );
+});
+
+const LobbyLeave = observer(() => {
+  let history = useHistory();
+  const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] =
+    useBoolean(false);
+  const buttonId = useId("callout-button");
+
+  return (
+    <Layout>
+      <DefaultButton
+        id={buttonId}
+        onClick={toggleIsCalloutVisible}
+        text="Leave"
+        className={styles.button}
+      />
+      {isCalloutVisible && (
+        <Callout
+          className={styles.callout}
+          target={`#${buttonId}`}
+          onDismiss={toggleIsCalloutVisible}
+          role="status"
+          aria-live="assertive"
+        >
+          <Label>Are you sure you want to leave?</Label>
+          <DefaultButton
+            onClick={() => {
+              LobbyState.leaveLobby();
+              history.push("/");
+            }}
+          >
+            Yes
+          </DefaultButton>
+        </Callout>
+      )}
+    </Layout>
+  );
+});
+
+const LobbyTitle = observer(() => {
+  return (
+    <Layout>
+      <LobbyLeave />
+      <LobbyKey />
+    </Layout>
+  );
+});
+
+const styles = mergeStyleSets({
+  button: {
+    margin: "4px",
+  },
+  callout: {
+    padding: "12px 12px",
+  },
 });
 
 export default LobbyTitle;

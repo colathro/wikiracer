@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
+import { Toggle } from "@fluentui/react/lib/Toggle";
 
 const Layout = styled.div`
   display: flex;
@@ -9,26 +10,18 @@ const Layout = styled.div`
   margin-bottom: 1em;
 `;
 
-const Toggle = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
 const LobbyVisibility = observer(() => {
   return (
     <Layout>
       <Toggle
-        onClick={() => {
+        onChange={() => {
           LobbyState.setPublic(() => {});
         }}
-      >
-        {LobbyState.lobby?.isPublic
-          ? "Make Lobby Private"
-          : "Make Lobby Public"}
-      </Toggle>
+        label="Public"
+        defaultChecked={LobbyState.lobby?.isPublic}
+        onText="On"
+        offText="Off"
+      ></Toggle>
     </Layout>
   );
 });

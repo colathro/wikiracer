@@ -23,6 +23,8 @@ export type LobbyPlayer = {
   finished: boolean;
   finishedTime: Date;
   active: boolean;
+  badges: string[];
+  level: number;
 };
 
 export type Message = {
@@ -42,6 +44,11 @@ export type User = {
   displayName: string;
   avatar: string;
   createdOn: Date;
+  experience: number;
+  unlockedAvatars: string[];
+  coins: number;
+  badges: string[];
+  level: number;
   key: string;
 };
 
@@ -57,6 +64,8 @@ export type Game = {
   startTime: Date;
   finishTime: Date;
   gameHistories: GameHistory[];
+  coinReward: number;
+  experienceReward: number;
 };
 
 export type GameHistory = {

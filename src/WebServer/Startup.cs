@@ -111,10 +111,11 @@ namespace WebServer
             services.AddHttpClient<IMediaWikiService, MediaWikiService>(client =>
             {
                 client.BaseAddress = new Uri("https://en.wikipedia.org/w/api.php");
-                client.DefaultRequestHeaders.Add("Api-User-Agent","colton@fivestack.io");
+                client.DefaultRequestHeaders.Add("Api-User-Agent", "colton@fivestack.io");
             });
             services.AddHostedService<LobbySynchronizer>();
             services.AddHostedService<CleanupService>();
+            services.AddHostedService<RewardService>();
 
             services.AddSpaStaticFiles(configuration =>
             {

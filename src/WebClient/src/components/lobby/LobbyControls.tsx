@@ -21,6 +21,14 @@ const LobbyControls = observer(() => {
       >
         Start Game
       </PrimaryButton>
+      <PrimaryButton
+        disabled={!LobbyState.isEarlyEndable()}
+        onClick={() => {
+          LobbyState.endEarly(() => {});
+        }}
+      >
+        End Game
+      </PrimaryButton>
     </Layout>
   );
 });

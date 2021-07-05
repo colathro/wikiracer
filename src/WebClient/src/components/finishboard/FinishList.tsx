@@ -36,12 +36,11 @@ const InnerWrapper = styled.div`
 `;
 
 const FinishList = observer(() => {
-  const gameHistories = LobbyState.game?.gameHistories;
   return (
     <FinishWrapper>
       <InnerWrapper>
-        {gameHistories != undefined ? (
-          gameHistories!.map((history, ind) => {
+        {LobbyState.game?.gameHistories! != undefined ? (
+          LobbyState.game?.gameHistories!.map((history, ind) => {
             const timeLeft = calculateTimeLeft(
               new Date(LobbyState.lobby?.startTime!),
               new Date(history.player.finishedTime)

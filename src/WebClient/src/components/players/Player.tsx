@@ -1,19 +1,12 @@
-import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { LobbyPlayer } from "../../types/Lobby";
 import { Text } from "@fluentui/react";
 import { AuthType } from "../../enums/AuthType";
 import { useId } from "@fluentui/react-hooks";
-import { Icon } from "@fluentui/react/lib/Icon";
-import { mergeStyles } from "@fluentui/react/lib/Styling";
-import { ProgressIndicator } from "@fluentui/react/lib/ProgressIndicator";
+import Avatar from "./Avatar";
 import { TooltipHost, ITooltipHostStyles } from "@fluentui/react/lib/Tooltip";
-import {
-  IPersonaProps,
-  IPersonaSharedProps,
-  Persona,
-} from "@fluentui/react/lib/Persona";
+
 const UserWrapper = styled.span`
   &:hover {
     cursor: pointer;
@@ -43,11 +36,6 @@ const ToolTipContainer = styled.div`
   margin: 1em;
 `;
 
-const customCoinClass = mergeStyles({
-  borderRadius: 12,
-  display: "block",
-});
-
 const styles: Partial<ITooltipHostStyles> = {
   root: { display: "inline-block" },
 };
@@ -65,27 +53,14 @@ const Player = observer((props: props) => {
       content={
         <ToolTipContainer>
           <ActionGroup>
-            <Persona
-              imageUrl={"/penguin.png"}
-              onRenderCoin={_onRenderCoin}
-              coinSize={48}
-            />
+            <Avatar avatar={props.player.avatar} />
             <Text>
               <h2>{props.player.displayName}</h2>
             </Text>
           </ActionGroup>
-          <ProgressIndicator
-            label={
-              <ActionGroup3>
-                <div>Level 12</div>
-                <div>
-                  <Icon iconName="AllCurrency"></Icon> 420
-                </div>
-              </ActionGroup3>
-            }
-            description="602 / 1000 Experience"
-            percentComplete={0.6}
-          />
+          <ActionGroup3>
+            <div>Level {props.player.level}</div>
+          </ActionGroup3>
         </ToolTipContainer>
       }
       // Give the user more time to interact with the tooltip before it closes
@@ -110,18 +85,5 @@ const Player = observer((props: props) => {
     </TooltipHost>
   );
 });
-
-function _onRenderCoin(props: IPersonaProps | undefined): JSX.Element {
-  const { coinSize, imageAlt, imageUrl } = props!;
-  return (
-    <img
-      src={imageUrl}
-      alt={imageAlt}
-      width={coinSize}
-      height={coinSize}
-      className={customCoinClass}
-    />
-  );
-}
 
 export default Player;

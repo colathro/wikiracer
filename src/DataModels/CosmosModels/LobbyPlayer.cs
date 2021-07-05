@@ -1,4 +1,5 @@
 using DataModels.CosmosModels.Enums;
+using System.Collections.Generic;
 using System;
 
 namespace DataModels.CosmosModels
@@ -8,10 +9,15 @@ namespace DataModels.CosmosModels
         public string Id { get; set; }
         public string DisplayName { get; set; }
         public string Avatar { get; set; }
+        public int Level { get; set; }
+        public List<string> Badges { get; set; }
+
         public AuthType AuthProvider { get; set; }
+
         public string CurrentArticle { get; set; }
         public bool Finished { get; set; }
         public DateTime FinishedTime { get; set; }
+
         public bool Active { get; set; }
         public DateTime LastUpdate { get; set; }
     }

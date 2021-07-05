@@ -4,6 +4,7 @@ using WebServer.Hubs;
 using DataModels.CosmosModels;
 using System.Threading;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.SignalR;
@@ -11,56 +12,56 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace WebServer.BackgroundServices
 {
-  public class LobbySynchronizer : BackgroundService
-  {
-    private readonly LobbyService lobbyService;
-    private readonly IHubContext<LobbyHub> lobbyHub;
-    private readonly IMemoryCache lobbyCache;
-
-    public LobbySynchronizer(LobbyService _lobbyService, IHubContext<LobbyHub> _lobbyHub)
+    public class LobbySynchronizer : BackgroundService
     {
-      this.lobbyHub = _lobbyHub;
-      this.lobbyService = _lobbyService;
-      this.lobbyCache = new MemoryCache(new MemoryCacheOptions());
-    }
+        private readonly LobbyService lobbyService;
+        private readonly IHubContext<LobbyHub> lobbyHub;
+        private readonly IMemoryCache lobbyCache;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-      while (!stoppingToken.IsCancellationRequested)
-      {
-        try
+        public LobbySynchronizer(LobbyService _lobbyService, IHubContext<LobbyHub> _lobbyHub)
         {
-          var lobbys = await this.lobbyService.GetAllLobbies();
+            this.lobbyHub = _lobbyHub;
+            this.lobbyService = _lobbyService;
+            this.lobbyCache = new MemoryCache(new MemoryCacheOptions());
+        }
 
-          List<Task> tasks = new List<Task>();
-
-          foreach (var lobby in lobbys)
-          {
-            if (!this.lobbyCache.TryGetValue<Lobby>(lobby.Key, out Lobby cachedLobby)
-                || lobby.ETag != cachedLobby.ETag)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            while (!stoppingToken.IsCancellationRequested)
             {
-              this.lobbyCache.Set<Lobby>(lobby.Key,
-                  lobby,
-                  new MemoryCacheEntryOptions
-                  {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                  });
+                try
+                {
+                    var lobbys = await this.lobbyService.GetAllLobbies();
 
-              tasks.Add(this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby));
+                    List<Task> tasks = new List<Task>();
+
+                    foreach (var lobby in lobbys)
+                    {
+                        if (!this.lobbyCache.TryGetValue<Lobby>(lobby.Key, out Lobby cachedLobby)
+                            || lobby.ETag != cachedLobby.ETag)
+                        {
+                            this.lobbyCache.Set<Lobby>(lobby.Key,
+                                lobby,
+                                new MemoryCacheEntryOptions
+                                {
+                                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                                });
+
+                            tasks.Add(this.lobbyHub.Clients.Group(lobby.Key).SendAsync("LobbyState", lobby));
+                        }
+                    }
+
+                    await Task.WhenAll(tasks);
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    await Task.Delay(250);
+                }
             }
-          }
-
-          await Task.WhenAll(tasks);
         }
-        catch
-        {
-
-        }
-        finally
-        {
-          await Task.Delay(250);
-        }
-      }
     }
-  }
 }

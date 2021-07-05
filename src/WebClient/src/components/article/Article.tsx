@@ -9,6 +9,7 @@ import ArticleSpan from "./ArticleSpan";
 import ArticleHeader from "./ArticleHeader";
 import ArticleLink from "./ArticleLink";
 import ArticleImage from "./ArticleImage";
+import ArticleNotLoaded from "./ArticleNotLoaded";
 
 const ArticleWrapper = styled.div`
   overflow-y: scroll;
@@ -80,7 +81,7 @@ const Article = observer(() => {
           })}
         </ArticleInner>
       ) : (
-        <div>not loaded</div>
+        <ArticleNotLoaded />
       )}
     </ArticleWrapper>
   );

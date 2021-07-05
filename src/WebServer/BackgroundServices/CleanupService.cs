@@ -5,35 +5,35 @@ using System.Threading.Tasks;
 
 namespace WebServer.BackgroundServices
 {
-  public class CleanupService : BackgroundService
-  {
-    private readonly UserService userService;
-    private readonly LobbyService lobbyService;
-
-    public CleanupService(UserService _userService, LobbyService _lobbyService)
+    public class CleanupService : BackgroundService
     {
-      this.userService = _userService;
-      this.lobbyService = _lobbyService;
-    }
+        private readonly UserService userService;
+        private readonly LobbyService lobbyService;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-      while (!stoppingToken.IsCancellationRequested)
-      {
-        try
+        public CleanupService(UserService _userService, LobbyService _lobbyService)
         {
-          await this.userService.CleanGuestUsers();
-          await this.lobbyService.CleanClosedLobbies();
+            this.userService = _userService;
+            this.lobbyService = _lobbyService;
         }
-        catch
-        {
 
-        }
-        finally
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-          await Task.Delay(10 * 60 * 1000);
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                try
+                {
+                    await this.userService.CleanGuestUsers();
+                    await this.lobbyService.CleanClosedLobbies();
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    await Task.Delay(10 * 60 * 1000);
+                }
+            }
         }
-      }
     }
-  }
 }

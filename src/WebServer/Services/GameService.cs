@@ -52,5 +52,20 @@ namespace WebServer.Services
         {
             await this.container.UpsertItemAsync<Game>(game, new PartitionKey(game.Key));
         }
+
+        public async Task<IList<Game>> GetAllUnrewardedGames()
+        {
+            var query = "SELECT * FROM c where c.RewardIssued = false";
+            var lobbys = await this.GetItemsAsync(query);
+            return lobbys.ToList();
+        }
+
+        public async Task MarkRewardIssued(string key, string etag)
+        {
+            await this.container.Scripts.ExecuteStoredProcedureAsync<int>(
+                "MarkIssued",
+                new PartitionKey(key),
+                new dynamic[] { key, etag });
+        }
     }
 }

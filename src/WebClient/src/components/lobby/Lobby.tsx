@@ -31,6 +31,9 @@ const ArticleWrapper = styled.div`
 const MenuWrapper = styled.div`
   width: 16em;
   max-width: 16em;
+  box-shadow: rgb(0 0 0 / 13%) 0px 3.2px 7.2px 0px,
+    rgb(0 0 0 / 11%) 0px 0.6px 1.8px 0px;
+  outline: transparent;
   display: flex;
   flex: 1;
   position: fixed;

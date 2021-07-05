@@ -3,18 +3,14 @@ import styled from "styled-components";
 import { observer } from "mobx-react-lite";
 import LobbyState from "../../state/LobbyState";
 import ThemeManager from "../../Themes";
+import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
+import { Stack, IStackTokens } from "@fluentui/react";
+import { TextField, MaskedTextField } from "@fluentui/react/lib/TextField";
+import { ActionButton } from "@fluentui/react/lib/Button";
 
 const Layout = styled.div`
   flex-direction: column;
   display: flex;
-`;
-
-const Toggle = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const Selection = styled.div`
@@ -22,19 +18,19 @@ const Selection = styled.div`
   margin-bottom: 1em;
 `;
 
-const SelectionText = styled.div`
-  margin-right: 1em;
-`;
-
 const InputContainer = styled.div``;
 
 const DropDownContainer = styled.div`
   display: flex;
   flex-direction: column;
+  z-index: 9999;
+  width: 200px;
   flex: 1;
   position: absolute;
   background-color: ${ThemeManager.theme?.background};
-  border: 1px solid ${ThemeManager.theme?.text};
+  box-shadow: rgb(0 0 0 / 13%) 0px 3.2px 7.2px 0px,
+    rgb(0 0 0 / 11%) 0px 0.6px 1.8px 0px;
+  outline: transparent;
 `;
 
 const SuggestionButton = styled.a`
@@ -46,17 +42,7 @@ const SuggestionButton = styled.a`
   }
 `;
 
-const Spacer = styled.div`
-  width: 1em;
-`;
-
-const ButtonSet = styled.div`
-  display: flex;
-`;
-
-const DisabledInput = styled.input``;
-
-const EnabledInput = styled.input``;
+const stackTokens: IStackTokens = { childrenGap: 40 };
 
 type props = {
   owner: boolean;
@@ -127,33 +113,30 @@ const TargetArticles = observer((props: props) => {
   return (
     <Layout>
       <Selection>
-        <SelectionText>Start:</SelectionText>
         <InputContainer>
-          {editable ? (
-            <EnabledInput
-              onFocus={() => {
-                setStartFocus(true);
-              }}
-              onBlur={() => {
-                setTimeout(() => {
-                  setStartFocus(false);
-                }, 200);
-              }}
-              onChange={(e: any) => {
-                loadStartSuggestions(e);
-              }}
-              value={startArticle}
-            ></EnabledInput>
-          ) : (
-            <DisabledInput
-              disabled
-              value={LobbyState.lobby?.startArticle ?? ""}
-            ></DisabledInput>
-          )}
+          <TextField
+            onFocus={() => {
+              setStartFocus(true);
+            }}
+            onBlur={() => {
+              setTimeout(() => {
+                setStartFocus(false);
+              }, 200);
+            }}
+            onChange={(e: any) => {
+              loadStartSuggestions(e);
+            }}
+            value={startArticle}
+            placeholder="Choose a start"
+            label="Start:"
+            disabled={!editable}
+            autoComplete="off"
+          ></TextField>
+
           {startFocus && suggestions.length > 0 ? (
             <DropDownContainer>
               {suggestions.map((val, ind) => (
-                <SuggestionButton
+                <ActionButton
                   key={ind}
                   onClick={() => {
                     console.log(val);
@@ -162,7 +145,7 @@ const TargetArticles = observer((props: props) => {
                   }}
                 >
                   {val}
-                </SuggestionButton>
+                </ActionButton>
               ))}
             </DropDownContainer>
           ) : (
@@ -171,33 +154,29 @@ const TargetArticles = observer((props: props) => {
         </InputContainer>
       </Selection>
       <Selection>
-        <SelectionText>Finish:</SelectionText>
         <InputContainer>
-          {editable ? (
-            <EnabledInput
-              onFocus={() => {
-                setFinishFocus(true);
-              }}
-              onBlur={() => {
-                setTimeout(() => {
-                  setFinishFocus(false);
-                }, 200);
-              }}
-              onChange={(e: any) => {
-                loadFinishSuggestions(e);
-              }}
-              value={finishArticle}
-            ></EnabledInput>
-          ) : (
-            <DisabledInput
-              disabled
-              value={LobbyState.lobby?.endArticle ?? ""}
-            ></DisabledInput>
-          )}
+          <TextField
+            onFocus={() => {
+              setFinishFocus(true);
+            }}
+            onBlur={() => {
+              setTimeout(() => {
+                setFinishFocus(false);
+              }, 200);
+            }}
+            onChange={(e: any) => {
+              loadFinishSuggestions(e);
+            }}
+            value={finishArticle}
+            placeholder="Choose a finish"
+            label="Finish:"
+            disabled={!editable}
+            autoComplete="off"
+          ></TextField>
           {finishFocus && suggestions.length > 0 ? (
             <DropDownContainer>
               {suggestions.map((val, ind) => (
-                <SuggestionButton
+                <ActionButton
                   key={ind}
                   onClick={() => {
                     console.log(val);
@@ -206,7 +185,7 @@ const TargetArticles = observer((props: props) => {
                   }}
                 >
                   {val}
-                </SuggestionButton>
+                </ActionButton>
               ))}
             </DropDownContainer>
           ) : (
@@ -214,35 +193,36 @@ const TargetArticles = observer((props: props) => {
           )}
         </InputContainer>
       </Selection>
-      {LobbyState.checkOwner() ? (
-        editable ? (
-          <ButtonSet>
-            <Toggle
+      <div>
+        {LobbyState.checkOwner() ? (
+          editable ? (
+            <Stack horizontal tokens={stackTokens}>
+              <PrimaryButton
+                onClick={() => {
+                  save();
+                }}
+              >
+                Save
+              </PrimaryButton>
+              <PrimaryButton
+                onClick={() => {
+                  cancel();
+                }}
+              >
+                Cancel
+              </PrimaryButton>
+            </Stack>
+          ) : (
+            <PrimaryButton
               onClick={() => {
-                save();
+                edit();
               }}
             >
-              Save
-            </Toggle>
-            <Spacer />
-            <Toggle
-              onClick={() => {
-                cancel();
-              }}
-            >
-              Cancel
-            </Toggle>
-          </ButtonSet>
-        ) : (
-          <Toggle
-            onClick={() => {
-              edit();
-            }}
-          >
-            Edit
-          </Toggle>
-        )
-      ) : null}
+              Edit
+            </PrimaryButton>
+          )
+        ) : null}
+      </div>
     </Layout>
   );
 });

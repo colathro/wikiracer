@@ -2,27 +2,16 @@ import { observer } from "mobx-react-lite";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import AuthState from "../../state/AuthState";
-import ThemeManager from "../../Themes";
-import { IIconProps, IContextualMenuProps, Stack, Link } from "@fluentui/react";
+import { IIconProps } from "@fluentui/react";
 import { Icon } from "@fluentui/react/lib/Icon";
-import { mergeStyles } from "@fluentui/react/lib/Styling";
 import { IconButton } from "@fluentui/react/lib/Button";
-import { IButtonProps } from "@fluentui/react/lib/Button";
-import { Text, ITextProps } from "@fluentui/react/lib/Text";
+import { Text } from "@fluentui/react/lib/Text";
 import { ProgressIndicator } from "@fluentui/react/lib/ProgressIndicator";
-import { IPersonaProps, Persona } from "@fluentui/react/lib/Persona";
+import Avatar from "../players/Avatar";
 
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const Anchor = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const ActionGroup = styled.div`
@@ -38,25 +27,17 @@ const ActionGroup3 = styled.div`
   justify-content: space-between;
 `;
 
-const customCoinClass = mergeStyles({
-  borderRadius: 12,
-  display: "block",
-});
-
-const overflowProps: IButtonProps = { ariaLabel: "More commands" };
-
 const User = observer(() => {
   const history = useHistory();
   const settingsIcon: IIconProps = { iconName: "Settings" };
   const signOutIcon: IIconProps = { iconName: "SignOut" };
+
+  var experience: number = AuthState.user?.experience!;
+
   return (
     <Layout>
       <ActionGroup>
-        <Persona
-          imageUrl={"/penguin.png"}
-          onRenderCoin={_onRenderCoin}
-          coinSize={48}
-        />
+        <Avatar avatar={AuthState.user?.avatar!} />
         <Text>
           <h2>{AuthState.auth_info?.display_name}</h2>
         </Text>
@@ -64,14 +45,14 @@ const User = observer(() => {
       <ProgressIndicator
         label={
           <ActionGroup3>
-            <div>Level 12</div>
+            <div>Level {AuthState.user?.level}</div>
             <div>
-              <Icon iconName="AllCurrency"></Icon> 420
+              <Icon iconName="AllCurrency"></Icon> {AuthState.user?.coins}
             </div>
           </ActionGroup3>
         }
-        description="602 / 1000 Experience"
-        percentComplete={0.6}
+        description={`${AuthState.user?.experience} / 1000 Experience`}
+        percentComplete={experience / 1000}
       />
       <ActionGroup2>
         <IconButton
@@ -90,18 +71,5 @@ const User = observer(() => {
     </Layout>
   );
 });
-
-function _onRenderCoin(props: IPersonaProps | undefined): JSX.Element {
-  const { coinSize, imageAlt, imageUrl } = props!;
-  return (
-    <img
-      src={imageUrl}
-      alt={imageAlt}
-      width={coinSize}
-      height={coinSize}
-      className={customCoinClass}
-    />
-  );
-}
 
 export default User;

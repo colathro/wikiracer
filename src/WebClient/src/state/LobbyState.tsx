@@ -20,6 +20,8 @@ class LobbyManager {
     this.checkBan();
     this.updateMe();
 
+    TimerState.updateEndTime(lobby?.endTime!);
+
     if (
       this.isStarting() &&
       this.lobby?.startArticle != SharedReferences.articleRef!.current &&
@@ -79,11 +81,9 @@ class LobbyManager {
   }
 
   updateMe() {
-    console.log(this.lobby);
     const me = this.lobby?.players.filter(
       (player) => player.id === AuthState.user?.key
     )[0];
-    console.log(me);
     this.me = me;
   }
 
@@ -96,6 +96,10 @@ class LobbyManager {
       new Date(this.lobby?.startTime!) <= new Date() &&
       new Date(this.lobby?.endTime!) >= new Date()
     );
+  }
+
+  hasEnded() {
+    return new Date(this.lobby?.endTime!) <= new Date();
   }
 
   isStarting() {
@@ -318,6 +322,26 @@ class LobbyManager {
       .then((data) => {
         callback(data);
       });
+  }
+
+  endEarly(callback: any) {
+    fetch(`/api/lobby/owner/endearly?lobbyKey=${this.lobby?.key}`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+      },
+    }).then(() => {
+      callback();
+    });
+  }
+
+  isEarlyEndable() {
+    const activePlayers = this.lobby?.players.filter((player) => player.active);
+    const finishedPlayers = this.lobby?.players.filter(
+      (player) => player.finished
+    );
+
+    return finishedPlayers!.length >= activePlayers!.length;
   }
 }
 
