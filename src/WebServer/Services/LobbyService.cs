@@ -15,14 +15,14 @@ namespace WebServer.Services
 
         public async Task<IList<Lobby>> GetActiveLobbies(int page = 0)
         {
-            var query = "SELECT * FROM c where c.IsPublic = true";
+            var query = "SELECT * FROM c where c.IsPublic = true and ARRAY_CONTAINS(c.Players, {'Active': true}, true)";
             var lobbys = await this.GetItemsPagedAsync(query, page);
             return lobbys.ToList();
         }
 
         public async Task<int> GetActiveLobbiesCount()
         {
-            var query = "SELECT VALUE COUNT(c) FROM c where c.IsPublic = true";
+            var query = "SELECT VALUE COUNT(c) FROM c where c.IsPublic = true and ARRAY_CONTAINS(c.Players, {'Active': true}, true)";
             return await this.GetCountAsync(query);
         }
 
@@ -93,9 +93,9 @@ namespace WebServer.Services
         public async Task<IEnumerable<Lobby>> GetItemsPagedAsync(string queryString, int page)
         {
             var requestOptions = new QueryRequestOptions
-                {
-                    MaxItemCount = 10
-                };
+            {
+                MaxItemCount = 10
+            };
             var query = this.container.GetItemQueryIterator<Lobby>(new QueryDefinition(queryString), null, requestOptions);
             List<Lobby> results = new List<Lobby>();
             FeedResponse<Lobby> response;
