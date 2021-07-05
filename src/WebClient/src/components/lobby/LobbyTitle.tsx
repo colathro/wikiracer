@@ -1,15 +1,8 @@
 import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
-import {
-  mergeStyleSets,
-  DelayedRender,
-  Callout,
-  Text,
-  TextField,
-} from "@fluentui/react";
+import { mergeStyleSets, Callout, TextField } from "@fluentui/react";
 import { useBoolean, useId } from "@fluentui/react-hooks";
 import { DefaultButton } from "@fluentui/react/lib/Button";
 import { Label } from "@fluentui/react/lib/Label";

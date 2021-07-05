@@ -1,25 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
 import Emotes from "./Emotes";
-import { TextField, MaskedTextField } from "@fluentui/react/lib/TextField";
-import { IIconProps, initializeIcons } from "@fluentui/react";
-import { TooltipHost, ITooltipHostStyles } from "@fluentui/react/lib/Tooltip";
+import { TextField } from "@fluentui/react/lib/TextField";
+import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import { IconButton } from "@fluentui/react/lib/Button";
 
 const Layout = styled.div`
   display: flex;
-  flex: 1;
-`;
-
-const Send = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const InputWrapper = styled.div`
@@ -27,20 +17,8 @@ const InputWrapper = styled.div`
   flex: 1;
 `;
 
-const Input = styled.input`
-  flex: 1;
-`;
-
 const ShowEmotesWrapper = styled.div`
   position: relative;
-`;
-
-const ShowEmotes = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const DropUpContainer = styled.div`
@@ -84,7 +62,6 @@ const ChatControls = observer(() => {
   };
 
   const handleKey = (ev: any) => {
-    console.log(ev);
     if (ev.keyCode === 13) {
       LobbyState.sendMessage(message, () => {});
       setMessage("");

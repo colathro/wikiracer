@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import LobbyState from "../../state/LobbyState";
-import { AuthType } from "../../enums/AuthType";
 import ChatMessageText from "./ChatMessageText";
 import ChatControls from "./ChatControls";
 import { useRef } from "react";
@@ -36,7 +35,7 @@ const ChatInner = styled.div`
   flex-direction: column;
 `;
 
-const ChatMessage = styled.p`
+const ChatMessage = styled.div`
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
@@ -57,7 +56,7 @@ const Chat = observer(() => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [LobbyState.lobby?.messages]);
+  }, []);
 
   return (
     <Layout>

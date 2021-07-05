@@ -3,14 +3,7 @@ import { useEffect } from "react";
 import AuthState from "../state/AuthState";
 import ThemeManager from "../Themes";
 import LobbyFinder from "../components/lobbyfinder/LobbyFinder";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-  useRouteMatch,
-} from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import HowToPlay from "../components/howtoplay/HowToPlay";
 import Nav from "../components/nav/Nav";
 import styled from "styled-components";
@@ -30,6 +23,9 @@ const NavWrapper = styled.div`
   width: 16em;
   max-width: 16em;
   height: 100vh;
+  box-shadow: rgb(0 0 0 / 13%) 0px 3.2px 7.2px 0px,
+    rgb(0 0 0 / 11%) 0px 0.6px 1.8px 0px;
+  outline: transparent;
 `;
 
 const ContentWrapper = styled.div`

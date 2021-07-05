@@ -31,8 +31,6 @@ class TimerManager {
     this.timerId = window.setInterval(() => {
       this.setTimeLeft(this.calculateTimeLeft());
     }, 250);
-    console.log("starting timer");
-    console.log(this.timerId!);
   }
 
   setTimeLeft(timeLeft: TimeLeft) {
@@ -40,8 +38,6 @@ class TimerManager {
   }
 
   resetTimer() {
-    console.log("destroying timer");
-    console.log(this.timerId);
     clearInterval(this.timerId);
     this.endTime = undefined;
     this.startTime = undefined;
@@ -77,8 +73,6 @@ class TimerManager {
         seconds: 0,
       };
 
-      console.log("timer self-terminating");
-      console.log(this.timerId);
       TimerState.resetTimer();
       LobbyState.getGame(() => {
         PopUpState.showFinish();

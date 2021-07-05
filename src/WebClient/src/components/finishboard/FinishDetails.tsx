@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import ThemeManager from "../../Themes";
-import PopUpState from "../../state/PopUpState";
-import LobbyState from "../../state/LobbyState";
-import { GameHistory, GameNavigation } from "../../types/Lobby";
+import { GameNavigation } from "../../types/Lobby";
 
 const FinishRecordDetailsWrapper = styled.div`
   display: flex;
@@ -62,7 +58,6 @@ const generateTraversalHistory = (
 
     if (index === 0) {
       if (index < navigations.length - 1) {
-        console.log(startTime);
         const nextArticle = navigations[index + 1];
         calculatedNavigations.push({
           article: curArticle.article,

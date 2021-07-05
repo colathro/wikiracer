@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
 import Chat from "../chat/Chat";
 import Players from "../players/Players";
@@ -29,8 +26,6 @@ const ArticleWrapper = styled.div`
 `;
 
 const MenuWrapper = styled.div`
-  width: 16em;
-  max-width: 16em;
   box-shadow: rgb(0 0 0 / 13%) 0px 3.2px 7.2px 0px,
     rgb(0 0 0 / 11%) 0px 0.6px 1.8px 0px;
   outline: transparent;

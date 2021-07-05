@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
-import PopUpState from "../../state/PopUpState";
-import LobbyState from "../../state/LobbyState";
 import { Game, GameHistory } from "../../types/Lobby";
 import FinishDetails from "./FinishDetails";
 
@@ -30,11 +28,6 @@ const DetailsButton = styled.a`
   }
   margin-right: 1em;
   user-select: none;
-`;
-
-const FinishRecordDetailsWrapper = styled.div`
-  display: flex;
-  justify-content: space-around;
 `;
 
 type props = {

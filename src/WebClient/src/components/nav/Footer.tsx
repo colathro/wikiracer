@@ -1,4 +1,3 @@
-import ThemeManager from "../../Themes";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { Link, Text } from "@fluentui/react";

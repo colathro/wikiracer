@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import AuthState from "./state/AuthState";
-import { Router, Switch, Route, Link } from "react-router-dom";
+import { Router, Switch, Route } from "react-router-dom";
 import styled from "styled-components";
 import LoginView from "./views/LoginView";
 import LoggedInView from "./views/LoggedInView";

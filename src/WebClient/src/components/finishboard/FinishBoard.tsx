@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
-import PopUpState from "../../state/PopUpState";
 import FinishTitle from "./FinishTitle";
 import FinishList from "./FinishList";
 import FinishControls from "./FinishControls";

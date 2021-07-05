@@ -31,7 +31,7 @@ const ChatMessageText = (props: props) => {
   splitText.forEach((snip) => {
     if (inSpan) {
       const potentialEmote = Emotes.get(snip);
-      if (potentialEmote != undefined) {
+      if (potentialEmote !== undefined) {
         inSpan = false;
         messages.push({ info: curSpan, type: SpanType.Text });
         messages.push({ info: " ", type: SpanType.Text });
@@ -42,7 +42,7 @@ const ChatMessageText = (props: props) => {
       }
     } else {
       const potentialEmote = Emotes.get(snip);
-      if (potentialEmote != undefined) {
+      if (potentialEmote !== undefined) {
         messages.push({ info: " ", type: SpanType.Text });
         messages.push({ info: potentialEmote!, type: SpanType.Emote });
       } else {

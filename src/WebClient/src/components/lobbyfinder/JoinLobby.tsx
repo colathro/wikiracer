@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import ThemeManager from "../../Themes";
 import { observer } from "mobx-react-lite";
 import LobbyState from "../../state/LobbyState";
 import { useHistory } from "react-router-dom";

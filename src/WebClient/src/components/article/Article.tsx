@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef, createRef } from "react";
+import { useState, useRef, createRef } from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
 import LobbyState from "../../state/LobbyState";
-import Lobby from "../lobby/Lobby";
 import SharedReferences from "../../state/SharedReferences";
 import ArticleTitle from "./ArticleTitle";
 import ArticleSpan from "./ArticleSpan";
@@ -33,30 +32,35 @@ const Article = observer(() => {
   const scrollRef = createRef<HTMLDivElement>();
   const [articleData, setArticleData] = useState<any>(undefined);
 
-  if (SharedReferences.articleHook != setArticleData) {
+  if (SharedReferences.articleHook !== setArticleData) {
     SharedReferences.articleHook = setArticleData;
   }
-  if (SharedReferences.articleRef != currentArticle) {
+  if (SharedReferences.articleRef !== currentArticle) {
     SharedReferences.articleRef = currentArticle;
   }
-  if (SharedReferences.scrollRef != scrollRef) {
+  if (SharedReferences.scrollRef !== scrollRef) {
     SharedReferences.scrollRef = scrollRef;
   }
 
   return (
     <ArticleWrapper ref={scrollRef}>
-      {articleData != undefined ? (
+      {articleData !== undefined ? (
         <ArticleInner>
           <ArticleTitle title={articleData!.title}></ArticleTitle>
           {articleData!.paragraphs.map((paragraph: any, ind: any) => {
             if (paragraph.level === 0) {
               if (paragraph.spans[0]?.type! === 2) {
-                return <ArticleImage span={paragraph.spans[0]}></ArticleImage>;
+                return (
+                  <ArticleImage
+                    key={ind}
+                    span={paragraph.spans[0]}
+                  ></ArticleImage>
+                );
               }
               return (
                 <Paragraph key={ind}>
                   {paragraph.spans.map((span: any, sind: any) => {
-                    if (span.link != null) {
+                    if (span.link !== null) {
                       return (
                         <ArticleLink
                           key={sind}
@@ -76,7 +80,11 @@ const Article = observer(() => {
               );
             }
             if (paragraph.level >= 1) {
-              return <ArticleHeader paragraph={paragraph}></ArticleHeader>;
+              return (
+                <ArticleHeader key={ind} paragraph={paragraph}></ArticleHeader>
+              );
+            } else {
+              return <></>;
             }
           })}
         </ArticleInner>

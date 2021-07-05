@@ -1,4 +1,3 @@
-import ThemeManager from "../../Themes";
 import styled from "styled-components";
 
 const None = styled.span``;

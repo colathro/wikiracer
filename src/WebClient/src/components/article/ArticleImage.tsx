@@ -34,7 +34,6 @@ type props = {
 };
 
 const ArticleImage = (props: props) => {
-  console.log(props.span.args);
   if (props.span.args.includes("left")) {
     return (
       <LeftLayout>

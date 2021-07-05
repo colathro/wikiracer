@@ -24,8 +24,8 @@ class LobbyManager {
 
     if (
       this.isStarting() &&
-      this.lobby?.startArticle != SharedReferences.articleRef!.current &&
-      this.lobby?.startArticle != undefined
+      this.lobby?.startArticle !== SharedReferences.articleRef!.current &&
+      this.lobby?.startArticle !== undefined
     ) {
       this.getArticle(lobby.startArticle!, (data: any) => {
         SharedReferences.articleRef!.current = lobby.startArticle!;
@@ -34,8 +34,8 @@ class LobbyManager {
     } else if (
       !this.isStarting() &&
       !this.isStarted() &&
-      this.lobby?.startArticle != SharedReferences.articleRef!.current &&
-      this.lobby?.startArticle != undefined
+      this.lobby?.startArticle !== SharedReferences.articleRef!.current &&
+      this.lobby?.startArticle !== undefined
     ) {
       this.getArticle(lobby.startArticle!, (data: any) => {
         SharedReferences.articleRef!.current = lobby.startArticle!;
@@ -122,7 +122,7 @@ class LobbyManager {
   }
 
   getArticle(key: string, callback: any) {
-    if (!LobbyState.isStarted() && key != LobbyState.lobby?.startArticle) {
+    if (!LobbyState.isStarted() && key !== LobbyState.lobby?.startArticle) {
       PopUpState.showError("Wait for game to start!");
       return;
     }
@@ -146,7 +146,6 @@ class LobbyManager {
           return null;
         }
         const resp = await response.json();
-        console.log(resp);
         return resp;
       })
       .then((data) => {
@@ -192,7 +191,7 @@ class LobbyManager {
       },
     })
       .then((response) => {
-        if (response.status == 200) return response.json();
+        if (response.status === 200) return response.json();
       })
       .then((data) => {
         if (data) {

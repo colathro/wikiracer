@@ -89,7 +89,7 @@ const LoginView = observer(() => {
         <ButtonContainer>
           <Button
             onClick={() => {
-              if (betaKey != "wrbeta") {
+              if (betaKey !== "wrbeta") {
                 PopUpState.showError(
                   "WikiRacer is currently in closed beta. You need to provide a Beta Code to play!"
                 );
@@ -102,7 +102,7 @@ const LoginView = observer(() => {
           </Button>
           <Button
             onClick={() => {
-              if (betaKey != "wrbeta") {
+              if (betaKey !== "wrbeta") {
                 PopUpState.showError(
                   "WikiRacer is currently in closed beta. You need to provide a Beta Code to play!"
                 );

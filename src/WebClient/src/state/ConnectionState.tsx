@@ -1,4 +1,3 @@
-import { makeAutoObservable } from "mobx";
 import AuthState from "./AuthState";
 import LobbyState from "./LobbyState";
 import * as signalR from "@microsoft/signalr";
@@ -21,7 +20,6 @@ class ConnectionManager {
     });
 
     this.connection.on("LobbyState", (message) => {
-      console.log("out callback");
       this.stateCallback(message);
     });
 
@@ -40,13 +38,12 @@ class ConnectionManager {
   }
 
   cleanConnection() {
-    if (this.connection != undefined) {
+    if (this.connection !== undefined) {
       this.connection.stop();
     }
   }
 
   joinLobby() {
-    console.log(`joined ${this.joinKey}`);
     this.connection!.invoke("JoinLobby", this.joinKey);
   }
 

@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
-import PopUpState from "../../state/PopUpState";
 import LobbyState from "../../state/LobbyState";
 import FinishRecord from "./FinishRecord";
 
@@ -39,7 +37,7 @@ const FinishList = observer(() => {
   return (
     <FinishWrapper>
       <InnerWrapper>
-        {LobbyState.game?.gameHistories! != undefined ? (
+        {LobbyState.game?.gameHistories! !== undefined ? (
           LobbyState.game?.gameHistories!.map((history, ind) => {
             const timeLeft = calculateTimeLeft(
               new Date(LobbyState.lobby?.startTime!),

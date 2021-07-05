@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
@@ -29,8 +28,9 @@ const Container = styled.div`
 `;
 
 const MessageText = styled.div`
-margin-left: 1em;
-margin-right: 1em;`;
+  margin-left: 1em;
+  margin-right: 1em;
+`;
 
 const Close = styled.a`
   color: ${ThemeManager.theme?.text2};
@@ -41,7 +41,8 @@ const Close = styled.a`
 `;
 
 const Image = styled.img`
-height: 2em;`;
+  height: 2em;
+`;
 
 const Message = observer((props: props) => {
   let targetSvg: string;

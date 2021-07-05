@@ -1,6 +1,5 @@
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
 import { Toggle } from "@fluentui/react/lib/Toggle";
 

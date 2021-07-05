@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
 import LobbyState from "../../state/LobbyState";
 import ThemeManager from "../../Themes";
-import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
+import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { Stack, IStackTokens } from "@fluentui/react";
-import { TextField, MaskedTextField } from "@fluentui/react/lib/TextField";
+import { TextField } from "@fluentui/react/lib/TextField";
 import { ActionButton } from "@fluentui/react/lib/Button";
 
 const Layout = styled.div`
@@ -31,15 +31,6 @@ const DropDownContainer = styled.div`
   box-shadow: rgb(0 0 0 / 13%) 0px 3.2px 7.2px 0px,
     rgb(0 0 0 / 11%) 0px 0.6px 1.8px 0px;
   outline: transparent;
-`;
-
-const SuggestionButton = styled.a`
-  margin: 0.25em;
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const stackTokens: IStackTokens = { childrenGap: 40 };
@@ -95,7 +86,6 @@ const TargetArticles = observer((props: props) => {
   };
 
   const save = () => {
-    console.log(finishArticle);
     LobbyState.setArticles(startArticle, finishArticle, () => {});
     setEditable(false);
   };
@@ -139,7 +129,6 @@ const TargetArticles = observer((props: props) => {
                 <ActionButton
                   key={ind}
                   onClick={() => {
-                    console.log(val);
                     setStartArticle(val);
                     startArticleRef.current = val;
                   }}
@@ -179,7 +168,6 @@ const TargetArticles = observer((props: props) => {
                 <ActionButton
                   key={ind}
                   onClick={() => {
-                    console.log(val);
                     setFinishArticle(val);
                     finishArticleRef.current = val;
                   }}

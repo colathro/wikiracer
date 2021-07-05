@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import AuthState from "../../state/AuthState";
 import { useHistory } from "react-router-dom";
 import Logo from "./Logo";
 import User from "./User";

@@ -54,12 +54,10 @@ const Player = observer((props: props) => {
         <ToolTipContainer>
           <ActionGroup>
             <Avatar avatar={props.player.avatar} />
-            <Text>
-              <h2>{props.player.displayName}</h2>
-            </Text>
+            <Text variant="xLarge">{props.player.displayName}</Text>
           </ActionGroup>
           <ActionGroup3>
-            <div>Level {props.player.level}</div>
+            <Text variant="medium">Level {props.player.level}</Text>
           </ActionGroup3>
         </ToolTipContainer>
       }

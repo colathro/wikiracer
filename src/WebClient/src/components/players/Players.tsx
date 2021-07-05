@@ -1,17 +1,15 @@
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
 import Player from "./Player";
 import {
   Text,
   OverflowSet,
-  IButtonStyles,
   IconButton,
   IOverflowSetItemProps,
   Link,
 } from "@fluentui/react";
-import { TooltipHost, ITooltipHostStyles } from "@fluentui/react/lib/Tooltip";
+import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import { useId } from "@fluentui/react-hooks";
 
 const Layout = styled.div`
@@ -106,6 +104,8 @@ const Players = observer(() => {
                   )}
                 </PlayerWrapper>
               );
+            } else {
+              return <></>;
             }
           })}
         </PlayersWrapper>

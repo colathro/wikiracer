@@ -1,5 +1,3 @@
-import { makeAutoObservable } from "mobx";
-
 type Theme = {
   background: string;
   background2: string;
@@ -8,16 +6,6 @@ type Theme = {
   text3: string;
   logo: string;
   player: string;
-};
-
-const dark: Theme = {
-  background: "#202124",
-  background2: "#35363a",
-  text: "#cccccc",
-  text2: "#7891EC",
-  text3: "#bdbdbd",
-  logo: "darklogo.svg",
-  player: "images/dark/player.svg",
 };
 
 const light: Theme = {
@@ -37,13 +25,12 @@ class ThemeManager {
 
   constructor() {
     this.tryGetThemeOverride();
-    document.body.style.backgroundColor = this.theme!.background;
-    document.body.style.color = this.theme!.text;
-    makeAutoObservable(this);
+    //document.body.style.backgroundColor = this.theme!.background;
+    //document.body.style.color = this.theme!.text;
+    //makeAutoObservable(this);
   }
 
   tryGetThemeOverride() {
-    const theme = localStorage.getItem("themeOverride");
     this.theme = light;
     /*     if (theme === null) {
       const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");

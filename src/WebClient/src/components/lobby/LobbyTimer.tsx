@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import ThemeManager from "../../Themes";
 import TimerState from "../../state/TimerState";
 import LobbyState from "../../state/LobbyState";
 import { Spinner } from "@fluentui/react/lib/Spinner";
-import { Text, ITextProps } from "@fluentui/react/lib/Text";
-import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
+import { Text } from "@fluentui/react/lib/Text";
+import { DefaultButton } from "@fluentui/react/lib/Button";
 
 const Layout = styled.div`
   display: flex;
@@ -20,14 +18,6 @@ const TimerContainer = styled.div`
   justify-content: center;
   font-size: 4em;
   user-select: none;
-`;
-
-const Toggle = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const CountDownSeconds = styled.span``;
@@ -65,7 +55,7 @@ const LobbyTimer = observer(() => {
             : TimerState.timeLeft?.seconds!}
         </Text>
       </TimerContainer>
-      {LobbyState.lobby?.startArticle != undefined ? (
+      {LobbyState.lobby?.startArticle !== undefined ? (
         <DefaultButton
           onClick={() => {
             LobbyState.backToStart();

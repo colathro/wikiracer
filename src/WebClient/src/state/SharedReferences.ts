@@ -4,7 +4,6 @@ class SharedRefs {
   articleHook: React.Dispatch<any> | undefined;
   articleRef: React.MutableRefObject<string> | undefined;
   scrollRef: RefObject<HTMLDivElement> | undefined;
-  constructor() {}
 }
 
 const SharedReferences = new SharedRefs();

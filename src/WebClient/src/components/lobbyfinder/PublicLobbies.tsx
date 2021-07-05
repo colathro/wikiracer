@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
 import { observer } from "mobx-react-lite";
 import LobbyState from "../../state/LobbyState";
-import AuthState from "../../state/AuthState";
 import { useHistory } from "react-router-dom";
 import { Lobby, PublicLobbyResponse } from "../../types/Lobby";
 import {
   PrimaryButton,
   Icon,
   Text,
-  Link,
   Spinner,
   IconButton,
   IIconProps,
@@ -72,8 +70,6 @@ const PlayersText = styled.div`
   margin-right: 1em;
 `;
 
-const Player = styled.img``;
-
 const refreshIcon: IIconProps = { iconName: "Refresh" };
 
 const PublicLobbies = observer(() => {
@@ -102,7 +98,7 @@ const PublicLobbies = observer(() => {
   useEffect(() => {
     LobbyState.getLobbies(setLobbies, 0);
   }, []);
-  if (pbr == undefined) {
+  if (pbr === undefined) {
     return (
       <Layout>
         <IconButton
@@ -185,18 +181,17 @@ const PublicLobbies = observer(() => {
                 const p = i;
                 if (i === page) {
                   row.push(
-                    <Text>
-                      <AnchorInactive key={i}>{i}</AnchorInactive>
+                    <Text key={i}>
+                      <AnchorInactive>{i}</AnchorInactive>
                     </Text>
                   );
                 } else {
                   row.push(
-                    <Text>
+                    <Text key={i}>
                       <Anchor
                         onClick={() => {
                           gotoPage(p);
                         }}
-                        key={i}
                       >
                         {i}
                       </Anchor>
@@ -214,18 +209,17 @@ const PublicLobbies = observer(() => {
                 const p = i;
                 if (i === page) {
                   row.push(
-                    <Text>
-                      <AnchorInactive key={i}>{i}</AnchorInactive>
+                    <Text key={i}>
+                      <AnchorInactive>{i}</AnchorInactive>
                     </Text>
                   );
                 } else {
                   row.push(
-                    <Text>
+                    <Text key={i}>
                       <Anchor
                         onClick={() => {
                           gotoPage(p);
                         }}
-                        key={i}
                       >
                         {i}
                       </Anchor>

@@ -9,7 +9,10 @@ const Layout = styled.div`
 const Logo = () => {
   return (
     <Layout>
-      <img src={"/images/" + ThemeManager.theme?.logo}></img>
+      <img
+        alt="wikiracer logo"
+        src={"/images/" + ThemeManager.theme?.logo}
+      ></img>
     </Layout>
   );
 };

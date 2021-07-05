@@ -1,6 +1,5 @@
 import ThemeManager from "../../Themes";
 import styled from "styled-components";
-import { createPublicKey } from "crypto";
 
 const Link = styled.a`
   color: ${ThemeManager.theme?.text2};

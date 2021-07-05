@@ -1,7 +1,11 @@
-body {
+#root {
   display: flex;
   min-height: 100vh;
   flex-direction: row;
+  margin: 0;
+}
+
+body {
   margin: 0;
 }
 

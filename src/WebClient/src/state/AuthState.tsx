@@ -4,7 +4,6 @@ import { AuthType } from "../enums/AuthType";
 import { AuthInfo } from "../types/AuthInfo";
 import { User } from "../types/Lobby";
 import LobbyState from "./LobbyState";
-import PopUpState from "./PopUpState";
 
 var config = {
   authority: " https://id.twitch.tv/oauth2/",
@@ -55,7 +54,6 @@ class Auth {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         this.handleCallbackGuest(data);
       });
   }
@@ -106,7 +104,11 @@ class Auth {
       },
     })
       .then((response) => response.json())
-      .then((data) => (this.user = data));
+      .then((data) => this.setUser(data));
+  }
+
+  setUser(user: User | undefined) {
+    this.user = user;
   }
 }
 
