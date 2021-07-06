@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import ThemeManager from "../../Themes";
 import { Game, GameHistory } from "../../types/Lobby";
 import FinishDetails from "./FinishDetails";
+import Player from "../players/Player";
+import { DefaultButton } from "@fluentui/react/lib/Button";
 
 const FinishRecordWrapper = styled.div`
   display: flex;
@@ -14,21 +15,10 @@ const FinishRecordWrapper = styled.div`
 const FinishRecordMain = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
-
-const User = styled.span``;
 
 const FinishTime = styled.span``;
-
-const DetailsButton = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-  margin-right: 1em;
-  user-select: none;
-`;
 
 type props = {
   game: Game;
@@ -43,14 +33,14 @@ const FinishRecord = observer((props: props) => {
   return (
     <FinishRecordWrapper key={props.ind}>
       <FinishRecordMain>
-        <User>{props.history.player.displayName}</User>
-        <DetailsButton
+        <Player player={props.history.player}></Player>
+        <DefaultButton
           onClick={() => {
             setDetailsOpen(!detailsOpen);
           }}
         >
           {detailsOpen ? "Hide" : "Show"} Details
-        </DetailsButton>
+        </DefaultButton>
         <FinishTime>
           {props.finished ? (
             <span>

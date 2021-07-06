@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import PopUpState from "../../state/PopUpState";
+import { DefaultButton } from "@fluentui/react/lib/Button";
 
 const FinishWrapper = styled.div`
   display: flex;
@@ -9,13 +10,13 @@ const FinishWrapper = styled.div`
 const FinishControls = observer(() => {
   return (
     <FinishWrapper>
-      <button
+      <DefaultButton
         onClick={() => {
           PopUpState.closeFinish();
         }}
       >
         close
-      </button>
+      </DefaultButton>
     </FinishWrapper>
   );
 });

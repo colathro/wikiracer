@@ -10,12 +10,8 @@ var config = {
   client_id: "fprj9ag7iy0cq29pbkaarxw26qe2i0",
   redirect_uri: document.location.origin + "/login",
   response_type: "token id_token",
-  scope: "openid user_read",
+  scope: "openid",
   post_logout_redirect_uri: document.location.origin,
-  extraQueryParams: {
-    claims:
-      '{"id_token": { "email": null, "email_verified": null, "picture": null, "preferred_username": null }}',
-  },
 };
 
 const twitchManager = new UserManager(config);

@@ -8,7 +8,6 @@ import FinishControls from "./FinishControls";
 const FinishWrapper = styled.div`
   display: flex;
   flex: 1;
-  position: absolute;
   width: 50vw;
   height: 50vh;
   background-color: ${ThemeManager.theme?.background};

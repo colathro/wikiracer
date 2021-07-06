@@ -1,6 +1,5 @@
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
 import FinishRecord from "./FinishRecord";
 
@@ -22,7 +21,6 @@ const FinishWrapper = styled.div`
   flex: 1;
   margin-top: 1em;
   margin-bottom: 1em;
-  border: 1px solid ${ThemeManager.theme?.text};
   overflow-y: scroll;
 `;
 

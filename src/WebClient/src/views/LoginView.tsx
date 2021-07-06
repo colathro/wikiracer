@@ -4,6 +4,8 @@ import ThemeManager from "../Themes";
 import AuthState from "../state/AuthState";
 import { useState } from "react";
 import PopUpState from "../state/PopUpState";
+import { DefaultButton } from "@fluentui/react/lib/Button";
+import { TextField } from "@fluentui/react";
 
 const BackgroundLayout = styled.div`
   position: absolute;
@@ -28,7 +30,9 @@ const CenteredContainer = styled.div`
   padding: 1em;
   flex-direction: column;
   background-color: ${ThemeManager.theme?.background2};
-  border: 1px solid ${ThemeManager.theme?.text};
+  box-shadow: rgb(0 0 0 / 13%) 0px 3.2px 7.2px 0px,
+    rgb(0 0 0 / 11%) 0px 0.6px 1.8px 0px;
+  outline: transparent;
 `;
 
 const LogoContainer = styled.div`
@@ -47,25 +51,10 @@ const BetaCodeContainer = styled.div`
   justify-content: center;
 `;
 
-const BetaCodeText = styled.div`
-  margin-right: 1em;
-`;
-
-const BetaCodeInput = styled.input``;
-
 const ButtonContainer = styled.div`
   display: flex;
   padding: 1em;
   justify-content: space-around;
-`;
-
-const Button = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-  margin-right: 1em;
 `;
 
 const LoginView = observer(() => {
@@ -78,16 +67,16 @@ const LoginView = observer(() => {
           <Logo src={"/images/" + ThemeManager.theme?.logo}></Logo>
         </LogoContainer>
         <BetaCodeContainer>
-          <BetaCodeText>Beta Code:</BetaCodeText>
-          <BetaCodeInput
+          <TextField
+            label={"Beta Code:"}
             value={betaKey}
-            onChange={(e) => {
+            onChange={(e: any) => {
               setBetaKey(e.target.value);
             }}
-          ></BetaCodeInput>
+          ></TextField>
         </BetaCodeContainer>
         <ButtonContainer>
-          <Button
+          <DefaultButton
             onClick={() => {
               if (betaKey !== "wrbeta") {
                 PopUpState.showError(
@@ -99,8 +88,9 @@ const LoginView = observer(() => {
             }}
           >
             Sign in as guest
-          </Button>
-          <Button
+          </DefaultButton>
+          <DefaultButton
+            style={{ backgroundColor: "#6441a5", color: "#fff" }}
             onClick={() => {
               if (betaKey !== "wrbeta") {
                 PopUpState.showError(
@@ -111,8 +101,8 @@ const LoginView = observer(() => {
               AuthState.loginTwitch();
             }}
           >
-            Sign in with Twitch
-          </Button>
+            Sign in with Twitch.tv
+          </DefaultButton>
         </ButtonContainer>
       </CenteredContainer>
     </Layout>
