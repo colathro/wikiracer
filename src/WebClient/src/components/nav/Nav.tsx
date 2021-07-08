@@ -14,7 +14,6 @@ const Layout = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 1em;
 `;
 
 const Navigation = () => {

@@ -26,6 +26,9 @@ const NavWrapper = styled.div`
   box-shadow: rgb(0 0 0 / 13%) 0px 3.2px 7.2px 0px,
     rgb(0 0 0 / 11%) 0px 0.6px 1.8px 0px;
   outline: transparent;
+  padding-bottom: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
 `;
 
 const ContentWrapper = styled.div`
