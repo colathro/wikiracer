@@ -122,6 +122,9 @@ class LobbyManager {
   }
 
   getArticle(key: string, callback: any) {
+    if (key === null) {
+      return;
+    }
     if (!LobbyState.isStarted() && key !== LobbyState.lobby?.startArticle) {
       PopUpState.showError("Wait for game to start!");
       return;

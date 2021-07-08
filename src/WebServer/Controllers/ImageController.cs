@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using HtmlAgilityPack;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace WebServer.Controllers
 {
@@ -26,7 +27,7 @@ namespace WebServer.Controllers
             var request = new HttpRequestMessage(HttpMethod.Get,
                 $"https://en.wikipedia.org/wiki/{imageurl}");
 
-            request.Headers.Add("Api-User-Agent", "colton@fivestack.io");
+            request.Headers.TryAddWithoutValidation("User-Agent", "WikiRacer/1.0 (https://wikiracer.com; colton@fivestack.io)");
 
             var client = this.clientFactory.CreateClient();
 
@@ -42,6 +43,8 @@ namespace WebServer.Controllers
 
             var actualRequest = new HttpRequestMessage(HttpMethod.Get,
                 $"https:{actualLink}");
+
+            actualRequest.Headers.TryAddWithoutValidation("User-Agent", "WikiRacer/1.0 (https://wikiracer.com; colton@fivestack.io)");
 
             var actualResponse = await client.SendAsync(actualRequest);
 
