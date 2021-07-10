@@ -50,13 +50,9 @@ const ChatMessage = styled.div`
 const Chat = observer(() => {
   const scrollTarget = useRef<null | HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
+  setTimeout(() => {
     scrollTarget.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, []);
+  }, 200);
 
   return (
     <Layout>
@@ -72,7 +68,7 @@ const Chat = observer(() => {
                 </ChatMessage>
               );
             })}
-            <div ref={scrollTarget} />
+            <div style={{ height: "3px" }} ref={scrollTarget} />
           </ChatInner>
         </ChatWrapper>
         <SendWrapper>

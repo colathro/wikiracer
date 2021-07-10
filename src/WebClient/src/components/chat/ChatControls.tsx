@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
 import LobbyState from "../../state/LobbyState";
 import Emotes from "./Emotes";
-import { TextField } from "@fluentui/react/lib/TextField";
+import { TextField, ITextField } from "@fluentui/react/lib/TextField";
 import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import { IconButton } from "@fluentui/react/lib/Button";
 
@@ -23,19 +23,28 @@ const ShowEmotesWrapper = styled.div`
 
 const DropUpContainer = styled.div`
   display: flex;
-  overflow-y: scroll;
   min-height: 8em;
-  min-width: 10em;
+  width: 10em;
   bottom: 2em;
   right: 2em;
   flex: 1;
   position: absolute;
   background-color: ${ThemeManager.theme?.background};
-  border: 1px solid ${ThemeManager.theme?.text};
+  box-shadow: rgb(0 0 0 / 13%) 0px 3.2px 7.2px 0px,
+    rgb(0 0 0 / 11%) 0px 0.6px 1.8px 0px;
+  outline: transparent;
+`;
+
+const DropUpWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: scroll;
 `;
 
 const EmoteWrapper = styled.div`
   margin: 0.3em;
+  height: 1.5em;
+  width: 1.5em;
 `;
 
 const Emote = styled.img`
@@ -44,11 +53,13 @@ const Emote = styled.img`
     background-color: ${ThemeManager.theme?.background2};
   }
   height: 1.5em;
+  width: 1.5em;
 `;
 
 const ChatControls = observer(() => {
   const [message, setMessage] = useState("");
   const [dropUpShow, setDropUpShow] = useState(false);
+  const inputTarget = useRef<null | ITextField>(null);
 
   const emotes: any = [];
 
@@ -69,7 +80,16 @@ const ChatControls = observer(() => {
   };
 
   const addToMessage = (emote: string) => {
-    setMessage(message + " " + emote + " ");
+    if (message.endsWith(" ")) {
+      setMessage(message + emote + " ");
+    } else {
+      setMessage(message + " " + emote + " ");
+    }
+  };
+
+  const setFocus = () => {
+    console.log(inputTarget.current);
+    inputTarget.current?.focus();
   };
 
   return (
@@ -83,6 +103,7 @@ const ChatControls = observer(() => {
             handleKey(ev);
           }}
           value={message}
+          componentRef={inputTarget}
         ></TextField>
       </InputWrapper>
       <TooltipHost content="Send Message">
@@ -98,19 +119,24 @@ const ChatControls = observer(() => {
       <ShowEmotesWrapper>
         {dropUpShow ? (
           <DropUpContainer>
-            {emotes.map((v: any, k: any) => {
-              return (
-                <EmoteWrapper
-                  key={k}
-                  onClick={() => {
-                    addToMessage(v.key);
-                    setDropUpShow(false);
-                  }}
-                >
-                  <Emote src={v.value}></Emote>
-                </EmoteWrapper>
-              );
-            })}
+            <DropUpWrapper>
+              {emotes.map((v: any, k: any) => {
+                return (
+                  <TooltipHost content={v.key} key={k}>
+                    <EmoteWrapper
+                      key={k}
+                      onClick={() => {
+                        addToMessage(v.key);
+                        setFocus();
+                        setDropUpShow(false);
+                      }}
+                    >
+                      <Emote src={v.value}></Emote>
+                    </EmoteWrapper>
+                  </TooltipHost>
+                );
+              })}
+            </DropUpWrapper>
           </DropUpContainer>
         ) : (
           <></>
