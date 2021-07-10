@@ -8,5 +8,6 @@ Emotes.set("CheekySmiles", "/images/emotes/CheekySmiles.png");
 Emotes.set("MmmKay", "/images/emotes/MmmKay.png");
 Emotes.set("FetchMeTheirSouls", "/images/emotes/FetchMeTheirSouls.png");
 Emotes.set("LetMeInPlease", "/images/emotes/LetMeInPlease.png");
+Emotes.set("PotatoPototo", "/images/emotes/PotatoPototo.png");
 
 export default Emotes;
