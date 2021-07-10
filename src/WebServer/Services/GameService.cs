@@ -67,5 +67,22 @@ namespace WebServer.Services
                 new PartitionKey(key),
                 new dynamic[] { key, etag });
         }
+
+        public async Task<List<Game>> GetGamesAsync(List<string> gameIds)
+        {
+            string list = "";
+
+            foreach (string id in gameIds)
+            {
+                list += $"'{id}',";
+            }
+
+            list = list.TrimEnd(',');
+            var query = $"SELECT * FROM c where c.id in ({list}) order by c._ts desc";
+
+            var games = await this.GetItemsAsync(query);
+
+            return games.ToList();
+        }
     }
 }

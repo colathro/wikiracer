@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { Text } from "@fluentui/react/lib/Text";
 import LobbyState from "../../state/LobbyState";
+import { Game } from "../../types/Lobby";
 
 const FinishWrapper = styled.div`
   display: flex;
@@ -19,31 +20,35 @@ const FinishInner2 = styled.div`
   justify-content: center;
 `;
 
-const FinishTitle = observer(() => {
+type props = {
+  game: Game;
+};
+
+const FinishTitle = (props: props) => {
   return (
     <FinishWrapper>
       <FinishInner>
         <Text variant="xLarge">Nice Work!</Text>
         <Text variant="large">
           Coins Earned: <Icon iconName="AllCurrency"></Icon>{" "}
-          {LobbyState.game?.coinReward}
+          {props.game?.coinReward}
         </Text>
         <Text variant="large">
-          Experience Gained: {LobbyState.game?.experienceReward}
+          Experience Gained: {props.game?.experienceReward}
         </Text>
       </FinishInner>
       <FinishInner2 style={{ marginTop: "1em" }}>
-        <Text variant="xLarge">{LobbyState.game?.startArticle}</Text>
+        <Text variant="xLarge">{props.game?.startArticle}</Text>
         <Text
           style={{ marginLeft: "1em", marginRight: "1em" }}
           variant="xLarge"
         >
           ➡
         </Text>
-        <Text variant="xLarge">{LobbyState.game?.finishArticle}</Text>
+        <Text variant="xLarge">{props.game?.finishArticle}</Text>
       </FinishInner2>
     </FinishWrapper>
   );
-});
+};
 
 export default FinishTitle;

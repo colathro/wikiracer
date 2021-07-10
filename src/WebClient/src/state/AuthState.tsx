@@ -103,6 +103,17 @@ class Auth {
       .then((data) => this.setUser(data));
   }
 
+  getGames(callback: any, page: number = 0) {
+    fetch(`/api/user/games?page=${page}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => callback(data));
+  }
+
   setUser(user: User | undefined) {
     this.user = user;
   }

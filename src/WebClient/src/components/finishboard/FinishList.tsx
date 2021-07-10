@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import LobbyState from "../../state/LobbyState";
+import { Game } from "../../types/Lobby";
 import FinishRecord from "./FinishRecord";
 
 const calculateTimeLeft = (start: Date, end: Date) => {
@@ -21,7 +22,6 @@ const FinishWrapper = styled.div`
   flex: 1;
   margin-top: 1em;
   margin-bottom: 1em;
-  overflow-y: scroll;
 `;
 
 const InnerWrapper = styled.div`
@@ -31,19 +31,23 @@ const InnerWrapper = styled.div`
   flex-direction: column;
 `;
 
-const FinishList = observer(() => {
+type props = {
+  game: Game;
+};
+
+const FinishList = (props: props) => {
   return (
     <FinishWrapper>
       <InnerWrapper>
-        {LobbyState.game?.gameHistories! !== undefined ? (
-          LobbyState.game?.gameHistories!.map((history, ind) => {
+        {props.game?.gameHistories! !== undefined ? (
+          props.game?.gameHistories!.map((history, ind) => {
             const timeLeft = calculateTimeLeft(
-              new Date(LobbyState.lobby?.startTime!),
+              new Date(props.game?.startTime!),
               new Date(history.player.finishedTime)
             );
             return (
               <FinishRecord
-                game={LobbyState.game!}
+                game={props.game!}
                 timeLeft={timeLeft}
                 history={history}
                 ind={ind}
@@ -57,6 +61,6 @@ const FinishList = observer(() => {
       </InnerWrapper>
     </FinishWrapper>
   );
-});
+};
 
 export default FinishList;

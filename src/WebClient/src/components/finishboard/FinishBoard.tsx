@@ -4,6 +4,7 @@ import ThemeManager from "../../Themes";
 import FinishTitle from "./FinishTitle";
 import FinishList from "./FinishList";
 import FinishControls from "./FinishControls";
+import LobbyState from "../../state/LobbyState";
 
 const FinishWrapper = styled.div`
   display: flex;
@@ -24,8 +25,8 @@ const FinishBoard = observer(() => {
   return (
     <FinishWrapper>
       <FinishContent>
-        <FinishTitle></FinishTitle>
-        <FinishList></FinishList>
+        <FinishTitle game={LobbyState.game!}></FinishTitle>
+        <FinishList game={LobbyState.game!}></FinishList>
         <FinishControls></FinishControls>
       </FinishContent>
     </FinishWrapper>

@@ -10,6 +10,8 @@ const FinishRecordWrapper = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 `;
 
 const FinishRecordMain = styled.div`

@@ -68,6 +68,11 @@ export type Game = {
   experienceReward: number;
 };
 
+export type GameResponse = {
+  games: Game[];
+  pages: number;
+};
+
 export type GameHistory = {
   player: LobbyPlayer;
   navigations: GameNavigation[];

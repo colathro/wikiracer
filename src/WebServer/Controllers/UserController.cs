@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System;
@@ -20,13 +21,19 @@ namespace WebServer.Controllers
     {
         private readonly ILogger logger;
         private readonly UserService userService;
+        private readonly GameService gameService;
         private readonly IConfiguration configuration;
         private readonly Random random;
 
-        public UserController(UserService _userService, ILogger<UserController> _logger, IConfiguration _configuration)
+        public UserController(
+            UserService _userService,
+            GameService _gameService,
+            ILogger<UserController> _logger,
+            IConfiguration _configuration)
         {
             this.logger = _logger;
             this.userService = _userService;
+            this.gameService = _gameService;
             this.configuration = _configuration;
             this.random = new Random();
         }
@@ -46,6 +53,33 @@ namespace WebServer.Controllers
             }
 
             return Ok(user);
+        }
+
+        [Authorize]
+        [HttpGet("games")]
+        public async Task<IActionResult> GetMyGames([FromQuery] int page)
+        {
+            var key = this.HttpContext.User.FindFirst("sub").Value;
+            var name = this.HttpContext.User.FindFirst("preferred_username").Value;
+            var provider = this.HttpContext.User.FindFirst("iss").Value;
+            var user = await this.userService.GetUser(key, provider);
+
+            user.GameIds.Reverse();
+
+            int pages = user.GameIds.Count() / 10;
+
+            user.GameIds.RemoveRange(0, page * 10);
+            var targetGames = user.GameIds.Take(10).ToList();
+
+            var games = await this.gameService.GetGamesAsync(targetGames);
+
+            var response = new GameResponse
+            {
+                Games = games,
+                Pages = pages
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("guest")]

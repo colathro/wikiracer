@@ -6,6 +6,7 @@ import LobbyFinder from "../components/lobbyfinder/LobbyFinder";
 import { Switch, Route } from "react-router-dom";
 import HowToPlay from "../components/howtoplay/HowToPlay";
 import Nav from "../components/nav/Nav";
+import MyStats from "../components/stats/MyStats";
 import styled from "styled-components";
 import Settings from "../components/settings/Settings";
 import LobbyState from "../state/LobbyState";
@@ -67,6 +68,9 @@ const LoggedInView = observer(() => {
             </Route>
             <Route path="/howtoplay">
               <HowToPlay />
+            </Route>
+            <Route path="/mystats">
+              <MyStats />
             </Route>
             <Route path="/">
               <LobbyFinder />
