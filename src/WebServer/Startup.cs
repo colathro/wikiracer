@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Octokit;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using WebServer.Services;
@@ -43,6 +44,10 @@ namespace WebServer
             services.AddScoped<IMediaWikiService, MediaWikiService>();
             services.AddSingleton<GameService>(initializeGameService());
             services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSingleton<IGitHubClient>(new GitHubClient(new ProductHeaderValue("WikiRacer"))
+            {
+                Credentials = new Credentials(Configuration["GITHUB_KEY"])
+            });
 
             services.AddAuthentication()
                 .AddJwtBearer("Twitch", options =>

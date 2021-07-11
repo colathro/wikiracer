@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeManager from "../../Themes";
 import PopUpState, { Level, MessageType } from "../../state/PopUpState";
+import { Text, DefaultButton, TextField } from "@fluentui/react";
 
 type props = {
   message: MessageType;
@@ -14,7 +15,9 @@ const Layout = styled.div`
   margin: 1em;
   margin-top: 0em;
   margin-bottom: 1em;
-  border: 1px solid ${ThemeManager.theme?.text};
+  box-shadow: rgb(0 0 0 / 13%) 0px 3.2px 7.2px 0px,
+    rgb(0 0 0 / 11%) 0px 0.6px 1.8px 0px;
+  outline: transparent;
   width: 360px;
   background-color: ${ThemeManager.theme?.background2};
 `;
@@ -30,14 +33,6 @@ const Container = styled.div`
 const MessageText = styled.div`
   margin-left: 1em;
   margin-right: 1em;
-`;
-
-const Close = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const Image = styled.img`
@@ -61,14 +56,16 @@ const Message = observer((props: props) => {
     <Layout>
       <Container>
         <Image src={targetSvg}></Image>
-        <MessageText>{props.message.Text}</MessageText>
-        <Close
+        <MessageText>
+          <Text>{props.message.Text}</Text>
+        </MessageText>
+        <DefaultButton
           onClick={() => {
             PopUpState.popMessage(props.message);
           }}
         >
           Close
-        </Close>
+        </DefaultButton>
       </Container>
     </Layout>
   );

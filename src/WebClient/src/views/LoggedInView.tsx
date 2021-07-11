@@ -12,6 +12,7 @@ import Settings from "../components/settings/Settings";
 import LobbyState from "../state/LobbyState";
 import ConnectionState from "../state/ConnectionState";
 import TimerState from "../state/TimerState";
+import ReportAProblem from "../components/reportaproblem/ReportAProblem";
 
 const Layout = styled.div`
   display: flex;
@@ -71,6 +72,9 @@ const LoggedInView = observer(() => {
             </Route>
             <Route path="/mystats">
               <MyStats />
+            </Route>
+            <Route path="/reportaproblem">
+              <ReportAProblem />
             </Route>
             <Route path="/">
               <LobbyFinder />

@@ -114,6 +114,19 @@ class Auth {
       .then((data) => callback(data));
   }
 
+  submitBug(callback: any, title: string, body: string) {
+    fetch(`/api/bugidea/bug?title=${title}`, {
+      body: JSON.stringify(body),
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => callback(data));
+  }
+
   setUser(user: User | undefined) {
     this.user = user;
   }
