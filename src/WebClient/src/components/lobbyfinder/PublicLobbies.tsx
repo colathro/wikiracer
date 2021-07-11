@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 import { Lobby, PublicLobbyResponse } from "../../types/Lobby";
 import {
   PrimaryButton,
+  DefaultButton,
   Icon,
   Text,
   Spinner,
@@ -68,6 +69,13 @@ const Players = styled.div`
 
 const PlayersText = styled.div`
   margin-right: 1em;
+`;
+
+const NoLobbies = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
 `;
 
 const refreshIcon: IIconProps = { iconName: "Refresh" };
@@ -135,32 +143,40 @@ const PublicLobbies = observer(() => {
         Refresh
       </IconButton>
       <List>
-        {pbr?.lobbies.map((lobby: Lobby, key: any) => {
-          return (
-            <LobbyWrapper key={key}>
-              <Owner>{lobby.owner.displayName}</Owner>
-              <Players>
-                <PlayersText>
-                  {
-                    lobby.players.filter((val) => {
-                      return val.active === true;
-                    }).length
-                  }
-                </PlayersText>
-                <Icon iconName="People" />
-              </Players>
-              <PrimaryButton
-                onClick={() => {
-                  LobbyState.joinLobby(lobby.key, () => {
-                    history.push("/lobby");
-                  });
-                }}
-              >
-                Join
-              </PrimaryButton>
-            </LobbyWrapper>
-          );
-        })}
+        {pbr?.lobbies.length > 0 ? (
+          pbr?.lobbies.map((lobby: Lobby, key: any) => {
+            return (
+              <LobbyWrapper key={key}>
+                <Owner>{lobby.owner.displayName}</Owner>
+                <Players>
+                  <PlayersText>
+                    {
+                      lobby.players.filter((val) => {
+                        return val.active === true;
+                      }).length
+                    }
+                  </PlayersText>
+                  <Icon iconName="People" />
+                </Players>
+                <PrimaryButton
+                  onClick={() => {
+                    LobbyState.joinLobby(lobby.key, () => {
+                      history.push("/lobby");
+                    });
+                  }}
+                >
+                  Join
+                </PrimaryButton>
+              </LobbyWrapper>
+            );
+          })
+        ) : (
+          <NoLobbies>
+            <Text variant="medium">
+              There are no public lobbies. Try creating one above!
+            </Text>
+          </NoLobbies>
+        )}
       </List>
       <PagesWrapper>
         <Text>
@@ -182,19 +198,19 @@ const PublicLobbies = observer(() => {
                 if (i === page) {
                   row.push(
                     <Text key={i}>
-                      <AnchorInactive>{i}</AnchorInactive>
+                      <DefaultButton disabled>{i}</DefaultButton>
                     </Text>
                   );
                 } else {
                   row.push(
                     <Text key={i}>
-                      <Anchor
+                      <DefaultButton
                         onClick={() => {
                           gotoPage(p);
                         }}
                       >
                         {i}
-                      </Anchor>
+                      </DefaultButton>
                     </Text>
                   );
                 }
@@ -208,22 +224,16 @@ const PublicLobbies = observer(() => {
               for (var i = bot; i <= top; i++) {
                 const p = i;
                 if (i === page) {
-                  row.push(
-                    <Text key={i}>
-                      <AnchorInactive>{i}</AnchorInactive>
-                    </Text>
-                  );
+                  row.push(<DefaultButton disabled>{i}</DefaultButton>);
                 } else {
                   row.push(
-                    <Text key={i}>
-                      <Anchor
-                        onClick={() => {
-                          gotoPage(p);
-                        }}
-                      >
-                        {i}
-                      </Anchor>
-                    </Text>
+                    <DefaultButton
+                      onClick={() => {
+                        gotoPage(p);
+                      }}
+                    >
+                      {i}
+                    </DefaultButton>
                   );
                 }
               }
