@@ -23,7 +23,6 @@ const Navigation = () => {
 
   const navLinkGroups: INavLinkGroup[] = [
     {
-      name: "Play",
       links: [
         {
           name: "Lobby Finder",
@@ -43,11 +42,6 @@ const Navigation = () => {
             history.push("howtoplay");
           },
         },
-      ],
-    },
-    {
-      name: "Stats",
-      links: [
         {
           name: "My Stats",
           key: "/mystats",
@@ -66,11 +60,6 @@ const Navigation = () => {
             history.push("leaderboards");
           },
         },
-      ],
-    },
-    {
-      name: "Feedback",
-      links: [
         {
           name: "Submit an Idea",
           key: "/submitandidea",
