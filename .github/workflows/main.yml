@@ -55,5 +55,6 @@ jobs:
             COSMOS_KEY=${{secrets.COSMOS_KEY}}
             STORAGE_KEY=${{secrets.STORAGE_KEY}}
             ENCRYPTION_KEY=${{secrets.ENCRYPTION_KEY}}
+            GITHUB_KEY=${{secrets.REPO_KEY}}
           tags: wikiracer.azurecr.io/wikiracer:latest
           push: true
