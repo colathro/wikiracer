@@ -14,6 +14,6 @@ WORKDIR app/
 
 COPY --chown=myuser:myuser out/ .
 
-EXPOSE 80 443
+EXPOSE 80 443 2222
 
 ENTRYPOINT dotnet WebServer/WebServer.dll
