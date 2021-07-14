@@ -10,10 +10,18 @@ ENV STORAGE_KEY ${STORAGE_KEY}
 ENV ENCRYPTION_KEY ${ENCRYPTION_KEY}
 ENV GITHUB_KEY ${GITHUB_KEY}
 
+RUN apt-get update \
+&& apt-get install -y --no-install-recommends openssh-server \
+&& echo "root:Docker!" | chpasswd
+
+COPY sshd_config /etc/ssh/
+
 WORKDIR app/
 
 COPY --chown=myuser:myuser out/ .
+COPY init_container.sh .
 
 EXPOSE 80 443 2222
 
-ENTRYPOINT dotnet WebServer/WebServer.dll
+RUN chmod 755 init_container.sh
+ENTRYPOINT ["init_container.sh"]
