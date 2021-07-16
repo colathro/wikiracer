@@ -36,7 +36,7 @@ const ContentWrapper = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  margin: 4em;
+  margin: 2em;
   margin-left: 20em;
   margin-top: 1em;
   align-content: center;
@@ -44,6 +44,7 @@ const ContentWrapper = styled.div`
 
 const Content = styled.div`
   display: flex;
+  flex: 1;
   justify-content: center;
 `;
 
