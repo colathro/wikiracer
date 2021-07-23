@@ -282,9 +282,16 @@ class LobbyManager {
     });
   }
 
-  setArticles(startArticle: string, finishArticle: string, callback: any) {
+  setArticles(
+    startArticle: string,
+    finishArticle: string,
+    gameLength: number,
+    callback: any
+  ) {
     fetch(
-      `/api/lobby/owner/setarticle?lobbyKey=${this.lobby?.key}&start=${startArticle}&finish=${finishArticle}`,
+      `/api/lobby/owner/setarticle?lobbyKey=${
+        this.lobby?.key
+      }&start=${startArticle}&finish=${finishArticle}&gamelength=${gameLength.toString()}`,
       {
         method: "GET",
         headers: {

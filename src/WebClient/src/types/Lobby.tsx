@@ -12,6 +12,7 @@ export type Lobby = {
   startTime: Date;
   endTime: Date;
   gameId: string;
+  currentGameLength: number;
 };
 
 export type LobbyPlayer = {

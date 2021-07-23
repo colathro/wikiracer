@@ -18,7 +18,7 @@ namespace DataModels.CosmosModels
         // used by client to know which lobbies are joinable
         public bool IsOpen { get; set; }
 
-        public string GameId { get; set;}
+        public string GameId { get; set; }
 
         // used by client to know when a game is started.
         public DateTime StartTime { get; set; }
@@ -31,5 +31,7 @@ namespace DataModels.CosmosModels
         public string EndArticle { get; set; }
 
         public List<Message> Messages { get; set; }
+
+        public int CurrentGameLength { get; set; }
     }
 }

@@ -145,12 +145,12 @@ namespace WebServer.Services
                 new dynamic[] { lobbyKey, message });
         }
 
-        public async Task<Lobby> SetStartEndArticle(string lobbyKey, string startArticleKey, string endArticleKey)
+        public async Task<Lobby> SetStartEndArticle(string lobbyKey, string startArticleKey, string endArticleKey, string gameLength)
         {
             return await this.container.Scripts.ExecuteStoredProcedureAsync<Lobby>(
                 "SetStartEndArticle",
                 new PartitionKey(lobbyKey),
-                new[] { lobbyKey, startArticleKey, endArticleKey });
+                new[] { lobbyKey, startArticleKey, endArticleKey, gameLength });
         }
 
         public async Task CleanClosedLobbies()

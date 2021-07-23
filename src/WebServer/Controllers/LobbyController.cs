@@ -104,7 +104,8 @@ namespace WebServer.Controllers
                 BanList = new List<string>(),
                 Messages = new List<Message>(),
                 IsPublic = false,
-                IsOpen = true
+                IsOpen = true,
+                CurrentGameLength = 4
             };
 
             await this.lobbyService.AddItemAsync(lobby);
@@ -282,7 +283,7 @@ namespace WebServer.Controllers
         }
 
         [HttpGet("owner/setarticle")]
-        public async Task<IActionResult> SetArticle([FromQuery] string lobbyKey, [FromQuery] string start, [FromQuery] string finish)
+        public async Task<IActionResult> SetArticle([FromQuery] string lobbyKey, [FromQuery] string start, [FromQuery] string finish, [FromQuery] int gameLength)
         {
             var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
             var lobby = await this.lobbyService.GetLobby(lobbyKey);
@@ -301,7 +302,12 @@ namespace WebServer.Controllers
                 return BadRequest("game running");
             }
 
-            await this.lobbyService.SetStartEndArticle(lobbyKey, start, finish);
+            if (gameLength < 0 || gameLength > 15)
+            {
+                return BadRequest("bad game length");
+            }
+
+            await this.lobbyService.SetStartEndArticle(lobbyKey, start, finish, gameLength.ToString());
             return Ok();
         }
 
@@ -431,7 +437,7 @@ namespace WebServer.Controllers
 
             lobby.GameId = gameId;
             lobby.StartTime = now.AddSeconds(10);
-            lobby.EndTime = now.AddMinutes(4).AddSeconds(10);
+            lobby.EndTime = now.AddMinutes(lobby.CurrentGameLength).AddSeconds(10);
 
             game.StartTime = lobby.StartTime;
             game.FinishTime = lobby.EndTime;

@@ -7,6 +7,7 @@ import { PrimaryButton } from "@fluentui/react/lib/Button";
 import { Stack, IStackTokens } from "@fluentui/react";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { ActionButton } from "@fluentui/react/lib/Button";
+import { SpinButton, ISpinButtonStyles } from "@fluentui/react/lib/SpinButton";
 
 const Layout = styled.div`
   flex-direction: column;
@@ -52,6 +53,10 @@ const TargetArticles = observer((props: props) => {
     LobbyState.lobby?.endArticle ?? ""
   );
 
+  const [gameLength, setGameLength] = useState(
+    LobbyState.lobby?.currentGameLength ?? 4
+  );
+
   const startArticleRef = useRef<string>(startArticle);
   const finishArticleRef = useRef<string>(finishArticle);
 
@@ -86,7 +91,7 @@ const TargetArticles = observer((props: props) => {
   };
 
   const save = () => {
-    LobbyState.setArticles(startArticle, finishArticle, () => {});
+    LobbyState.setArticles(startArticle, finishArticle, gameLength, () => {});
     setEditable(false);
   };
 
@@ -100,8 +105,47 @@ const TargetArticles = observer((props: props) => {
     setFinishArticle(LobbyState.lobby?.endArticle ?? "");
   };
 
+  const updateGameLength = (e: any) => {
+    var val = Number(e.target.value);
+    if (val < 1) {
+      val = 1;
+    } else if (val > 15) {
+      val = 15;
+    }
+    setGameLength(val);
+  };
+
+  const incrementGameLength = () => {
+    var val = 1;
+    if (gameLength > 14) {
+      val = 0;
+    }
+    setGameLength(gameLength + val);
+  };
+
+  const decrementGameLength = () => {
+    var val = 1;
+    if (gameLength < 2) {
+      val = 0;
+    }
+    setGameLength(gameLength - val);
+  };
+
   return (
     <Layout>
+      <Selection>
+        <InputContainer>
+          <SpinButton
+            min={1}
+            max={15}
+            disabled={!editable}
+            value={gameLength?.toString()}
+            onChange={updateGameLength}
+            onIncrement={incrementGameLength}
+            onDecrement={decrementGameLength}
+          />
+        </InputContainer>
+      </Selection>
       <Selection>
         <InputContainer>
           <TextField
