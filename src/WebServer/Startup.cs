@@ -41,6 +41,7 @@ namespace WebServer
 
             services.AddSingleton<UserService>(initializeUserService());
             services.AddSingleton<LobbyService>(initializeLobbyService());
+            services.AddSingleton<PageStatisticService>(initializePageStatisticService());
             services.AddScoped<IMediaWikiService, MediaWikiService>();
             services.AddSingleton<GameService>(initializeGameService());
             services.AddSingleton<IConfiguration>(Configuration);
@@ -184,6 +185,13 @@ namespace WebServer
             string account = "https://wikiracer.documents.azure.com:443/";
             string key = this.Configuration["COSMOS_KEY"];
             return new GameService(account, key);
+        }
+
+        private PageStatisticService initializePageStatisticService()
+        {
+            string account = "https://wikiracer.documents.azure.com:443/";
+            string key = this.Configuration["COSMOS_KEY"];
+            return new PageStatisticService(account, key);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace WebServer.Controllers
         private readonly UserService userService;
         private readonly IMediaWikiService mediaWikiService;
         private readonly GameService gameService;
+        private readonly PageStatisticService pageStatisticService;
 
         private static Random random = new Random((int)DateTime.Now.Ticks);
 
@@ -29,6 +30,7 @@ namespace WebServer.Controllers
           UserService _userService,
           IMediaWikiService _mediaWikiService,
           GameService _gameService,
+          PageStatisticService _pageStatisticService,
           ILogger<LobbyController> _logger)
         {
             this.logger = _logger;
@@ -36,6 +38,7 @@ namespace WebServer.Controllers
             this.userService = _userService;
             this.mediaWikiService = _mediaWikiService;
             this.gameService = _gameService;
+            this.pageStatisticService = _pageStatisticService;
         }
 
         [HttpGet("public")]
@@ -173,6 +176,8 @@ namespace WebServer.Controllers
             var article = await this.mediaWikiService.GetArticleMediaWikiAsync(key);
 
             bool isFinished = article.Title == lobby.EndArticle;
+
+            pageStatisticService.LogStatistic(article.Title);
 
             await lobbyService.SetCurrentArticle(lobbyKey, user.Key, article.Title, isFinished);
 
