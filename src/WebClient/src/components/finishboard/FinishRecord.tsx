@@ -26,14 +26,13 @@ type props = {
   game: Game;
   history: GameHistory;
   timeLeft: any;
-  ind: number;
   finished: boolean;
 };
 
 const FinishRecord = observer((props: props) => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   return (
-    <FinishRecordWrapper key={props.ind}>
+    <FinishRecordWrapper>
       <FinishRecordMain>
         <Player player={props.history.player}></Player>
         <DefaultButton

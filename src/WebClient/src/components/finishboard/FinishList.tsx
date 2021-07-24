@@ -50,7 +50,7 @@ const FinishList = (props: props) => {
                 game={props.game!}
                 timeLeft={timeLeft}
                 history={history}
-                ind={ind}
+                key={ind}
                 finished={history.player.finished}
               ></FinishRecord>
             );
