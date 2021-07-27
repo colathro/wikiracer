@@ -3,6 +3,7 @@ import { UserManager } from "oidc-client";
 import { AuthType } from "../enums/AuthType";
 import { AuthInfo } from "../types/AuthInfo";
 import { User } from "../types/Lobby";
+import { StoreItem } from "../types/Store";
 import LobbyState from "./LobbyState";
 
 var config = {
@@ -125,6 +126,35 @@ class Auth {
     })
       .then((response) => response.json())
       .then((data) => callback(data));
+  }
+
+  getStoreItems(callback: any) {
+    fetch(`/api/store/available`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => callback(data));
+  }
+
+  unlockItem(callback: any, item: StoreItem) {
+    fetch(`/api/store/unlock?itemName=${item.name}&itemType=${item.type}`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+      },
+    }).then(() => callback());
+  }
+
+  setAvatar(callback: any, avatar: string) {
+    fetch(`/api/user/avatar?avatar=${avatar}`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+      },
+    }).then(() => callback());
   }
 
   setUser(user: User | undefined) {

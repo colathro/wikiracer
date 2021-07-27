@@ -43,6 +43,15 @@ const Navigation = () => {
           },
         },
         {
+          name: "Store",
+          key: "/store",
+          url: "s",
+          onClick: (e: any) => {
+            e.preventDefault();
+            history.push("store");
+          },
+        },
+        {
           name: "My Stats",
           key: "/mystats",
           url: "s",

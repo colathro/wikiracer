@@ -82,6 +82,27 @@ namespace WebServer.Controllers
             return Ok(response);
         }
 
+        [Authorize]
+        [HttpPost("avatar")]
+        public async Task<IActionResult> SetAvatar([FromQuery] string avatar)
+        {
+            var key = this.HttpContext.User.FindFirst("sub").Value;
+            var name = this.HttpContext.User.FindFirst("preferred_username").Value;
+            var provider = this.HttpContext.User.FindFirst("iss").Value;
+            var user = await this.userService.GetUser(key, provider);
+
+            if (!user.UnlockedAvatars.Contains(avatar))
+            {
+                return BadRequest("not unlocked");
+            }
+
+            user.Avatar = avatar;
+
+            await this.userService.UpdateItemAsync(user);
+
+            return Ok();
+        }
+
         [HttpGet("guest")]
         public async Task<ActionResult> Guest()
         {
@@ -101,9 +122,9 @@ namespace WebServer.Controllers
                 CreatedOn = DateTime.UtcNow,
                 GameIds = new List<string>(),
                 Level = 1,
-                Avatar = "default",
+                Avatar = "default.png",
                 Badges = new List<string> { "beta" },
-                UnlockedAvatars = new List<string> { "default" }
+                UnlockedAvatars = new List<string> { "default.png" }
             };
             await this.userService.AddItemAsync(user);
             return user;

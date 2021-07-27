@@ -14,7 +14,7 @@ type props = {
 const Avatar = observer((props: props) => {
   return (
     <Persona
-      imageUrl={`/images/avatars/${props.avatar}.png`}
+      imageUrl={`/images/avatars/${props.avatar}`}
       onRenderCoin={_onRenderCoin}
       coinSize={48}
     />

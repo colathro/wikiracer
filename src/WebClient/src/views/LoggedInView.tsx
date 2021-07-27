@@ -13,6 +13,7 @@ import LobbyState from "../state/LobbyState";
 import ConnectionState from "../state/ConnectionState";
 import TimerState from "../state/TimerState";
 import ReportAProblem from "../components/reportaproblem/ReportAProblem";
+import Store from "../components/store/Store";
 
 const Layout = styled.div`
   display: flex;
@@ -72,6 +73,9 @@ const LoggedInView = observer(() => {
             </Route>
             <Route path="/mystats">
               <MyStats />
+            </Route>
+            <Route path="/store">
+              <Store />
             </Route>
             <Route path="/reportaproblem">
               <ReportAProblem />
