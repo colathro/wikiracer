@@ -7,6 +7,7 @@ const Layout = styled.div`
   flex-direction: column-reverse;
   padding: 0.25em;
   flex: 1;
+  margin-bottom: 0.5em;
 `;
 
 const Container = styled.div`
