@@ -26,6 +26,9 @@ const InnerCard = styled.div`
 const InnerImage = styled.div`
   display: flex;
   flex: 1;
+  margin: 1em;
+  align-items: center;
+  justify-content: center;
 `;
 
 const MainText = styled.div`
@@ -35,17 +38,24 @@ const SubText = styled.div`
   margin-top: 3em;
 `;
 
+const Image = styled.img`
+  max-width: 20em;
+`;
+
 type props = {
   text: string;
   subtext: string;
   reversed: boolean;
+  bunny: string;
 };
 
 const Card = (props: props) => {
   if (props.reversed) {
     return (
       <CardContainer>
-        <InnerImage></InnerImage>
+        <InnerImage>
+          <Image src={props.bunny}></Image>
+        </InnerImage>
         <InnerCard>
           <MainText>
             <Text variant="xLarge">{props.text}</Text>
@@ -67,7 +77,9 @@ const Card = (props: props) => {
             <Text variant="tiny">{props.subtext}</Text>
           </SubText>
         </InnerCard>
-        <InnerImage></InnerImage>
+        <InnerImage>
+          <Image src={props.bunny}></Image>
+        </InnerImage>
       </CardContainer>
     );
   }
