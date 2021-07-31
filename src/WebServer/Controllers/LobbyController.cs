@@ -97,7 +97,7 @@ namespace WebServer.Controllers
             var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
             var players = new List<LobbyPlayer>();
 
-            players.Add(this.ConvertUserToLobbyPlayer(user));
+            players.Add(ConvertUserToLobbyPlayer(user));
             var lobby = new Lobby
             {
                 Owner = new Owner { Id = user.Key, AuthProvider = user.AuthProvider },
@@ -115,7 +115,7 @@ namespace WebServer.Controllers
             return Ok(lobby);
         }
 
-        private LobbyPlayer ConvertUserToLobbyPlayer(User user)
+        public static LobbyPlayer ConvertUserToLobbyPlayer(User user)
         {
             return new LobbyPlayer
             {
@@ -255,7 +255,7 @@ namespace WebServer.Controllers
 
             var messageObject = new Message
             {
-                Author = this.ConvertUserToLobbyPlayer(user),
+                Author = ConvertUserToLobbyPlayer(user),
                 Id = Guid.NewGuid().ToString(),
                 Text = message
             };

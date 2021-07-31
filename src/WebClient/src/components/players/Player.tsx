@@ -56,9 +56,9 @@ const Player = observer((props: props) => {
   const loadUser = () => {
     if (lastLoad === undefined || new Date() > lastLoad) {
       var d = new Date();
-      d.setSeconds(d.getSeconds() + 15);
+      d.setSeconds(d.getSeconds() + 30);
       setLastLoad(d);
-      LobbyState.inspectPlayer(player!, setPlayer);
+      LobbyState.inspectPlayer(props.player, setPlayer);
     }
   };
 

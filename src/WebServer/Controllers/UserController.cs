@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebServer.Services;
 using DataModels.CosmosModels;
+using DataModels.CosmosModels.Enums;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -105,10 +106,11 @@ namespace WebServer.Controllers
 
         [Authorize]
         [HttpGet("inspect")]
-        public async Task<ActionResult> Inspect([FromQuery] string id, [FromQuery] string authProvider)
+        public async Task<ActionResult> Inspect([FromQuery] string id, [FromQuery] AuthType authProvider)
         {
             var user = await this.userService.GetUser(id, authProvider);
-            return Ok(user);
+
+            return Ok(LobbyController.ConvertUserToLobbyPlayer(user));
         }
 
         [HttpGet("guest")]
