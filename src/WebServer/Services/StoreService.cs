@@ -96,7 +96,27 @@ namespace WebServer.Services
                 Name = "kermit.gif",
                 Price = 5000,
                 Type = ItemType.Avatar
-            }
+            },
+            new StoreItem {
+                Name = "amongus.jpeg",
+                Price = 400,
+                Type = ItemType.Avatar,
+            },
+            new StoreItem {
+                Name = "bbgroot.jpeg",
+                Price = 400,
+                Type = ItemType.Avatar,
+            },
+            new StoreItem {
+                Name = "bbyoda.jpeg",
+                Price = 400,
+                Type = ItemType.Avatar,
+            },
+            new StoreItem {
+                Name = "captainamerica.png",
+                Price = 400,
+                Type = ItemType.Avatar,
+            },
         };
     }
 

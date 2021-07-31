@@ -234,6 +234,22 @@ class LobbyManager {
       });
   }
 
+  inspectPlayer(player: LobbyPlayer, callback: any) {
+    fetch(
+      `/api/user/inspect?id=${player.id}&authProvider=${player.authProvider}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + AuthState.auth_info?.access_token,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        callback(data);
+      });
+  }
+
   leaveLobby() {
     if (this.lobby === null) {
       return true;

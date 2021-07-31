@@ -6,6 +6,8 @@ import { AuthType } from "../../enums/AuthType";
 import { useId } from "@fluentui/react-hooks";
 import Avatar from "./Avatar";
 import { TooltipHost, ITooltipHostStyles } from "@fluentui/react/lib/Tooltip";
+import { useState } from "react";
+import LobbyState from "../../state/LobbyState";
 
 const UserWrapper = styled.span`
   &:hover {
@@ -48,17 +50,35 @@ type props = {
 
 const Player = observer((props: props) => {
   const tooltipId = useId("tooltip");
+  const [player, setPlayer] = useState<LobbyPlayer>();
+  const [lastLoad, setLastLoad] = useState<Date>();
+
+  const loadUser = () => {
+    if (lastLoad === undefined || new Date() > lastLoad) {
+      var d = new Date();
+      d.setSeconds(d.getSeconds() + 15);
+      setLastLoad(d);
+      LobbyState.inspectPlayer(player!, setPlayer);
+    }
+  };
+
   return (
     <TooltipHost
       content={
         <ToolTipContainer>
-          <ActionGroup>
-            <Avatar avatar={props.player.avatar} />
-            <Text variant="xLarge">{props.player.displayName}</Text>
-          </ActionGroup>
-          <ActionGroup3>
-            <Text variant="medium">Level {props.player.level}</Text>
-          </ActionGroup3>
+          {player !== undefined ? (
+            <>
+              <ActionGroup>
+                <Avatar avatar={props.player.avatar} />
+                <Text variant="xLarge">{props.player.displayName}</Text>
+              </ActionGroup>
+              <ActionGroup3>
+                <Text variant="medium">Level {props.player.level}</Text>
+              </ActionGroup3>
+            </>
+          ) : (
+            <>Loading</>
+          )}
         </ToolTipContainer>
       }
       // Give the user more time to interact with the tooltip before it closes
@@ -67,7 +87,12 @@ const Player = observer((props: props) => {
       calloutProps={calloutProps}
       styles={styles}
     >
-      <UserWrapper>
+      <UserWrapper
+        onMouseOver={() => {
+          loadUser();
+          console.log("mouse over");
+        }}
+      >
         {props.player.authProvider === AuthType.Twitch ? (
           <UserIconWrapper>
             <UserIcon src={"/images/TwitchGlitchPurple.svg"}></UserIcon>

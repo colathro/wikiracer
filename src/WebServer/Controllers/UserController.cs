@@ -103,6 +103,14 @@ namespace WebServer.Controllers
             return Ok();
         }
 
+        [Authorize]
+        [HttpGet("inspect")]
+        public async Task<ActionResult> Inspect([FromQuery] string id, [FromQuery] string authProvider)
+        {
+            var user = await this.userService.GetUser(id, authProvider);
+            return Ok(user);
+        }
+
         [HttpGet("guest")]
         public async Task<ActionResult> Guest()
         {

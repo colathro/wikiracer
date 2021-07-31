@@ -56,16 +56,11 @@ const User = observer(() => {
       />
       <ActionGroup2>
         <IconButton
-          iconProps={settingsIcon}
-          title="Settings"
-          ariaLabel="Settings"
-          onClick={() => history.push("/settings")}
-        />
-        <IconButton
           iconProps={signOutIcon}
           title="SignOut"
           ariaLabel="SignOut"
           onClick={() => AuthState.logout()}
+          text="Logout"
         />
       </ActionGroup2>
     </Layout>
