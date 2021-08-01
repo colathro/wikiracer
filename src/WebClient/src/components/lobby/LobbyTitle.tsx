@@ -2,14 +2,27 @@ import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import LobbyState from "../../state/LobbyState";
-import { mergeStyleSets, Callout, TextField } from "@fluentui/react";
+import {
+  mergeStyleSets,
+  Callout,
+  TextField,
+  ITextField,
+} from "@fluentui/react";
 import { useBoolean, useId } from "@fluentui/react-hooks";
-import { DefaultButton } from "@fluentui/react/lib/Button";
+import { DefaultButton, IconButton } from "@fluentui/react/lib/Button";
 import { Label } from "@fluentui/react/lib/Label";
+import { useRef } from "react";
+import PopUpState from "../../state/PopUpState";
 
 const Layout = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const CopyContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 1em;
 `;
 
 const LobbyKey = observer(() => {
@@ -17,6 +30,13 @@ const LobbyKey = observer(() => {
   const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] =
     useBoolean(false);
   const buttonId = useId("callout-button");
+  const textAreaRef = useRef<ITextField | null>(null);
+
+  const copyToClipboard = (e: any) => {
+    textAreaRef.current!.select();
+    document.execCommand("copy");
+    PopUpState.showSuccess("Copied join link.");
+  };
 
   return (
     <Layout>
@@ -37,6 +57,17 @@ const LobbyKey = observer(() => {
         >
           <Label></Label>
           <TextField label="Lobby Key:" value={lobby} readOnly />
+          <CopyContainer>
+            <TextField
+              value={`${window.document.URL}?joinkey=${lobby}`}
+              readOnly
+              componentRef={textAreaRef}
+            />
+            <IconButton
+              onClick={copyToClipboard}
+              iconProps={{ iconName: "Copy" }}
+            ></IconButton>
+          </CopyContainer>
         </Callout>
       )}
     </Layout>

@@ -45,17 +45,17 @@ class Auth {
     });
   }
 
-  loginGuest() {
+  loginGuest(callback = () => {}) {
     fetch(`/api/user/guest`, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((data) => {
-        this.handleCallbackGuest(data);
+        this.handleCallbackGuest(data, callback);
       });
   }
 
-  handleCallbackGuest(token_response: any) {
+  handleCallbackGuest(token_response: any, callback = () => {}) {
     fetch(`/api/user/me`, {
       method: "GET",
       headers: {
@@ -72,6 +72,7 @@ class Auth {
           auth_provider: data.authProvider,
         };
         this.setLocalAuthInfo(temp_auth_info);
+        callback();
       });
   }
 

@@ -7,6 +7,11 @@ import LoggedInView from "./views/LoggedInView";
 import LobbyView from "./views/LobbyView";
 import Messages from "./components/popups/Messages";
 import history from "./History";
+import { useLocation } from "react-router-dom";
+import queryString from "query-string";
+import { useState } from "react";
+import LobbyState from "./state/LobbyState";
+import { useEffect } from "react";
 
 const Layout = styled.div`
   display: flex;
@@ -17,12 +22,43 @@ function App() {
   return (
     <Layout>
       <Messages />
-      <LandingView></LandingView>
+      <Router history={history}>
+        <LandingView></LandingView>
+      </Router>
     </Layout>
   );
 }
 
 const LandingView = observer(() => {
+  const [continueLoading, setContinueLoading] = useState(false);
+  let location = useLocation();
+  let params = queryString.parse(location.search);
+  if (params.joinkey != undefined && params.joinkey!.length >= 5) {
+    useEffect(() => {
+      if (AuthState.auth_info === null) {
+        AuthState.loginGuest(() => {
+          LobbyState.joinLobby(params.joinkey!.toString(), () => {
+            setContinueLoading(true);
+            history.push("/lobby");
+          });
+        });
+      } else {
+        LobbyState.joinLobby(params.joinkey!.toString(), () => {
+          setContinueLoading(true);
+          history.push("/lobby");
+        });
+      }
+    }, []);
+  } else {
+    useEffect(() => {
+      setContinueLoading(true);
+    }, []);
+  }
+
+  if (!continueLoading) {
+    return <div>Loading</div>;
+  }
+
   if (AuthState.auth_info === null) {
     return <UnauthenticatedRouting />;
   } else {
@@ -32,28 +68,24 @@ const LandingView = observer(() => {
 
 const UnauthenticatedRouting = () => {
   return (
-    <Router history={history}>
-      <Switch>
-        <Route path="/">
-          <LoginView />
-        </Route>
-      </Switch>
-    </Router>
+    <Switch>
+      <Route path="/">
+        <LoginView />
+      </Route>
+    </Switch>
   );
 };
 
 const AuthenticatedRouting = () => {
   return (
-    <Router history={history}>
-      <Switch>
-        <Route path="/lobby">
-          <LobbyView />
-        </Route>
-        <Route path="/">
-          <LoggedInView />
-        </Route>
-      </Switch>
-    </Router>
+    <Switch>
+      <Route path="/lobby">
+        <LobbyView />
+      </Route>
+      <Route path="/">
+        <LoggedInView />
+      </Route>
+    </Switch>
   );
 };
 
