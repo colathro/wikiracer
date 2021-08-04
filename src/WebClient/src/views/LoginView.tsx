@@ -60,7 +60,6 @@ const Logo = styled.img`
 `;
 
 const LoginView = observer(() => {
-  const [betaKey, setBetaKey] = useState("");
   return (
     <Wrapper>
       <Layout>
@@ -68,24 +67,9 @@ const LoginView = observer(() => {
           <LogoContainer>
             <Logo src={"/images/darklogo.svg"}></Logo>
           </LogoContainer>
-          <BetaCodeContainer>
-            <Label style={{ color: "#ffffff" }}>Beta Code:</Label>
-            <TextField
-              value={betaKey}
-              onChange={(e: any) => {
-                setBetaKey(e.target.value);
-              }}
-            ></TextField>
-          </BetaCodeContainer>
           <ButtonContainer>
             <DefaultButton
               onClick={() => {
-                if (betaKey !== "wrbeta") {
-                  PopUpState.showError(
-                    "WikiRacer is currently in closed beta. You need to provide a Beta Code to play!"
-                  );
-                  return;
-                }
                 AuthState.loginGuest();
               }}
             >
@@ -94,12 +78,6 @@ const LoginView = observer(() => {
             <DefaultButton
               style={{ backgroundColor: "#6441a5", color: "#fff" }}
               onClick={() => {
-                if (betaKey !== "wrbeta") {
-                  PopUpState.showError(
-                    "WikiRacer is currently in closed beta. You need to provide a Beta Code to play!"
-                  );
-                  return;
-                }
                 AuthState.loginTwitch();
               }}
             >
