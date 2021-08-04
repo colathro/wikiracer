@@ -101,7 +101,14 @@ class Auth {
         Authorization: "Bearer " + AuthState.auth_info?.access_token,
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        if (response.status == 401) {
+          this.logout();
+          return;
+        }
+        return response.json();
+      })
       .then((data) => this.setUser(data));
   }
 
