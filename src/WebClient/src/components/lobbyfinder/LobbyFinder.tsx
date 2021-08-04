@@ -33,9 +33,9 @@ const LobbyFinder = observer(() => {
     <BigLayout>
       <BetaBannerWrapper>
         <MessageBar messageBarType={MessageBarType.warning}>
-          Wiki Racer is currently in closed beta. This means all features and
-          data is subject to deletion. Expect all your history to be
-          periodically removed while we develop!
+          Wiki Racer is currently in open beta. This means all features and data
+          is subject to deletion. Expect all your history to be periodically
+          removed while we develop!
         </MessageBar>
       </BetaBannerWrapper>
       <Layout>
