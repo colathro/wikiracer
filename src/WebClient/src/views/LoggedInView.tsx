@@ -15,6 +15,7 @@ import TimerState from "../state/TimerState";
 import ReportAProblem from "../components/reportaproblem/ReportAProblem";
 import Store from "../components/store/Store";
 import Cookie from "../components/cookie/Cookie";
+import SubmitAnIdea from "../components/submitanidea/SubmitAnIdea";
 
 const Layout = styled.div`
   display: flex;
@@ -80,6 +81,9 @@ const LoggedInView = observer(() => {
             </Route>
             <Route path="/reportaproblem">
               <ReportAProblem />
+            </Route>
+            <Route path="/submitanidea">
+              <SubmitAnIdea />
             </Route>
             <Route path="/cookie">
               <Cookie />

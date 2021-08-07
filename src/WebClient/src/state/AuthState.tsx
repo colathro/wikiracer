@@ -136,6 +136,19 @@ class Auth {
       .then((data) => callback(data));
   }
 
+  submitIdea(callback: any, title: string, body: string) {
+    fetch(`/api/bugidea/idea?title=${title}`, {
+      body: JSON.stringify(body),
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + AuthState.auth_info?.access_token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => callback(data));
+  }
+
   getStoreItems(callback: any) {
     fetch(`/api/store/available`, {
       method: "GET",
