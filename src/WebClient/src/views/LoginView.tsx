@@ -56,7 +56,7 @@ const LogoContainer = styled.div`
 `;
 
 const Logo = styled.img`
-  height: 8em;
+  height: 10em;
 `;
 
 const LoginView = observer(() => {
@@ -65,7 +65,7 @@ const LoginView = observer(() => {
       <Layout>
         <CenteredContainer>
           <LogoContainer>
-            <Logo src={"/images/darklogo.svg"}></Logo>
+            <Logo src={"/images/wikiracer-light.png"}></Logo>
           </LogoContainer>
           <ButtonContainer>
             <DefaultButton
