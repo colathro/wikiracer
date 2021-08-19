@@ -25,7 +25,7 @@ const Navigation = () => {
     {
       links: [
         {
-          name: "Lobby Finder",
+          name: "Play",
           key: "/",
           url: "s",
           onClick: (e: any) => {

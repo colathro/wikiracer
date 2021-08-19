@@ -97,6 +97,20 @@ namespace WebServer.Controllers
             var user = await this.userService.GetUser(this.GetUserKey(), this.GetUserProvider());
             var players = new List<LobbyPlayer>();
 
+            var topArticles = await this.pageStatisticService.GetTop100();
+            var topArticlesList = topArticles.ToList();
+
+            int startIndex = random.Next(0, 99);
+            int finishIndex;
+            if (startIndex == 0 || startIndex == 99)
+            {
+                finishIndex = random.Next(1, 98);
+            }
+            else
+            {
+                finishIndex = random.Next(0, startIndex);
+            }
+
             players.Add(ConvertUserToLobbyPlayer(user));
             var lobby = new Lobby
             {
@@ -108,7 +122,9 @@ namespace WebServer.Controllers
                 Messages = new List<Message>(),
                 IsPublic = false,
                 IsOpen = true,
-                CurrentGameLength = 4
+                CurrentGameLength = 4,
+                StartArticle = topArticlesList[startIndex].Key,
+                EndArticle = topArticlesList[finishIndex].Key
             };
 
             await this.lobbyService.AddItemAsync(lobby);
