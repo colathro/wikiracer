@@ -49,9 +49,9 @@ namespace WebServer.BackgroundServices
                             user.Coins += game.CoinReward;
                             user.Experience += game.ExperienceReward;
 
-                            if (user.Experience >= 1000)
+                            if (user.Experience >= user.Level * 100)
                             {
-                                user.Experience = user.Experience % 1000;
+                                user.Experience = user.Experience % (user.Level * 100);
                                 user.Level = user.Level += 1;
                             }
 

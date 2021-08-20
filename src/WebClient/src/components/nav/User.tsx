@@ -51,8 +51,10 @@ const User = observer(() => {
             </div>
           </ActionGroup3>
         }
-        description={`${AuthState.user?.experience} / 1000 Experience`}
-        percentComplete={experience / 1000}
+        description={`${AuthState.user?.experience} / ${
+          AuthState.user?.level! * 100
+        } Experience`}
+        percentComplete={experience / (AuthState.user?.level! * 100)}
       />
       <ActionGroup2>
         <IconButton

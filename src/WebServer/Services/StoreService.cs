@@ -14,107 +14,107 @@ namespace WebServer.Services
         public static readonly List<StoreItem> StoreItems = new List<StoreItem> {
             new StoreItem {
                 Name = "chicken.png",
-                Price = 300,
+                Price = 30,
                 Type = ItemType.Avatar,
             },
             new StoreItem {
                 Name = "rabbit.png",
-                Price = 250,
+                Price = 25,
                 Type = ItemType.Avatar,
             },
             new StoreItem {
                 Name = "willsmith.png",
-                Price = 500,
+                Price = 50,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "aoc.gif",
-                Price = 5000,
+                Price = 250,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "bezos.gif",
-                Price = 10000,
+                Price = 300,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "dababy.jpg",
-                Price = 750,
+                Price = 50,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "charli.gif",
-                Price = 5000,
+                Price = 250,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "breaking_bad.jpg",
-                Price = 750,
+                Price = 50,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "john_cena.gif",
-                Price = 7000,
+                Price = 250,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "oprah.gif",
-                Price = 15000,
+                Price = 250,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "pulpfiction.gif",
-                Price = 6500,
+                Price = 250,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "harrypotter.gif",
-                Price = 5500,
+                Price = 250,
                 Type = ItemType.Avatar
             },
              new StoreItem {
                 Name = "hobbit.gif",
-                Price = 4000,
+                Price = 250,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "minions.gif",
-                Price = 8500,
+                Price = 250,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "familyguy.gif",
-                Price = 5000,
+                Price = 250,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "newgirl.gif",
-                Price = 6000,
+                Price = 250,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "kermit.gif",
-                Price = 5000,
+                Price = 250,
                 Type = ItemType.Avatar
             },
             new StoreItem {
                 Name = "amongus.jpeg",
-                Price = 400,
+                Price = 30,
                 Type = ItemType.Avatar,
             },
             new StoreItem {
                 Name = "bbgroot.jpeg",
-                Price = 400,
+                Price = 30,
                 Type = ItemType.Avatar,
             },
             new StoreItem {
                 Name = "bbyoda.jpeg",
-                Price = 400,
+                Price = 40,
                 Type = ItemType.Avatar,
             },
             new StoreItem {
                 Name = "captainamerica.png",
-                Price = 400,
+                Price = 20,
                 Type = ItemType.Avatar,
             },
         };
