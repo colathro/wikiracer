@@ -7,6 +7,7 @@ import PopupState from "../../state/PopUpState";
 import {
   TextField,
   PrimaryButton,
+  CompoundButton,
   Stack,
   IStackProps,
   IStackStyles,
@@ -34,42 +35,48 @@ const JoinLobby = observer(() => {
   const [joinKey, setJoinKey] = useState("");
   return (
     <Layout>
-      <Text variant="xLarge">Join Lobby:</Text>
-      <Stack horizontal tokens={stackTokens} styles={stackStyles}>
-        <Stack {...columnProps1}>
-          <TextField
-            placeholder="Enter lobby code"
-            onChange={(e: any) => {
-              setJoinKey(e.target.value);
-            }}
-            value={joinKey}
-          ></TextField>
-        </Stack>
-        <Stack {...columnProps2}>
-          <PrimaryButton
-            onClick={() => {
-              LobbyState.joinLobby(joinKey, (d: any) => {
-                history.push("/lobby");
-              });
-            }}
-          >
-            Join Lobby
-          </PrimaryButton>
-        </Stack>
-        <Stack {...columnProps2}>
-          <PrimaryButton
-            onClick={() => {
-              LobbyState.createLobby((d: any) => {
-                PopupState.showSuccess(
-                  "Successfully created a lobby, invite your friends!"
-                );
-                history.push("/lobby");
-              });
-            }}
-          >
-            Create Lobby
-          </PrimaryButton>
-        </Stack>
+      <Stack horizontal tokens={stackTokens}>
+        <CompoundButton
+          primary
+          secondaryText="Jump right in and start racing!"
+          onClick={() => {
+            LobbyState.playNow(() => {
+              history.push("/lobby");
+            });
+          }}
+        >
+          Play Now!
+        </CompoundButton>
+        <CompoundButton
+          primary
+          secondaryText="Invite your friends directly or make it public!"
+          onClick={() => {
+            LobbyState.createLobby((d: any) => {
+              PopupState.showSuccess(
+                "Successfully created a lobby, invite your friends!"
+              );
+              history.push("/lobby");
+            });
+          }}
+        >
+          Create a Private Lobby!
+        </CompoundButton>
+        <TextField
+          placeholder="Enter lobby code"
+          onChange={(e: any) => {
+            setJoinKey(e.target.value);
+          }}
+          value={joinKey}
+        ></TextField>
+        <PrimaryButton
+          onClick={() => {
+            LobbyState.joinLobby(joinKey, (d: any) => {
+              history.push("/lobby");
+            });
+          }}
+        >
+          Join Lobby
+        </PrimaryButton>
       </Stack>
     </Layout>
   );

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import { LobbyPlayer } from "../../types/Lobby";
+import { LobbyPlayer, Owner } from "../../types/Lobby";
 import { Text } from "@fluentui/react";
 import { AuthType } from "../../enums/AuthType";
 import { useId } from "@fluentui/react-hooks";
@@ -44,7 +44,7 @@ const styles: Partial<ITooltipHostStyles> = {
 const calloutProps = { gapSpace: 0 };
 
 type props = {
-  player: LobbyPlayer;
+  player: LobbyPlayer | Owner;
   showColon?: boolean;
 };
 
@@ -69,11 +69,11 @@ const Player = observer((props: props) => {
           {player !== undefined ? (
             <>
               <ActionGroup>
-                <Avatar avatar={props.player.avatar} />
-                <Text variant="xLarge">{props.player.displayName}</Text>
+                <Avatar avatar={player.avatar} />
+                <Text variant="xLarge">{player.displayName}</Text>
               </ActionGroup>
               <ActionGroup3>
-                <Text variant="medium">Level {props.player.level}</Text>
+                <Text variant="medium">Level {player.level}</Text>
               </ActionGroup3>
             </>
           ) : (

@@ -13,24 +13,15 @@ import {
   Spinner,
   IconButton,
   IIconProps,
+  TooltipHost,
 } from "@fluentui/react";
+import { useId } from "@fluentui/react-hooks";
+import Player from "../players/Player";
 
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-`;
-
-const Anchor = styled.a`
-  color: ${ThemeManager.theme?.text2};
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const AnchorInactive = styled.span`
-  color: ${ThemeManager.theme?.text};
 `;
 
 const List = styled.div`
@@ -51,6 +42,20 @@ const LobbyWrapper = styled.div`
   display: flex;
   margin: 1em;
   justify-content: space-between;
+  box-shadow: rgb(0 0 0 / 13%) 0px 3.2px 7.2px 0px,
+    rgb(0 0 0 / 11%) 0px 0.6px 1.8px 0px;
+  outline: transparent;
+  border-radius: 4px;
+`;
+
+const LobbyInner = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5em;
+  margin-left: 2em;
+  margin-right: 2em;
 `;
 
 const LoaderWrapper = styled.div`
@@ -59,16 +64,6 @@ const LoaderWrapper = styled.div`
   align-items: center;
   justify-content: center;
   height: 500px;
-`;
-
-const Owner = styled.div``;
-
-const Players = styled.div`
-  display: flex;
-`;
-
-const PlayersText = styled.div`
-  margin-right: 1em;
 `;
 
 const NoLobbies = styled.div`
@@ -84,6 +79,8 @@ const PublicLobbies = observer(() => {
   let history = useHistory();
   const [pbr, setLobbies] = useState<PublicLobbyResponse>();
   const [page, setPage] = useState<number>(0);
+
+  const tooltipId = useId("tooltip");
 
   const runCallback = (cb: any) => {
     return cb();
@@ -147,26 +144,52 @@ const PublicLobbies = observer(() => {
           pbr?.lobbies.map((lobby: Lobby, key: any) => {
             return (
               <LobbyWrapper key={key}>
-                <Owner>{lobby.owner.displayName}</Owner>
-                <Players>
-                  <PlayersText>
+                <LobbyInner>
+                  <Player player={lobby.owner} />
+                  <div>
+                    <Text variant="tiny" nowrap style={{ maxWidth: "8em" }}>
+                      <TooltipHost
+                        content={lobby.startArticle}
+                        // This id is used on the tooltip itself, not the host
+                        // (so an element with this id only exists when the tooltip is shown)
+                        id={tooltipId}
+                      >
+                        <Text variant="tiny" nowrap>
+                          Start: {lobby.startArticle}
+                        </Text>
+                      </TooltipHost>
+                    </Text>{" "}
+                    <Text variant="tiny" nowrap style={{ maxWidth: "8em" }}>
+                      <TooltipHost
+                        content={lobby.endArticle}
+                        // This id is used on the tooltip itself, not the host
+                        // (so an element with this id only exists when the tooltip is shown)
+                        id={tooltipId}
+                      >
+                        <Text variant="tiny" nowrap>
+                          Finish: {lobby.endArticle}
+                        </Text>
+                      </TooltipHost>
+                    </Text>
+                  </div>
+                  <Text>
                     {
                       lobby.players.filter((val) => {
                         return val.active === true;
                       }).length
                     }
-                  </PlayersText>
-                  <Icon iconName="People" />
-                </Players>
-                <PrimaryButton
-                  onClick={() => {
-                    LobbyState.joinLobby(lobby.key, () => {
-                      history.push("/lobby");
-                    });
-                  }}
-                >
-                  Join
-                </PrimaryButton>
+                    {"/10 Players"}
+                  </Text>
+                  <PrimaryButton
+                    onClick={() => {
+                      LobbyState.joinLobby(lobby.key, () => {
+                        history.push("/lobby");
+                      });
+                    }}
+                  >
+                    Join
+                  </PrimaryButton>
+                </LobbyInner>
               </LobbyWrapper>
             );
           })

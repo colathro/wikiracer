@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import AuthState from "./AuthState";
-import { Game, Lobby, LobbyPlayer } from "../types/Lobby";
+import { Game, Lobby, LobbyPlayer, Owner } from "../types/Lobby";
 import PopUpState from "./PopUpState";
 import TimerState from "./TimerState";
 import SharedReferences from "./SharedReferences";
@@ -204,6 +204,18 @@ class LobbyManager {
       });
   }
 
+  playNow(callback: any) {
+    const joinOrCreate = (data: any) => {
+      if (data.lobbies.length >= 1) {
+        this.joinLobby(data.lobbies[0].key, callback);
+      } else {
+        this.createLobby(callback);
+      }
+    };
+
+    this.getLobbies(joinOrCreate, 0);
+  }
+
   sendMessage(message: string, callback: any) {
     fetch(
       `/api/lobby/player/message?lobbyKey=${this.lobby?.key}&message=${message}`,
@@ -234,7 +246,7 @@ class LobbyManager {
       });
   }
 
-  inspectPlayer(player: LobbyPlayer, callback: any) {
+  inspectPlayer(player: LobbyPlayer | Owner, callback: any) {
     fetch(
       `/api/user/inspect?id=${player.id}&authProvider=${player.authProvider}`,
       {
