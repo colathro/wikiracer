@@ -1,11 +1,8 @@
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import ThemeManager from "../Themes";
 import AuthState from "../state/AuthState";
-import { useState } from "react";
-import PopUpState from "../state/PopUpState";
-import { DefaultButton } from "@fluentui/react/lib/Button";
-import { TextField, Label } from "@fluentui/react";
+import PlayNow from "../components/login/PlayNow";
+import PlayNowTwitch from "../components/login/PlayNowTwitch";
 
 const Wrapper = styled.div`
   position: relative;
@@ -35,18 +32,11 @@ const CenteredContainer = styled.div`
   overflow: hidden;
 `;
 
-const BetaCodeContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 1em;
-  justify-content: center;
-  align-items: center;
-`;
-
 const ButtonContainer = styled.div`
   display: flex;
   padding: 1em;
-  justify-content: space-around;
+  width: 35em;
+  justify-content: space-between;
 `;
 
 const LogoContainer = styled.div`
@@ -68,21 +58,16 @@ const LoginView = observer(() => {
             <Logo src={"/images/wikiracer-light.png"}></Logo>
           </LogoContainer>
           <ButtonContainer>
-            <DefaultButton
-              onClick={() => {
+            <PlayNow
+              action={() => {
                 AuthState.loginGuest();
               }}
-            >
-              Sign in as guest
-            </DefaultButton>
-            <DefaultButton
-              style={{ backgroundColor: "#6441a5", color: "#fff" }}
-              onClick={() => {
+            ></PlayNow>
+            <PlayNowTwitch
+              action={() => {
                 AuthState.loginTwitch();
               }}
-            >
-              Sign in with Twitch.tv
-            </DefaultButton>
+            ></PlayNowTwitch>
           </ButtonContainer>
         </CenteredContainer>
       </Layout>
