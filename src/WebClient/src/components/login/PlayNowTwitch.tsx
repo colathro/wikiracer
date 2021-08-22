@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 const Button = styled.div`
+  width: 262px;
   display: flex;
   padding: 2em;
   border-radius: 6px;

@@ -1,19 +1,20 @@
-import { action } from "mobx";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import LobbyState from "../../state/LobbyState";
 
 const Button = styled.div`
+  width: 262px;
   display: flex;
   padding: 2em;
   border-radius: 6px;
-  background-color: white;
+  background-color: black;
+  color: white;
   font-weight: bold;
   align-items: center;
+  justify-content: center;
   font-family: sans-serif;
   font: Arial;
   &:hover {
-    background-color: lightblue;
+    background-color: grey;
     cursor: pointer;
   }
 `;
@@ -29,7 +30,7 @@ const PlayNow = observer((props: props) => {
         props.action();
       }}
     >
-      PLAY NOW AS GUEST
+      <div>PLAY NOW AS GUEST</div>
     </Button>
   );
 });

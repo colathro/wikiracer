@@ -12,10 +12,26 @@ import queryString from "query-string";
 import { useState } from "react";
 import LobbyState from "./state/LobbyState";
 import { useEffect } from "react";
+import Cookie from "./components/cookie/Cookie";
+import { Link, PrimaryButton, Text } from "@fluentui/react";
+import TheTeam from "./components/team/TheTeam";
 
 const Layout = styled.div`
   display: flex;
   flex: 1;
+`;
+
+const LayoutUnauth = styled.div`
+  display: flex;
+  flex: 1;
+  margin-top: 3em;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const BackUnauthed = styled.div`
+  float: left;
 `;
 
 function App() {
@@ -69,6 +85,34 @@ const LandingView = observer(() => {
 const UnauthenticatedRouting = () => {
   return (
     <Switch>
+      <Route path="/cookie">
+        <LayoutUnauth>
+          <BackUnauthed>
+            <Link
+              onClick={() => {
+                history.push("/");
+              }}
+            >
+              <PrimaryButton>Back</PrimaryButton>
+            </Link>
+          </BackUnauthed>
+          <Cookie></Cookie>
+        </LayoutUnauth>
+      </Route>
+      <Route path="/team">
+        <LayoutUnauth>
+          <BackUnauthed>
+            <Link
+              onClick={() => {
+                history.push("/");
+              }}
+            >
+              <PrimaryButton>Back</PrimaryButton>
+            </Link>
+          </BackUnauthed>
+          <TheTeam></TheTeam>
+        </LayoutUnauth>
+      </Route>
       <Route path="/">
         <LoginView />
       </Route>

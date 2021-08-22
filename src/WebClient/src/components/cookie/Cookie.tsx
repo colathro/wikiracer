@@ -7,6 +7,7 @@ const BigLayout = styled.div`
   flex: 1;
   justify-content: center;
   flex-direction: column;
+  max-width: 1000px;
 `;
 
 const Cookie = () => {
